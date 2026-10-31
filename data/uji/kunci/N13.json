@@ -1,0 +1,101 @@
+{
+  "id": "N13",
+  "durasi_s": 50.4,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Dek Raka, maem yuk. Mbak suapin ya. Mau mamam?",
+      "t_selesai": 5,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.5
+    },
+    {
+      "baris": 4,
+      "teks": "Mamam. Mamam nasi. Ayamnya juga ya, dikit.",
+      "t_selesai": 13.6,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 6,
+      "teks": "Enak nggak?",
+      "t_selesai": 15.6,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 7,
+      "teks": "Enak ya. Ayo satu lagi.",
+      "t_selesai": 19,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 8,
+      "teks": "Mau lagi?",
+      "t_selesai": 21,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.4
+    },
+    {
+      "baris": 10,
+      "teks": "Lagi. Nih, aaa.",
+      "t_selesai": 27.5,
+      "kategori": "memotong",
+      "jeda_s": 1.4
+    },
+    {
+      "baris": 11,
+      "teks": "Pinter. Minum dulu ya.",
+      "t_selesai": 30.5,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 12,
+      "teks": "Gelasnya buka dulu?",
+      "t_selesai": 32.8,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 4.3
+    },
+    {
+      "baris": 13,
+      "teks": "Mbak bukain ya. Pelan pelan minumnya.",
+      "t_selesai": 39.4,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 14,
+      "teks": "Udah kenyang?",
+      "t_selesai": 41.3,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 14,
+      "teks": "Perutnya mana, coba Mbak lihat.",
+      "t_selesai": 43.3,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    }
+  ],
+  "perluasan": 1,
+  "giliran": 2,
+  "vokalisasi_anak": 2,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "id": "N14",
+  "durasi_s": 51.2,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Cilukba! Mana ibu?",
+      "t_selesai": 2.1,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.4
+    },
+    {
+      "baris": 3,
+      "teks": "Ba! Ini ibu.",
+      "t_selesai": 8.7,
+      "kategori": "memotong",
+      "jeda_s": 1.4
+    },
+    {
+      "baris": 4,
+      "teks": "Lagi?",
+      "t_selesai": 10.3,
+      "kategori": "memotong",
+      "jeda_s": 0.2
+    },
+    {
+      "baris": 4,
+      "teks": "Ibu ngumpet lagi ya.",
+      "t_selesai": 12,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.5
+    },
+    {
+      "baris": 6,
+      "teks": "Ba! Hehe, kaget ya.",
+      "t_selesai": 19.1,
+      "kategori": "memotong",
+      "jeda_s": 1.4
+    },
+    {
+      "baris": 7,
+      "teks": "Sekarang Raka yang ngumpet?",
+      "t_selesai": 22,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.6
+    },
+    {
+      "baris": 9,
+      "teks": "Raka mana ya?",
+      "t_selesai": 28.6,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 9,
+      "teks": "Kok nggak ada.",
+      "t_selesai": 29.9,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 10,
+      "teks": "Ketemu! Di balik bantal.",
+      "t_selesai": 32.7,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 11,
+      "teks": "Udah capek?",
+      "t_selesai": 34.8,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 11,
+      "teks": "Minum dulu.",
+      "t_selesai": 35.7,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 12,
+      "teks": "Sekali lagi ya, terakhir. Mana Raka?",
+      "t_selesai": 39.3,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.5
+    },
+    {
+      "baris": 14,
+      "teks": "Ba! Ketemu lagi.",
+      "t_selesai": 46,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    }
+  ],
+  "perluasan": 0,
+  "giliran": 4,
+  "vokalisasi_anak": 4,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

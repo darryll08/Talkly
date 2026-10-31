@@ -1,0 +1,165 @@
+{
+  "id": "N05",
+  "durasi_s": 46.3,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Ini apa?",
+      "t_selesai": 1.8,
+      "kategori": "memotong",
+      "jeda_s": 0.6
+    },
+    {
+      "baris": 2,
+      "teks": "Warnanya apa?",
+      "t_selesai": 3.1,
+      "kategori": "memotong",
+      "jeda_s": 0.6
+    },
+    {
+      "baris": 3,
+      "teks": "Bebeknya mana?",
+      "t_selesai": 4.5,
+      "kategori": "memotong",
+      "jeda_s": 0.7
+    },
+    {
+      "baris": 4,
+      "teks": "Bebeknya lagi ngapain?",
+      "t_selesai": 6.3,
+      "kategori": "memotong",
+      "jeda_s": 2
+    },
+    {
+      "baris": 5,
+      "teks": "Lagi berenang ya. Di kolam.",
+      "t_selesai": 10.2,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 6,
+      "teks": "Raka suka bebek nggak?",
+      "t_selesai": 12.9,
+      "kategori": "memotong",
+      "jeda_s": 0.5
+    },
+    {
+      "baris": 7,
+      "teks": "Suka ya?",
+      "t_selesai": 14.2,
+      "kategori": "memotong",
+      "jeda_s": 0.5
+    },
+    {
+      "baris": 8,
+      "teks": "Mau pegang?",
+      "t_selesai": 15.5,
+      "kategori": "memotong",
+      "jeda_s": 1.6
+    },
+    {
+      "baris": 9,
+      "teks": "Nih pegang. Hati hati, licin.",
+      "t_selesai": 19,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 10,
+      "teks": "Bunyinya gimana bebek?",
+      "t_selesai": 21.3,
+      "kategori": "memotong",
+      "jeda_s": 0.6
+    },
+    {
+      "baris": 11,
+      "teks": "Kwek kwek ya?",
+      "t_selesai": 23,
+      "kategori": "memotong",
+      "jeda_s": 0.6
+    },
+    {
+      "baris": 12,
+      "teks": "Coba Raka, kwek kwek?",
+      "t_selesai": 25.2,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 13,
+      "teks": "Kwek kwek. Lucu ya bebeknya.",
+      "t_selesai": 28.6,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 14,
+      "teks": "Udah, bebeknya bobok dulu.",
+      "t_selesai": 31.3,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 15,
+      "teks": "Raka mau main apa sekarang?",
+      "t_selesai": 34.2,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 15,
+      "teks": "Bola?",
+      "t_selesai": 34.6,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 15,
+      "teks": "Mobil?",
+      "t_selesai": 35.1,
+      "kategori": "memotong",
+      "jeda_s": 0.6
+    },
+    {
+      "baris": 16,
+      "teks": "Mobil ya?",
+      "t_selesai": 36.4,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 16,
+      "teks": "Yang mana mobilnya?",
+      "t_selesai": 37.6,
+      "kategori": "memotong",
+      "jeda_s": 1.4
+    }
+  ],
+  "perluasan": 0,
+  "giliran": 0,
+  "vokalisasi_anak": 0,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

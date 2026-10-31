@@ -1,0 +1,77 @@
+{
+  "id": "N04",
+  "durasi_s": 43.6,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Le, ayo maem sik. Iki opo?",
+      "t_selesai": 3.3,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.4
+    },
+    {
+      "baris": 3,
+      "teks": "Iyo, mamam. Mamam sego. Sego karo endhog. Enak to?",
+      "t_selesai": 12.6,
+      "kategori": "memotong",
+      "jeda_s": 1.4
+    },
+    {
+      "baris": 5,
+      "teks": "Mau lagi, Le?",
+      "t_selesai": 15.1,
+      "kategori": "memotong",
+      "jeda_s": 1.1
+    },
+    {
+      "baris": 6,
+      "teks": "Iki, sesendok meneh. Aaa.",
+      "t_selesai": 17.8,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 7,
+      "teks": "Wis entek. Pinter tenan. Saiki ngombe yo. Gelase endi?",
+      "t_selesai": 23.3,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 4.7
+    },
+    {
+      "baris": 9,
+      "teks": "Kae lho, sing ijo. Dijupuk, Le.",
+      "t_selesai": 30.3,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 10,
+      "teks": "Nah, iki. Buka tutupe dhisik.",
+      "t_selesai": 33.5,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.3
+    },
+    {
+      "baris": 12,
+      "teks": "Buka. Wis kebuka. Ngombe.",
+      "t_selesai": 40.3,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    }
+  ],
+  "perluasan": 1,
+  "giliran": 2,
+  "vokalisasi_anak": 2,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

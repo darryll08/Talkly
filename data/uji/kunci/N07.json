@@ -1,0 +1,93 @@
+{
+  "id": "N07",
+  "durasi_s": 45.8,
+  "harap_ditolak": "bising",
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Raka, sini. Nonton apa sih?",
+      "t_selesai": 2.9,
+      "kategori": "memotong",
+      "jeda_s": 2
+    },
+    {
+      "baris": 2,
+      "teks": "Ih, lagunya rame ya.",
+      "t_selesai": 6.4,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 3,
+      "teks": "Bebeknya mana?",
+      "t_selesai": 8.7,
+      "kategori": "memotong",
+      "jeda_s": 3
+    },
+    {
+      "baris": 4,
+      "teks": "Ini bebek. Mau pegang?",
+      "t_selesai": 13.2,
+      "kategori": "memotong",
+      "jeda_s": 3
+    },
+    {
+      "baris": 5,
+      "teks": "Raka lihat ibu dulu, sini.",
+      "t_selesai": 18.1,
+      "kategori": "memotong",
+      "jeda_s": 3
+    },
+    {
+      "baris": 6,
+      "teks": "Mau mamam nggak?",
+      "t_selesai": 22.2,
+      "kategori": "memotong",
+      "jeda_s": 3
+    },
+    {
+      "baris": 7,
+      "teks": "Nanti ya habis lagunya.",
+      "t_selesai": 26.8,
+      "kategori": "memotong",
+      "jeda_s": 3
+    },
+    {
+      "baris": 8,
+      "teks": "Bebek, bebek, kwek kwek.",
+      "t_selesai": 31.3,
+      "kategori": "memotong",
+      "jeda_s": 3
+    },
+    {
+      "baris": 9,
+      "teks": "Udah ah, TV-nya kekencengan.",
+      "t_selesai": 35.8,
+      "kategori": "memotong",
+      "jeda_s": 3
+    },
+    {
+      "baris": 10,
+      "teks": "Mau lagi lagunya?",
+      "t_selesai": 39.9,
+      "kategori": "memotong",
+      "jeda_s": 3
+    }
+  ],
+  "perluasan": 0,
+  "giliran": 0,
+  "vokalisasi_anak": 0,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

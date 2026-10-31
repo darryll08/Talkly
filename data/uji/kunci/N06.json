@@ -1,0 +1,37 @@
+{
+  "id": "N06",
+  "durasi_s": 46.9,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Raka, mau main bebek?",
+      "t_selesai": 2.5,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.5
+    },
+    {
+      "baris": 6,
+      "teks": "Oh iya. Makasih Yah. Nah, ini bebeknya. Raka mau buka?",
+      "t_selesai": 23.1,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.6
+    },
+    {
+      "baris": 11,
+      "teks": "Jadi, habis Raka bobok siang. Yuk Raka, bebeknya mandi?",
+      "t_selesai": 40.3,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 4.5
+    }
+  ],
+  "perluasan": 1,
+  "giliran": 2,
+  "vokalisasi_anak": 2,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null
+  ]
+}

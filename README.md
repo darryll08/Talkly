@@ -120,3 +120,22 @@ Tidak ada perubahan lingkup; Talkly diajukan di subtema 2.
 Seluruh data di versi lomba adalah data contoh dan rekaman bernaskah yang diperankan tim.
 
 ## Hasil uji akurasi
+
+Kriteria ditetapkan sebelum pengujian (proposal 4.4). Hasil lengkap per naskah ada di [`docs/hasil-uji.md`](docs/hasil-uji.md).
+
+| Ukuran | Target | Hasil |
+|---|---|---|
+| Selisih jeda rata-rata (pembanding: Audacity) | ≤ 0,5 detik | menunggu rekaman N01–N15 |
+| Ketepatan pengenalan ajakan | ≥ 80% | menunggu rekaman N01–N15 |
+| Kesesuaian kategori ajakan | ≥ 80% | menunggu rekaman N01–N15 |
+| Kesesuaian perluasan (AI) | ≥ 80% | menunggu rekaman N01–N15 |
+| Kasus regresi tertandai Bahas minggu ini | 10/10 | 10/10 (`uji/status.test.ts`) |
+| Draf rencana acak bebas kata terlarang dan hanya dari bank aktivitas | 50/50 | 50/50, tanpa cadangan (`uji/rencana-acak.ts`, GPT-6 Luna) |
+
+Cara mengulang:
+1. Rekam 15 naskah di [`docs/naskah-rekaman.md`](docs/naskah-rekaman.md) lewat aplikasi (mode demo Ibu Sari; N13 Mbak Sri). Naskah dan kunci dibuat dari `uji/naskah.ts` (`npx tsx uji/cetak-naskah.ts`).
+2. `node --env-file=.env.vercel-produksi node_modules/tsx/dist/cli.mjs uji/ambil-rekaman.ts --terbaru 15` menyimpan transkrip ke `data/uji/transkrip/` dan audio ke `data/uji/rekaman/`.
+3. Ukur jeda setiap ajakan di Audacity, isi `jeda_manual_s` di `data/uji/kunci/Nxx.json` sesuai urutan `ajakan`.
+4. `npm run uji:akurasi` menjalankan ulang pengukuran dari transkrip tersimpan (tanpa kredit STT) dan menulis `docs/hasil-uji.md`.
+
+Pemeriksaan konsistensi: `npx tsx uji/akurasi.ts --simulasi` menjalankan mesin pada transkrip sempurna yang dibuat dari naskah. Hasilnya 100% sesuai kunci; ini hanya memastikan kunci dan mesin memakai definisi yang sama, bukan hasil uji akurasi.

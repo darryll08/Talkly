@@ -1,0 +1,77 @@
+{
+  "id": "N03",
+  "durasi_s": 48.9,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Raka mau mamam apa?",
+      "t_selesai": 2.4,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 1,
+      "teks": "Nasi atau roti?",
+      "t_selesai": 3.7,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 5.2
+    },
+    {
+      "baris": 2,
+      "teks": "Hmm, nasi ya. Ibu ambilin nasi. Mau sayurnya juga?",
+      "t_selesai": 12.9,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 4.8
+    },
+    {
+      "baris": 4,
+      "teks": "Dikit aja ya, wortel.",
+      "t_selesai": 19.2,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 5,
+      "teks": "Ini sendoknya. Buka mulutnya, aaa.",
+      "t_selesai": 22.4,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 4.5
+    },
+    {
+      "baris": 6,
+      "teks": "Nah, gitu. Enak?",
+      "t_selesai": 28,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 5
+    },
+    {
+      "baris": 7,
+      "teks": "Kunyah kunyah. Pelan pelan aja.",
+      "t_selesai": 34.9,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 8,
+      "teks": "Mau lagi?",
+      "t_selesai": 37.2,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 4.6
+    }
+  ],
+  "perluasan": 0,
+  "giliran": 0,
+  "vokalisasi_anak": 0,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

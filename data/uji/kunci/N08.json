@@ -1,0 +1,45 @@
+{
+  "id": "N08",
+  "durasi_s": 21.6,
+  "harap_ditolak": "durasi",
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Raka, mau mamam?",
+      "t_selesai": 2.1,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.5
+    },
+    {
+      "baris": 3,
+      "teks": "Mamam. Ibu ambilin ya.",
+      "t_selesai": 9.2,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 4,
+      "teks": "Pakai sendok yang ini?",
+      "t_selesai": 11.9,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 4.6
+    },
+    {
+      "baris": 5,
+      "teks": "Iya yang ini aja. Buka mulutnya.",
+      "t_selesai": 18.8,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    }
+  ],
+  "perluasan": 0,
+  "giliran": 1,
+  "vokalisasi_anak": 1,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null
+  ]
+}

@@ -46,3 +46,5 @@ next-env.d.ts
 
 # berkas sementara lokal (log server dev, keluaran uji)
 *.tmp.*
+# audio rekaman uji (suara tim), hanya untuk diukur di Audacity
+/data/uji/rekaman/

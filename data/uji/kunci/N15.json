@@ -1,0 +1,77 @@
+{
+  "id": "N15",
+  "durasi_s": 45.2,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Raka, pakai baju dulu yuk. Mau yang mana?",
+      "t_selesai": 4,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 2,
+      "teks": "Yang biru ya, ada gambar bebeknya. Tangannya masuk. Mana tangannya?",
+      "t_selesai": 9.7,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.6
+    },
+    {
+      "baris": 5,
+      "teks": "Ini. Ini tangan Raka. Kancingnya, ayo bilang buka.",
+      "t_selesai": 18.9,
+      "kategori": "memotong",
+      "jeda_s": 1
+    },
+    {
+      "baris": 7,
+      "teks": "Nggak usah deh. Ibu bantu.",
+      "t_selesai": 21.8,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 8,
+      "teks": "Celananya, kaki dulu. Kaki mana?",
+      "t_selesai": 25.2,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 4.4
+    },
+    {
+      "baris": 9,
+      "teks": "Nah ini. Masukin.",
+      "t_selesai": 30.7,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 10,
+      "teks": "Udah ganteng. Mau sisiran?",
+      "t_selesai": 33.5,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.5
+    },
+    {
+      "baris": 12,
+      "teks": "Mau. Sisir dulu rambutnya.",
+      "t_selesai": 40.6,
+      "kategori": "memotong",
+      "jeda_s": 1.4
+    }
+  ],
+  "perluasan": 1,
+  "giliran": 2,
+  "vokalisasi_anak": 2,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

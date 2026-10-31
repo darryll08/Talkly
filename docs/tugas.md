@@ -51,9 +51,9 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 
 ### 4.6–4.8
 - [x] A6.1 Audio terapis: tautan 5 menit, log_dengar +1, izin dengar mati 403.
-- [ ] A7.1 Naskah dan kunci (N01, N02 jam 4–6; sisanya jam 12–16)
-- [ ] A7.2 Skrip akurasi · I3
-- [ ] A7.3 Regresi dan rencana · I3
+- [ ] A7.1 Naskah N01–N15 dan kunci dibuat (`uji/naskah.ts`, `docs/naskah-rekaman.md`, `data/uji/kunci/`), simulasi transkrip sempurna 100% sesuai kunci. Menunggu rekaman tim dan jeda manual Audacity.
+- [ ] A7.2 `npm run uji:akurasi` dan `uji/ambil-rekaman.ts` siap; hasil menunggu rekaman.
+- [x] A7.3 Regresi 10/10 dan 50 draf rencana acak GPT-6 Luna: 50/50 bebas kata terlarang, 50/50 dari bank, 0 cadangan (31 Okt).
 - [ ] A8.1 Penutupan (README lengkap, repo publik, tag `submission-24h`, Devpost)
 - [ ] A8.2 Kontribusi Darryl di README
 

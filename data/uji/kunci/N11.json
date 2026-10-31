@@ -1,0 +1,133 @@
+{
+  "id": "N11",
+  "durasi_s": 41.6,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Raka mau bebek?",
+      "t_selesai": 2.1,
+      "kategori": "anak_merespons",
+      "jeda_s": 0.7
+    },
+    {
+      "baris": 3,
+      "teks": "Mau. Nih bebeknya.",
+      "t_selesai": 5,
+      "kategori": "memotong",
+      "jeda_s": 1.4
+    },
+    {
+      "baris": 4,
+      "teks": "Bebeknya bunyinya?",
+      "t_selesai": 7.1,
+      "kategori": "anak_merespons",
+      "jeda_s": 0.8
+    },
+    {
+      "baris": 6,
+      "teks": "Kwek kwek! Pinter.",
+      "t_selesai": 10.1,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 7,
+      "teks": "Lagi?",
+      "t_selesai": 12.1,
+      "kategori": "anak_merespons",
+      "jeda_s": 0.6
+    },
+    {
+      "baris": 9,
+      "teks": "Kwek kwek lagi.",
+      "t_selesai": 14.9,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 10,
+      "teks": "Bebeknya bobok ya. Ssst.",
+      "t_selesai": 17.9,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 11,
+      "teks": "Udah bobok?",
+      "t_selesai": 20.1,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 11,
+      "teks": "Mau bangunin?",
+      "t_selesai": 21,
+      "kategori": "anak_merespons",
+      "jeda_s": 0.9
+    },
+    {
+      "baris": 13,
+      "teks": "Bangun, bebek! Pagi pagi.",
+      "t_selesai": 24.4,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 14,
+      "teks": "Yuk kita taruh di kotak.",
+      "t_selesai": 27.8,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 15,
+      "teks": "Kotaknya buka?",
+      "t_selesai": 29.7,
+      "kategori": "anak_merespons",
+      "jeda_s": 0.7
+    },
+    {
+      "baris": 17,
+      "teks": "Buka. Masukin bebeknya.",
+      "t_selesai": 32.6,
+      "kategori": "memotong",
+      "jeda_s": 1.4
+    },
+    {
+      "baris": 18,
+      "teks": "Tutup lagi?",
+      "t_selesai": 34.6,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 18,
+      "teks": "Klik.",
+      "t_selesai": 35.1,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    }
+  ],
+  "perluasan": 0,
+  "giliran": 5,
+  "vokalisasi_anak": 5,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

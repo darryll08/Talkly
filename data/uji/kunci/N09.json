@@ -1,0 +1,101 @@
+{
+  "id": "N09",
+  "durasi_s": 49.4,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Mobilnya siap?",
+      "t_selesai": 1.6,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 1,
+      "teks": "Siap siap?",
+      "t_selesai": 2.5,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.2
+    },
+    {
+      "baris": 3,
+      "teks": "Siap! Jalan!",
+      "t_selesai": 8.5,
+      "kategori": "memotong",
+      "jeda_s": 1.5
+    },
+    {
+      "baris": 4,
+      "teks": "Mobilnya mau lagi?",
+      "t_selesai": 11.1,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.4
+    },
+    {
+      "baris": 6,
+      "teks": "Lagi. Ngeeng.",
+      "t_selesai": 17.4,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 7,
+      "teks": "Sekarang yang merah atau yang biru?",
+      "t_selesai": 21,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.5
+    },
+    {
+      "baris": 9,
+      "teks": "Yang merah ya. Merah jalan.",
+      "t_selesai": 28.5,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 10,
+      "teks": "Kok berhenti?",
+      "t_selesai": 30.4,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    },
+    {
+      "baris": 10,
+      "teks": "Mau dorong?",
+      "t_selesai": 31.3,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.3
+    },
+    {
+      "baris": 12,
+      "teks": "Mau dorong. Dorong yang kuat.",
+      "t_selesai": 38.5,
+      "kategori": "memotong",
+      "jeda_s": 1.4
+    },
+    {
+      "baris": 13,
+      "teks": "Wah nabrak bantal. Gimana dong?",
+      "t_selesai": 41.8,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.4
+    }
+  ],
+  "perluasan": 0,
+  "giliran": 5,
+  "vokalisasi_anak": 5,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

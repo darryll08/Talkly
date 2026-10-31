@@ -1,0 +1,69 @@
+{
+  "id": "N12",
+  "durasi_s": 46,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Raka, ini apa?",
+      "t_selesai": 2.1,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.4
+    },
+    {
+      "baris": 3,
+      "teks": "Bebek. Bebek kuning. Bebeknya mau ke mana?",
+      "t_selesai": 10.6,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.5
+    },
+    {
+      "baris": 6,
+      "teks": "Mandi. Mandi di ember. Embernya penuh nggak?",
+      "t_selesai": 19.2,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.4
+    },
+    {
+      "baris": 9,
+      "teks": "Penuh ya. Ember penuh air.",
+      "t_selesai": 26.5,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 10,
+      "teks": "Terus bebeknya?",
+      "t_selesai": 28.4,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.6
+    },
+    {
+      "baris": 12,
+      "teks": "Lagi. Bebek mandi lagi. Udah ah, nanti kedinginan.",
+      "t_selesai": 37.5,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 14,
+      "teks": "Handuknya mana ya?",
+      "t_selesai": 39.7,
+      "kategori": "memotong",
+      "jeda_s": 0.1
+    }
+  ],
+  "perluasan": 3,
+  "giliran": 4,
+  "vokalisasi_anak": 4,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

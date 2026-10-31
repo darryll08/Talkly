@@ -1,0 +1,93 @@
+{
+  "id": "N10",
+  "durasi_s": 50.1,
+  "harap_ditolak": null,
+  "ajakan": [
+    {
+      "baris": 1,
+      "teks": "Bebeknya mau...",
+      "t_selesai": 1.8,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.6
+    },
+    {
+      "baris": 3,
+      "teks": "Mandi. Bebeknya mandi. Sekarang kita buka...",
+      "t_selesai": 10.2,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 4.4
+    },
+    {
+      "baris": 5,
+      "teks": "Buka kerannya. Cuuur.",
+      "t_selesai": 15.8,
+      "kategori": "memotong",
+      "jeda_s": 1.4
+    },
+    {
+      "baris": 6,
+      "teks": "Airnya penuh. Bebek masuk...",
+      "t_selesai": 18.7,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.5
+    },
+    {
+      "baris": 8,
+      "teks": "Masuk. Plung.",
+      "t_selesai": 25,
+      "kategori": "memotong",
+      "jeda_s": 1.6
+    },
+    {
+      "baris": 9,
+      "teks": "Satu, dua...",
+      "t_selesai": 27.3,
+      "kategori": "menunggu_cukup",
+      "jeda_s": 4.3
+    },
+    {
+      "baris": 10,
+      "teks": "Tiga! Byur.",
+      "t_selesai": 32.4,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    },
+    {
+      "baris": 11,
+      "teks": "Raka basah. Bebek juga basah.",
+      "t_selesai": 35.5,
+      "kategori": "memotong",
+      "jeda_s": 1.3
+    },
+    {
+      "baris": 12,
+      "teks": "Sekarang sabunnya. Sabun, gosok...",
+      "t_selesai": 38.3,
+      "kategori": "anak_merespons",
+      "jeda_s": 4.4
+    },
+    {
+      "baris": 14,
+      "teks": "Gosok. Gosok perutnya.",
+      "t_selesai": 44.8,
+      "kategori": "memotong",
+      "jeda_s": 1.2
+    }
+  ],
+  "perluasan": 1,
+  "giliran": 3,
+  "vokalisasi_anak": 3,
+  "suruhan_beruntun": 0,
+  "jeda_manual_s": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}
