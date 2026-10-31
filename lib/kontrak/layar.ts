@@ -34,6 +34,8 @@ export const LAYAR = {
   D4: { pemilik: "C" },
   D5: { pemilik: "C" }, // Setelah sesi (v19; v20 menyebutnya D6)
   D6: { pemilik: "C" }, // Pesan keluarga (v19; v20 menyebutnya D5)
+  "Masuk admin": { pemilik: "B", hanya_tulis: "Masuk sebelum ada sesi" },
+  A1: { pemilik: "B" }, // Admin: klinik dan akun terapis
 } as const satisfies Record<string, { pemilik: "B" | "C"; hanya_tulis?: string }>;
 
 export type KodeLayar = keyof typeof LAYAR;

@@ -8,6 +8,7 @@ import * as g from "@/lib/gaya";
 import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { lupakanSaya } from "@/lib/perangkat/saya";
+import { tandaiMasukContoh } from "@/lib/perangkat/sesi-contoh";
 import { Inisial } from "@/components/inisial";
 import { KepalaHalaman } from "@/components/kepala-halaman";
 
@@ -76,6 +77,7 @@ export function Gabung() {
       try {
         sessionStorage.setItem(KUNCI_KODE_MASUK, r.kode_masuk);
       } catch {}
+      tandaiMasukContoh("anggota");
       lupakanSaya();
       router.replace("/mulai");
     } catch (err) {

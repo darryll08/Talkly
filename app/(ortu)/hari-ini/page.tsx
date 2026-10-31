@@ -6,6 +6,7 @@ import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { Memuat } from "@/components/memuat";
 import { Inisial } from "@/components/inisial";
+import { MenuAkun } from "@/components/menu-akun";
 import { Ikon, type NamaIkon } from "@/components/ikon";
 
 function salam(jam: number) {
@@ -39,10 +40,15 @@ export default function HariIni() {
   return (
     <div className="muncul space-y-5 pt-6">
       <header className="space-y-1">
-        <p className={g.labelAtas}>
-          {salam(new Date().getHours())}, {nama}
-        </p>
-        <h1 className={g.judulHalaman}>Latihan {data.anak.nama}</h1>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 space-y-1">
+            <p className={g.labelAtas}>
+              {salam(new Date().getHours())}, {nama}
+            </p>
+            <h1 className={g.judulHalaman}>Latihan {data.anak.nama}</h1>
+          </div>
+          <MenuAkun />
+        </div>
         {data.aktivitas.length > 0 ? (
           <div className="flex items-center gap-3 pt-2" role="group" aria-label={`${jumlahSelesai} dari ${data.aktivitas.length} aktivitas hari ini`}>
             <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-abu-muda">

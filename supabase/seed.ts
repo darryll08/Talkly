@@ -7,6 +7,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import aktivitas from "../data/aktivitas.json";
 import { BankAktivitas } from "../lib/kontrak/konten";
 import { EMAIL_TERAPIS_CONTOH, ID_CONTOH } from "../lib/server/data-contoh";
+import { pastikanAdminContoh } from "../lib/admin/akun";
 import { anakLain, hariSesiBesok, riwayatRaka } from "./seed-riwayat";
 
 const DEV = process.argv.includes("--dev");
@@ -149,6 +150,9 @@ async function utama() {
   // 5b. Riwayat tiga minggu Raka dan 24 anak lain (total 25 anak di D3).
   await riwayatRaka(db, nadiaId, (item ?? []).map((i) => i.id));
   await anakLain(db, nadiaId);
+
+  // 5c. Akun admin Talkly (A1), sandi sama dengan akun terapis contoh.
+  await pastikanAdminContoh(wajib("DEMO_TERAPIS_KATA_SANDI"));
 
   // 6. Data uji akses (hanya dev): terapis kedua dan Keluarga Uji B dengan anak Nara.
   if (DEV) {

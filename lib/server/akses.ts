@@ -16,10 +16,12 @@ export type AnggotaSesi = {
   izin_klip: boolean;
 };
 export type TerapisSesi = { id: string; klinik_id: string; nama: string };
+export type AdminSesi = { id: string; email: string; nama: string };
 
 export type Saya =
   | { jenis: "anggota"; anggota: AnggotaSesi }
   | { jenis: "terapis"; terapis: TerapisSesi }
+  | { jenis: "admin"; admin: AdminSesi }
   | { jenis: "cron" }
   | { jenis: "publik" };
 
@@ -29,6 +31,7 @@ type Handler<S extends Saya> = (req: Request, ctx: { saya: S; params: Record<str
 type SayaUntuk<P extends Akses> =
   | (P extends "anggota" | "pengelola" ? Extract<Saya, { jenis: "anggota" }> : never)
   | (P extends "terapis" ? Extract<Saya, { jenis: "terapis" }> : never)
+  | (P extends "admin" ? Extract<Saya, { jenis: "admin" }> : never)
   | (P extends "cron" ? Extract<Saya, { jenis: "cron" }> : never)
   | (P extends "publik" ? Saya : never);
 
@@ -53,6 +56,16 @@ async function muatTerapis(): Promise<TerapisSesi | null> {
   return (data as TerapisSesi | null) ?? null;
 }
 
+/** Admin = akun Supabase Auth dengan app_metadata.peran "admin" (tanpa tabel baru). */
+async function muatAdmin(): Promise<AdminSesi | null> {
+  const id = await bacaSesi("admin");
+  if (!id) return null;
+  const { data } = await db().auth.admin.getUserById(id);
+  const u = data?.user;
+  if (!u || u.app_metadata?.peran !== "admin") return null;
+  return { id: u.id, email: u.email ?? "", nama: (u.user_metadata?.nama as string | undefined) ?? "Admin Talkly" };
+}
+
 function cronSah(req: Request): boolean {
   const rahasia = process.env.CRON_SECRET;
   return !!rahasia && req.headers.get("authorization") === `Bearer ${rahasia}`;
@@ -75,6 +88,10 @@ export function denganAkses<const P extends Akses>(peran: readonly P[], handler:
     if (!saya && peran.includes("terapis" as P)) {
       const t = await muatTerapis();
       if (t) saya = { jenis: "terapis", terapis: t };
+    }
+    if (!saya && peran.includes("admin" as P)) {
+      const a = await muatAdmin();
+      if (a) saya = { jenis: "admin", admin: a };
     }
     if (!saya && peran.includes("publik" as P)) saya = { jenis: "publik" };
 

@@ -6,6 +6,7 @@ import { tandatangani, verifikasi } from "./tanda";
 export const COOKIE = {
   anggota: "talkly_anggota",
   terapis: "talkly_terapis",
+  admin: "talkly_admin",
 } as const;
 
 export type JenisSesi = keyof typeof COOKIE;

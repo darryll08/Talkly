@@ -1,6 +1,6 @@
 "use client";
 
-// useData(): memuat satu endpoint GET lewat panggil(). Mengarahkan ke halaman masuk saat 401.
+// useData(): memuat satu endpoint GET lewat panggil(). Saat 401, ke /keluar: cookie basi dihapus lalu ke halaman masuk.
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ type Req<E extends Endpoint> = E["request"] extends z.ZodType ? z.input<E["reque
 export function useData<E extends Endpoint>(
   endpoint: E,
   data?: Req<E>,
-  { masuk = "/gabung", aktif = true, simpanLokal }: { masuk?: string; aktif?: boolean; simpanLokal?: string } = {},
+  { masuk = "/keluar", aktif = true, simpanLokal }: { masuk?: string; aktif?: boolean; simpanLokal?: string } = {},
 ) {
   const router = useRouter();
   const [hasil, setHasil] = useState<{ data: Res<E> | null; galat: string | null; status: number | null; dariCache: boolean }>({

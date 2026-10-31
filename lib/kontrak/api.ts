@@ -6,7 +6,7 @@ import { Laporan } from "./laporan";
 // Parameter path (`:id`) ikut di skema request; panggil() memindahkannya ke URL, sisanya jadi query (GET/DELETE) atau body.
 // Kode layar mengikuti v19: D5 = Setelah sesi, D6 = Pesan keluarga.
 
-export type Akses = "publik" | "anggota" | "pengelola" | "terapis" | "cron";
+export type Akses = "publik" | "anggota" | "pengelola" | "terapis" | "admin" | "cron";
 export type Titik = "I0" | "I1" | "I2" | "I3";
 
 export type DefEndpoint = {
@@ -649,12 +649,86 @@ export const API = {
     titik: "I3",
   }),
 
+  // Admin (orang Talkly): mengelola klinik dan akun terapis. Terapis tidak mendaftar sendiri.
+  adminMasuk: ep({
+    metode: "POST",
+    path: "/api/admin/masuk",
+    akses: ["publik"],
+    request: z.object({ email: z.email(), kata_sandi: z.string().min(6).max(100) }),
+    galat: { 401: "Email atau kata sandi salah" },
+    layar: ["Masuk admin"],
+    titik: "I2",
+  }),
+  adminRingkasan: ep({
+    metode: "GET",
+    path: "/api/admin/ringkasan",
+    akses: ["admin"],
+    response: z.object({
+      admin: z.object({ nama: z.string(), email: z.string() }),
+      total: z.object({
+        klinik: z.number().int(),
+        terapis: z.number().int(),
+        anak: z.number().int(),
+        keluarga: z.number().int(),
+      }),
+      klinik: z.array(
+        z.object({
+          id: Id,
+          nama: z.string(),
+          data_contoh: z.boolean(),
+          terapis: z.number().int(),
+          anak: z.number().int(),
+        }),
+      ),
+      terapis: z.array(
+        z.object({
+          id: Id,
+          nama: z.string(),
+          email: z.string(),
+          klinik_id: Id,
+          klinik: z.string(),
+          anak: z.number().int(),
+          data_contoh: z.boolean(),
+          dibuat: Waktu,
+        }),
+      ),
+    }),
+    layar: ["A1"],
+    titik: "I2",
+  }),
+  adminTerapisBuat: ep({
+    metode: "POST",
+    path: "/api/admin/terapis",
+    akses: ["admin"],
+    request: z.object({
+      nama: z.string().trim().min(2).max(60),
+      email: z.email(),
+      kata_sandi: z.string().min(8).max(100),
+      /** Klinik yang sudah ada, atau isi klinik_baru untuk membuat klinik. */
+      klinik_id: Id.optional(),
+      klinik_baru: z.string().trim().min(2).max(80).optional(),
+    }),
+    response: z.object({ id: Id }),
+    galat: { 409: "Email sudah dipakai", 422: "Pilih klinik atau tulis nama klinik baru" },
+    layar: ["A1"],
+    titik: "I2",
+  }),
+  adminTerapisHapus: ep({
+    metode: "DELETE",
+    path: "/api/admin/terapis/:id",
+    akses: ["admin"],
+    request: z.object({ id: Id }),
+    galat: { 404: "Terapis tidak ditemukan", 409: "Akun data contoh tidak bisa dihapus" },
+    layar: ["A1"],
+    titik: "I2",
+  }),
+
   // Lainnya
   demo: ep({
     metode: "POST",
     path: "/api/demo",
     akses: ["publik"],
-    request: z.object({ sebagai: z.enum(["ibu_sari", "mbak_sri", "kak_nadia", "uji_b"]) }),
+    request: z.object({ sebagai: z.enum(["ibu_sari", "mbak_sri", "ibu_alya", "kak_nadia", "admin", "uji_b"]) }),
     galat: { 404: "Mode demo tidak aktif" },
     layar: ["Beranda"],
     titik: "I1",

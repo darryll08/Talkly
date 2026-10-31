@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import type { z } from "zod";
 import * as g from "@/lib/gaya";
 import { API, type Peran } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { useData } from "@/lib/perangkat/use-data";
-import { useSaya, lupakanSaya } from "@/lib/perangkat/saya";
+import { useSaya } from "@/lib/perangkat/saya";
+import { keluarSekarang } from "@/lib/perangkat/sesi-contoh";
 import { Memuat } from "@/components/memuat";
 import { Inisial } from "@/components/inisial";
 import { IzinRekaman } from "@/components/izin-rekaman";
@@ -256,7 +256,6 @@ function UndangPengasuh({ anakId }: { anakId: string }) {
 }
 
 function Akun({ nama }: { nama: string }) {
-  const router = useRouter();
   const [hapus, setHapus] = useState(false);
   const [proses, setProses] = useState(false);
   const [galat, setGalat] = useState<string | null>(null);
@@ -267,8 +266,7 @@ function Akun({ nama }: { nama: string }) {
     setGalat(null);
     try {
       await panggil(API.keluar);
-      lupakanSaya();
-      router.replace("/");
+      keluarSekarang();
     } catch (e) {
       setGalat(pesanDari(e));
       setProses(false);
@@ -281,8 +279,7 @@ function Akun({ nama }: { nama: string }) {
     setGalat(null);
     try {
       await panggil(API.anggotaHapus, { id: saya.anggota.id });
-      lupakanSaya();
-      router.replace("/");
+      keluarSekarang();
     } catch (e) {
       setGalat(pesanDari(e));
       setProses(false);
