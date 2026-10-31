@@ -94,7 +94,7 @@ async function proses(r: BarisRekaman) {
         durasi_s: durasi,
         kata_perekam: 0,
       }
-    : periksaMutu({ durasi_s: durasi, terputus: meta.terputus, ucapan, perekam: peran.perekam, peristiwa: transkrip!.peristiwa });
+    : periksaMutu({ durasi_s: durasi, terputus: meta.terputus, ucapan, perekam: peran.perekam, peristiwa: transkrip!.peristiwa, jejak: meta.jejak });
 
   const stt: HasilRekaman["stt"] = {
     penyedia: sttGagal ? "tidak_ada" : transkrip!.penyedia,

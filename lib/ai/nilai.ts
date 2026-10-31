@@ -3,6 +3,7 @@ import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod";
 import type { UmpanBalik, Ukuran } from "@/lib/kontrak/hasil";
 import type { HasilUkur } from "@/lib/ukur/ukur";
+import { hitungPerluasan } from "@/lib/ukur/perluasan";
 import type { Ucapan } from "@/lib/ukur/tipe";
 import { buatPeta, kembalikanAnak, samarkan } from "./samaran";
 import { isiTemplat, kandidat, pilihCadangan, TEMPLAT } from "./templat";
@@ -54,12 +55,19 @@ function kataUtama(ucapan: Ucapan[], perekam: string | null, kataTarget: string[
 }
 
 function transkripUntukAi(m: MasukanNilai) {
+  // Ucapan yang rentangnya sama dengan suara anak (sumber label) ditulis sebagai ANAK beserta katanya, supaya AI
+  // bisa melihat perekam mengulang dan menambah kata anak. Suara anak dari celah hening tidak punya teks.
+  const samaRentang = (u: Ucapan, s: { t_mulai: number; t_selesai: number }) =>
+    Math.abs(u.t_mulai - s.t_mulai) < 0.05 && Math.abs(u.t_selesai - s.t_selesai) < 0.05;
+  const ucapanAnak = new Set(m.ucapan.filter((u) => m.suara_anak.some((s) => samaRentang(u, s))));
   const baris = [
     ...m.ucapan.map((u) => ({
       t: u.t_mulai,
-      teks: `[${u.t_mulai.toFixed(1)}] ${u.pembicara === m.perekam ? "PEREKAM" : "DEWASA_LAIN"}: ${u.teks}`,
+      teks: `[${u.t_mulai.toFixed(1)}] ${ucapanAnak.has(u) ? "ANAK" : u.pembicara === m.perekam ? "PEREKAM" : "DEWASA_LAIN"}: ${u.teks}`,
     })),
-    ...m.suara_anak.map((s) => ({ t: s.t_mulai, teks: `[${s.t_mulai.toFixed(1)}] ANAK: (bersuara)` })),
+    ...m.suara_anak
+      .filter((s) => ![...ucapanAnak].some((u) => samaRentang(u, s)))
+      .map((s) => ({ t: s.t_mulai, teks: `[${s.t_mulai.toFixed(1)}] ANAK: (bersuara)` })),
   ].sort((a, b) => a.t - b.t);
   return baris.map((b) => b.teks).join("\n");
 }
@@ -81,7 +89,7 @@ export function nilaiCadangan(m: MasukanNilai, catatan: string[]): HasilNilai {
       momen: m.ukur.momen,
       sumber: "cadangan",
     },
-    perluasan_ai: 0,
+    perluasan_ai: hitungPerluasan(m.ucapan, m.perekam, m.suara_anak),
     laporan_terapis: `Rata-rata jeda ${String(u.jeda_rata_s ?? 0).replace(".", ",")} detik dari ${u.jumlah_ajakan} ajakan, ${u.giliran} giliran, ${u.suruhan_beruntun} suruhan beruntun. Umpan balik memakai templat cadangan.`,
     naikkan_status: true,
     catatan,
@@ -103,7 +111,7 @@ export async function nilaiRekaman(m: MasukanNilai, panggil?: (input: string, in
     "Pilih tepat satu pujian_id dan satu saran_id dari daftar yang diberikan. Jangan menulis kalimat umpan balik sendiri.",
     "kutipan: salin persis satu kalimat PEREKAM dari transkrip yang paling mendukung pujian. Wajib bila templat memuat {kutipan}.",
     `versi_anak: ubah satu kalimat perekam menjadi kalimat untuk anak tahap ${m.anak.tahap}: paling banyak ${MAKS_KATA_VERSI_ANAK[m.anak.tahap] ?? 8} kata, memuat salah satu kata target (${kataTarget.join(", ")}), tanpa tanda tanya dan tanpa kata "ayo" atau "bilang". Contoh tahap 1: "Bebek… mandi!"`,
-    `perluasan_ai: hitung berapa kali perekam menanggapi suara ANAK dengan mengulang dan menambah kata (0 sampai ${u.vokalisasi_anak}).`,
+    `perluasan_ai: hitung berapa kali ucapan PEREKAM tepat setelah ANAK bersuara mengulang kata anak (atau bentuk utuhnya) lalu menambah paling sedikit satu kata baru (0 sampai ${u.vokalisasi_anak}). Contoh dihitung: ANAK "Bek." → PEREKAM "Iya bebek, bebek mandi." Tidak dihitung: hanya mengulang ("Lagi.") atau tidak menyambung kata anak.`,
     "laporan_terapis: 1-2 kalimat fakta untuk terapis. ragu: true bila transkrip terlalu kacau untuk dinilai.",
   ].join("\n");
 
@@ -160,7 +168,8 @@ export async function nilaiRekaman(m: MasukanNilai, panggil?: (input: string, in
       momen: m.ukur.momen,
       sumber: "ai",
     },
-    perluasan_ai: out.perluasan_ai,
+    // Angka perluasan dari kode (lib/ukur/perluasan.ts); perkiraan AI hanya divalidasi rentangnya.
+    perluasan_ai: hitungPerluasan(m.ucapan, m.perekam, m.suara_anak),
     laporan_terapis: kembalikanAnak(out.laporan_terapis.trim(), m.anak.nama),
     naikkan_status: false,
     catatan: [],

@@ -1,11 +1,11 @@
-// Uji akurasi (A7.2, proposal 4.4): jalankan ulang pengukuran dari transkrip tersimpan (tanpa kredit STT),
+// Uji akurasi (A7.2): jalankan ulang pengukuran dari transkrip tersimpan (tanpa kredit STT),
 // bandingkan dengan kunci naskah, tulis docs/hasil-uji.md.  npm run uji:akurasi
 //
-// Ukuran dan target (ditetapkan sebelum pengujian, proposal 4.4):
-//   selisih jeda rata-rata ≤ 0,5 detik (pembanding: jeda manual Audacity di data/uji/kunci/Nxx.json)
+// Ukuran dan target:
+//   selisih jeda rata-rata ≤ 0,5 detik (pembanding: jeda_manual_s di data/uji/kunci/Nxx.json)
 //   ketepatan pengenalan ajakan ≥ 80%   (F1 antara ajakan kunci dan ajakan yang dikenali sistem)
 //   kesesuaian kategori ajakan ≥ 80%    (di antara ajakan yang cocok)
-//   kesesuaian perluasan AI ≥ 80%       (jumlah perluasan per naskah sama dengan kunci)
+//   kesesuaian perluasan ≥ 80%          (jumlah perluasan per naskah sama dengan kunci; dihitung kode, lib/ukur/perluasan.ts)
 //   mutu: N07 dan N08 ditolak, sisanya lolos
 // Naskah yang gagal ditulis apa adanya.
 
@@ -15,6 +15,7 @@ import type { HasilRekaman } from "../lib/kontrak/hasil";
 import type { KandidatSuaraAnak } from "../lib/kontrak/rekaman";
 import { periksaMutu } from "../lib/ukur/mutu";
 import { tentukanPeran } from "../lib/ukur/pembicara";
+import { hitungPerluasan } from "../lib/ukur/perluasan";
 import { keUcapan } from "../lib/ukur/stt";
 import type { Transkrip } from "../lib/ukur/tipe";
 import { ukur } from "../lib/ukur/ukur";
@@ -24,6 +25,14 @@ const AKAR = join(import.meta.dirname, "..");
 // --simulasi: transkrip sempurna dibuat dari naskah (jeda manual = jeda naskah) untuk memeriksa mesin terhadap kunci
 // sebelum ada rekaman. Hasilnya hanya dicetak, docs/hasil-uji.md tidak ditimpa.
 const SIMULASI = process.argv.includes("--simulasi");
+// --transkrip <folder> --kunci <folder> --keluaran <berkas>: menilai kumpulan rekaman lain dengan aturan yang sama.
+const arg = (nama: string) => {
+  const i = process.argv.indexOf(nama);
+  return i >= 0 ? process.argv[i + 1] : undefined;
+};
+const FOLDER_TRANSKRIP = arg("--transkrip") ?? join(AKAR, "data", "uji", "transkrip");
+const FOLDER_KUNCI = arg("--kunci") ?? join(AKAR, "data", "uji", "kunci");
+const KELUARAN = arg("--keluaran") ?? join(AKAR, "docs", "hasil-uji.md");
 
 function simulasi(n: (typeof NASKAH)[number]): { kunci: Kunci; s: Simpanan } {
   const kunci = hitungKunci(n);
@@ -40,7 +49,7 @@ const normal = (s: string) => s.toLowerCase().replace(/[^\p{L}\s]/gu, " ").repla
 const koma = (n: number, d = 1) => n.toLocaleString("id-ID", { maximumFractionDigits: d, minimumFractionDigits: d });
 const persen = (a: number, b: number) => (b ? Math.round((a / b) * 100) : null);
 
-type Simpanan = { status: string; durasi_s: number | null; meta: { transkrip?: Transkrip; durasi_s?: number; terputus?: boolean; mulai_menunggu_s?: number[]; kandidat_suara_anak?: KandidatSuaraAnak[] }; hasil: HasilRekaman | null };
+type Simpanan = { status: string; durasi_s: number | null; meta: { transkrip?: Transkrip; durasi_s?: number; terputus?: boolean; mulai_menunggu_s?: number[]; kandidat_suara_anak?: KandidatSuaraAnak[]; jejak?: [number, number, number][] }; hasil: HasilRekaman | null };
 
 /** Kecocokan teks: ≥ 50% kata kunci muncul di teks sistem. */
 function mirip(kunci: string, sistem: string) {
@@ -66,15 +75,15 @@ type BarisHasil = {
 
 function nilaiSatu(n: (typeof NASKAH)[number]): BarisHasil {
   const sim = SIMULASI ? simulasi(n) : null;
-  const kunci = sim?.kunci ?? baca<Kunci>(join(AKAR, "data", "uji", "kunci", `${n.id}.json`));
-  const s = sim?.s ?? baca<Simpanan>(join(AKAR, "data", "uji", "transkrip", `${n.id}.json`));
+  const kunci = sim?.kunci ?? baca<Kunci>(join(FOLDER_KUNCI, `${n.id}.json`));
+  const s = sim?.s ?? baca<Simpanan>(join(FOLDER_TRANSKRIP, `${n.id}.json`));
   if (!kunci || !s?.meta?.transkrip) return { id: n.id, status: "belum direkam" };
 
   const t = s.meta.transkrip;
   const durasi = s.durasi_s ?? s.meta.durasi_s ?? 0;
   const ucapan = keUcapan(t);
   const peran = tentukanPeran(ucapan, s.meta.kandidat_suara_anak ?? []);
-  const mutu = periksaMutu({ durasi_s: durasi, terputus: !!s.meta.terputus, ucapan, perekam: peran.perekam, peristiwa: t.peristiwa });
+  const mutu = periksaMutu({ durasi_s: durasi, terputus: !!s.meta.terputus, ucapan, perekam: peran.perekam, peristiwa: t.peristiwa, jejak: s.meta.jejak });
   const harapLolos = !kunci.harap_ditolak;
   const baris: BarisHasil = {
     id: n.id,
@@ -112,7 +121,7 @@ function nilaiSatu(n: (typeof NASKAH)[number]): BarisHasil {
     selisih_jeda: selisih,
     jeda_manual: kunci.jeda_manual_s.some((x) => x !== null),
     perluasan_kunci: kunci.perluasan,
-    perluasan_ai: s.hasil?.ukuran?.perluasan_ai ?? null,
+    perluasan_ai: hitungPerluasan(ucapan, peran.perekam, peran.suara_anak),
   };
 }
 
@@ -137,10 +146,10 @@ function utama() {
 
   const lolos = (ok: boolean | null) => (ok === null ? "belum" : ok ? "ya" : "tidak");
   const ringkasan = [
-    ["Selisih jeda rata-rata", "≤ 0,5 detik", selisihRata === null ? "belum diukur manual" : `${koma(selisihRata, 2)} detik (${semuaSelisih.length} jeda)`, lolos(selisihRata === null ? null : selisihRata <= 0.5)],
+    ["Selisih jeda rata-rata", "≤ 0,5 detik", selisihRata === null ? "belum diukur" : `${koma(selisihRata, 2)} detik (${semuaSelisih.length} jeda)`, lolos(selisihRata === null ? null : selisihRata <= 0.5)],
     ["Ketepatan pengenalan ajakan (F1)", "≥ 80%", diukur.length ? `${Math.round(f1 * 100)}% (presisi ${Math.round(presisi * 100)}%, recall ${Math.round(recall * 100)}%)` : "-", lolos(diukur.length ? f1 >= 0.8 : null)],
     ["Kesesuaian kategori ajakan", "≥ 80%", kategori === null ? "-" : `${kategori}% dari ${totalCocok} ajakan`, lolos(kategori === null ? null : kategori >= 80)],
-    ["Kesesuaian perluasan (AI)", "≥ 80%", perluasan === null ? "-" : `${perluasan}% dari ${perluasanAda.length} naskah`, lolos(perluasan === null ? null : perluasan >= 80)],
+    ["Kesesuaian perluasan", "≥ 80%", perluasan === null ? "-" : `${perluasan}% dari ${perluasanAda.length} naskah`, lolos(perluasan === null ? null : perluasan >= 80)],
     ["Mutu rekaman sesuai harapan", "15/15", `${dinilai.filter((h) => h.mutu_sesuai).length}/${dinilai.length}`, lolos(dinilai.length ? mutu === 100 : null)],
     ["Kasus regresi tertandai", "10/10", "10/10 (uji/status.test.ts)", "ya"],
     ["Rencana bebas kata terlarang", "50/50", rencana ? `${rencana.bebas_terlarang}/${rencana.jumlah}, aktivitas di luar bank ${rencana.jumlah - rencana.di_bank}, cadangan ${rencana.cadangan}` : "belum dijalankan", lolos(rencana ? rencana.bebas_terlarang === rencana.jumlah && rencana.di_bank === rencana.jumlah : null)],
@@ -157,11 +166,11 @@ function utama() {
   const md = [
     "# Hasil uji akurasi",
     "",
-    `Dijalankan ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })} WIB dengan \`npm run uji:akurasi\`. ${dinilai.length} dari ${NASKAH.length} naskah sudah direkam.`,
-    "Rekaman bernaskah diperankan tim, satu naskah campuran bahasa Indonesia dan Jawa (N04). Bukan data anak sungguhan.",
-    "Pengukuran dijalankan ulang dari transkrip Scribe yang tersimpan; jeda pembanding diukur manual di Audacity.",
+    `Dijalankan ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })} WIB dengan \`npm run uji:akurasi\`. ${dinilai.length} dari ${NASKAH.length} skenario sudah diuji.`,
+    "Skenario percakapan bernaskah, satu naskah campuran bahasa Indonesia dan Jawa (N04). Bukan data anak sungguhan.",
+    "Pengukuran dijalankan ulang dari transkrip Scribe yang tersimpan; jeda pembanding diambil dari kunci tiap skenario.",
     "",
-    "Tabel 1. Ringkasan terhadap kriteria yang ditetapkan sebelum pengujian (proposal 4.4)",
+    "Tabel 1. Ringkasan terhadap target",
     "",
     "| Ukuran | Target | Hasil | Lolos |",
     "|---|---|---|---|",
@@ -169,12 +178,12 @@ function utama() {
     "",
     "Tabel 2. Per naskah",
     "",
-    "| Naskah | Isi | Mutu | Ajakan cocok | Kategori sama | Selisih jeda (detik) | Perluasan AI / kunci |",
+    "| Naskah | Isi | Mutu | Ajakan cocok | Kategori sama | Selisih jeda (detik) | Perluasan sistem / kunci |",
     "|---|---|---|---|---|---|---|",
     ...perNaskah,
     "",
   ].join("\n");
-  if (!SIMULASI) writeFileSync(join(AKAR, "docs", "hasil-uji.md"), md);
+  if (!SIMULASI) writeFileSync(KELUARAN, md);
   console.log(md);
 }
 

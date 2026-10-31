@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { periksaMutu } from "../lib/ukur/mutu";
 import { tentukanPeran } from "../lib/ukur/pembicara";
+import { adalahPerluasan } from "../lib/ukur/perluasan";
 import { keUcapan } from "../lib/ukur/stt";
 import { ukur } from "../lib/ukur/ukur";
 import { pengisi, transkrip, type Baris } from "./data/bantu-transkrip";
@@ -175,8 +176,60 @@ test("mutu: TV atau musik ≥ 30% durasi ditolak", () => {
   assert.match(m.alasan!, /TV atau musik/);
 });
 
+// Ucapan dengan sela panjang di antaranya, dan jejak level: bicara -15 dBFS, sela sesuai parameter.
+const ucapanBersela = keUcapan(
+  transkrip([0, 1, 2, 3, 4].map((i) => ["ibu", 2 + i * 10, 5 + i * 10, "bebek mandi yuk sini ya"] as [string, number, number, string])),
+);
+const jejakDengan = (selaDb: number): [number, number, number][] =>
+  Array.from({ length: 1200 }, (_, i) => {
+    const t = (i + 1) * 0.05;
+    return [t, ucapanBersela.some((u) => t >= u.t_mulai && t <= u.t_selesai) ? -15 : selaDb, 0];
+  });
+
+test("mutu: TV keras yang tidak ditandai STT ditolak dari jejak level ponsel", () => {
+  const m = periksaMutu({ durasi_s: 60, terputus: false, ucapan: ucapanBersela, perekam: "ibu", peristiwa: [], jejak: jejakDengan(-19) });
+  assert.equal(m.lolos, false);
+  assert.match(m.alasan!, /TV atau musik/);
+});
+
+test("mutu: ruangan tenang dengan jejak level tetap lolos", () => {
+  const m = periksaMutu({ durasi_s: 60, terputus: false, ucapan: ucapanBersela, perekam: "ibu", peristiwa: [], jejak: jejakDengan(-40) });
+  assert.equal(m.lolos, true);
+});
+
 test("mutu: rekaman cukup lolos", () => {
   const m = periksaMutu({ durasi_s: 60, terputus: false, ucapan: ucapanCukup, perekam: "ibu", peristiwa: [] });
   assert.equal(m.lolos, true);
   assert.equal(m.alasan, null);
+});
+
+// --- perluasan --------------------------------------------------------------
+
+test("perluasan: ulang kata anak lalu pakai lagi dalam frasa lebih panjang", () => {
+  assert.equal(adalahPerluasan("bek", "Bebek. Bebek kuning."), true);
+  assert.equal(adalahPerluasan("Bek.", "Iya bebek, bebek mandi. Bebek kan mau berenang."), true);
+  assert.equal(adalahPerluasan("mam", "Iyo mamam, mamam sego. Sego karo endok."), true);
+  assert.equal(adalahPerluasan("andi", "Mandi. Mandi di ember."), true);
+});
+
+test("perluasan: hanya mengulang atau kalimat sesudahnya tanpa kata anak tidak dihitung", () => {
+  assert.equal(adalahPerluasan("agi", "Lagi."), false);
+  assert.equal(adalahPerluasan("au", "Mau. Nih bebeknya."), false);
+  assert.equal(adalahPerluasan("uka", "Buka. Wis kebuka. Ngombe."), false);
+  assert.equal(adalahPerluasan("eh", "Penuh ya. Ember penuh air."), false);
+});
+
+test("pembicara: satu ucapan panjang yang salah label tidak membuat anak jadi dewasa (median)", () => {
+  const u = keUcapan(
+    transkrip([
+      ["ibu", 1, 3, "ini bebek mandi ya"],
+      ["anak", 4, 4.4, "andi"],
+      ["ibu", 5, 7, "mandi bebeknya mandi"],
+      ["anak", 9, 9.4, "uk"],
+      ["ibu", 10, 12, "masuk plung ya"],
+      ["anak", 14, 17, "udah wangi sebentar lagi selesai ya tinggal bilas"],
+      ["ibu", 18, 20, "gosok perutnya ya"],
+    ]),
+  );
+  assert.deepEqual(tentukanPeran(u).anak, ["anak"]);
 });

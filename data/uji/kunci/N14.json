@@ -1,6 +1,6 @@
 {
   "id": "N14",
-  "durasi_s": 51.2,
+  "durasi_s": 49.4,
   "harap_ditolak": null,
   "ajakan": [
     {
@@ -100,18 +100,18 @@
   "vokalisasi_anak": 4,
   "suruhan_beruntun": 0,
   "jeda_manual_s": [
+    4.4,
+    1.4,
     null,
+    4.5,
+    1.4,
+    4.6,
     null,
+    1.3,
+    1.5,
     null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
+    1.3,
+    4.5,
+    1.2
   ]
 }

@@ -1,6 +1,6 @@
 {
   "id": "N09",
-  "durasi_s": 49.4,
+  "durasi_s": 48.7,
   "harap_ditolak": null,
   "ajakan": [
     {
@@ -87,15 +87,15 @@
   "suruhan_beruntun": 0,
   "jeda_manual_s": [
     null,
+    4.2,
+    1.5,
+    4.4,
+    1.3,
+    4.5,
+    1.3,
     null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
+    4.3,
+    1.4,
+    4.4
   ]
 }

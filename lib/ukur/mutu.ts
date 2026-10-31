@@ -7,6 +7,28 @@ import type { PeristiwaAudio, Ucapan } from "./tipe";
 export const DURASI_MIN_S = 40;
 export const KATA_PEREKAM_MIN = 15;
 export const PORSI_BISING_MAKS = 0.3;
+// Cadangan bila Scribe tidak menandai musik yang menumpuk dengan suara bicara: dari jejak level ponsel,
+// sela tanpa kata yang hampir sekeras bicara berarti ada TV/musik di latar.
+export const SELA_BISING_DBFS = -24;
+export const SELA_BISING_SELISIH_DB = -8;
+const SELA_MIN_S = 5;
+const LANGKAH_JEJAK_S = 0.05;
+
+const median = (a: number[]) => [...a].sort((x, y) => x - y)[Math.floor(a.length / 2)];
+
+/** Level median di sela tanpa kata dan saat bicara, dari jejak [detik, dBFS, f0]. null bila sela terlalu sedikit. */
+export function levelSela(ucapan: Ucapan[], jejak: [number, number, number][]) {
+  const kata = ucapan.flatMap((u) => u.kata);
+  const bicara = (t: number) => kata.some((k) => t >= k.t_mulai - 0.15 && t <= k.t_selesai + 0.15);
+  const sela: number[] = [];
+  const ucap: number[] = [];
+  for (const [t, db] of jejak) {
+    if (t < 0.5) continue;
+    (bicara(t) ? ucap : sela).push(db);
+  }
+  if (sela.length * LANGKAH_JEJAK_S < SELA_MIN_S || ucap.length === 0) return null;
+  return { sela_dbfs: median(sela), ucap_dbfs: median(ucap) };
+}
 
 export function periksaMutu(input: {
   durasi_s: number;
@@ -14,6 +36,7 @@ export function periksaMutu(input: {
   ucapan: Ucapan[];
   perekam: string | null;
   peristiwa: PeristiwaAudio[];
+  jejak?: [number, number, number][];
 }): Mutu {
   const kataPerekam = input.ucapan.filter((u) => u.pembicara === input.perekam).reduce((n, u) => n + u.kata.length, 0);
   const dasar = { durasi_s: Math.round(input.durasi_s * 10) / 10, kata_perekam: kataPerekam };
@@ -35,7 +58,9 @@ export function periksaMutu(input: {
   const bising = input.peristiwa
     .filter((p) => p.jenis === "musik" || p.jenis === "tv")
     .reduce((n, p) => n + Math.max(0, p.t_selesai - p.t_mulai), 0);
-  if (bising / input.durasi_s >= PORSI_BISING_MAKS) {
+  const lv = input.jejak?.length ? levelSela(input.ucapan, input.jejak) : null;
+  const latarKeras = !!lv && lv.sela_dbfs >= SELA_BISING_DBFS && lv.sela_dbfs - lv.ucap_dbfs >= SELA_BISING_SELISIH_DB;
+  if (bising / input.durasi_s >= PORSI_BISING_MAKS || latarKeras) {
     return {
       ...dasar,
       lolos: false,

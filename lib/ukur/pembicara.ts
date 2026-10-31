@@ -16,11 +16,12 @@ export type Peran = {
 };
 
 export function tentukanPeran(ucapan: Ucapan[], kandidat: KandidatSuaraAnak[] = []): Peran {
-  const per = new Map<string, { ucapan: number; kata: number }>();
+  const per = new Map<string, { ucapan: number; kata: number; panjang: number[] }>();
   for (const u of ucapan) {
-    const s = per.get(u.pembicara) ?? { ucapan: 0, kata: 0 };
+    const s = per.get(u.pembicara) ?? { ucapan: 0, kata: 0, panjang: [] };
     s.ucapan += 1;
     s.kata += u.kata.length;
+    s.panjang.push(u.kata.length);
     per.set(u.pembicara, s);
   }
   const urut = [...per.entries()].sort((a, b) => b[1].ucapan - a[1].ucapan || b[1].kata - a[1].kata);
@@ -28,7 +29,12 @@ export function tentukanPeran(ucapan: Ucapan[], kandidat: KandidatSuaraAnak[] = 
 
   const anak: string[] = [];
   const dewasa: string[] = [];
-  for (const [p, s] of urut.slice(1)) (s.kata / s.ucapan <= KATA_PER_UCAPAN_ANAK ? anak : dewasa).push(p);
+  // Median, bukan rata-rata: satu ucapan perekam yang salah dilabeli STT tidak mengubah anak menjadi dewasa.
+  const median = (a: number[]) => {
+    const s = [...a].sort((x, y) => x - y);
+    return s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2;
+  };
+  for (const [p, s] of urut.slice(1)) (median(s.panjang) <= KATA_PER_UCAPAN_ANAK ? anak : dewasa).push(p);
 
   if (anak.length > 0) {
     const suara = ucapan.filter((u) => anak.includes(u.pembicara)).map(({ t_mulai, t_selesai }) => ({ t_mulai, t_selesai }));

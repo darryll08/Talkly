@@ -1,6 +1,6 @@
 {
   "id": "N08",
-  "durasi_s": 21.6,
+  "durasi_s": 21.9,
   "harap_ditolak": "durasi",
   "ajakan": [
     {
@@ -37,9 +37,9 @@
   "vokalisasi_anak": 1,
   "suruhan_beruntun": 0,
   "jeda_manual_s": [
-    null,
-    null,
-    null,
-    null
+    4.5,
+    1.2,
+    4.6,
+    1.2
   ]
 }
