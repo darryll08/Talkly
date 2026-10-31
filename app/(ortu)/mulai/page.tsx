@@ -8,6 +8,7 @@ import { IzinRekaman } from "@/components/izin-rekaman";
 import { PasangAplikasi } from "@/components/pasang-aplikasi";
 import { SakelarNotifikasi } from "@/components/sakelar-notifikasi";
 import { KUNCI_KODE_MASUK } from "../gabung/gabung";
+import { KepalaHijau } from "@/components/kepala-hijau";
 
 const JUDUL = ["Izin rekaman", "Pasang di layar utama", "Minggu pertama"];
 
@@ -35,20 +36,15 @@ export default function Mulai() {
   const terapis = saya?.anak.terapis.nama ?? "terapis";
 
   return (
-    <div className="space-y-6 pb-4 pt-8">
-      <div className="flex gap-2" role="img" aria-label={`Langkah ${langkah + 1} dari 3`}>
-        {JUDUL.map((j, i) => (
-          <div key={j} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${i <= langkah ? "bg-hijau" : "bg-abu-muda"}`} />
-        ))}
-      </div>
-
+    <div className="space-y-6 pb-4">
       <div key={langkah} className="muncul space-y-5">
-        <header className="space-y-1">
-          <p className={g.labelAtas}>
-            Langkah {langkah + 1} dari 3
-          </p>
-          <h1 className={g.judulHalaman}>{JUDUL[langkah]}</h1>
-        </header>
+        <KepalaHijau atas={`Langkah ${langkah + 1} dari 3`} judul={JUDUL[langkah]} rapat>
+          <div className="flex gap-2" role="img" aria-label={`Langkah ${langkah + 1} dari 3`}>
+            {JUDUL.map((j, i) => (
+              <div key={j} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${i <= langkah ? "bg-oranye" : "bg-hijau"}`} />
+            ))}
+          </div>
+        </KepalaHijau>
 
         {langkah === 0 ? (
           <>

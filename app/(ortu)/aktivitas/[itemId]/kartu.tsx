@@ -11,6 +11,7 @@ import { daftarKartuBenda, type KartuBenda } from "@/lib/perangkat/klip";
 import { useSaya } from "@/lib/perangkat/saya";
 import { Memuat } from "@/components/memuat";
 import { KepalaHalaman } from "@/components/kepala-halaman";
+import { KepalaHijau } from "@/components/kepala-hijau";
 import { Ikon } from "@/components/ikon";
 
 // O4 Kartu aktivitas: terbaca dalam sekitar 15 detik.
@@ -67,16 +68,12 @@ export function KartuAktivitas() {
 
   return (
     <div className="pb-4">
-      <KepalaHalaman />
       <div className="muncul space-y-4">
-        <header className="space-y-1">
-          <p className={g.labelAtas}>{data.rutinitas}</p>
-          <h1 className={g.judulHalaman}>{data.judul}</h1>
-        </header>
+        <KepalaHijau kembali="/hari-ini" atas={data.rutinitas} judul={data.judul} />
 
-        <section className="rounded-2xl bg-permukaan px-4 py-5 text-center shadow-kartu">
-          <p className="text-[13px] font-medium text-abu">Kata minggu ini</p>
-          <p className="mt-1 text-[32px] font-bold leading-tight text-hijau-tua">{data.kata_target.join(" · ")}</p>
+        <section className={`${g.tumpuk} text-center`}>
+          <p className="text-[13px] font-bold text-hijau">Kata minggu ini</p>
+          <p className="font-judul mt-1 text-[34px] font-extrabold leading-tight text-hijau-tua">{data.kata_target.join(" · ")}</p>
           {fotoBenda ? (
             // eslint-disable-next-line @next/next/no-img-element -- blob lokal dari IndexedDB
             <img
@@ -90,7 +87,7 @@ export function KartuAktivitas() {
         <ol className={g.daftar}>
           {data.langkah.map((l, i) => (
             <li key={i} className="flex gap-3 px-4 py-3.5">
-              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-hijau-muda text-sm font-bold text-hijau-tua">
+              <span className="font-judul inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-oranye text-[15px] font-extrabold text-white">
                 {i + 1}
               </span>
               <span className="text-[16px] leading-snug">{l}</span>
@@ -115,8 +112,14 @@ export function KartuAktivitas() {
 
         <div className="space-y-3 pt-2">
           {saya?.anggota.izin_nilai !== false ? (
-            <Link href={`/rekam?item=${encodeURIComponent(itemId)}`} className={g.tombolUtama}>
-              <Ikon nama="mikrofon" /> Rekam 1 Menit
+            <Link
+              href={`/rekam?item=${encodeURIComponent(itemId)}`}
+              className="tekan flex items-center gap-4 rounded-3xl bg-hijau-tua p-4 pr-5 text-white shadow-angkat"
+            >
+              <span className={g.tombolRekam.replace("tekan ", "")}>
+                <Ikon nama="mikrofon" ukuran={28} />
+              </span>
+              <span className="font-judul text-[22px] font-extrabold">Rekam 1 Menit</span>
             </Link>
           ) : null}
           {selesai ? (

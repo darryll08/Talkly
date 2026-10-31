@@ -10,6 +10,7 @@ import { useSaya } from "@/lib/perangkat/saya";
 import { Memuat } from "@/components/memuat";
 import { Inisial } from "@/components/inisial";
 import { Ikon } from "@/components/ikon";
+import { KepalaHijau } from "@/components/kepala-hijau";
 
 const PERAN: Record<string, string> = { ibu: "Ibu", ayah: "Ayah", pengasuh: "Pengasuh", nenek: "Nenek", kakek: "Kakek", lainnya: "Keluarga" };
 
@@ -28,13 +29,12 @@ export default function Keluarga() {
   if (!data || !pengelola) return <Memuat />;
 
   return (
-    <div className="muncul space-y-5 pt-6">
-      <header className="space-y-1">
-        <p className={g.labelAtas}>
-          Minggu mulai {new Date(data.minggu_mulai).toLocaleDateString("id-ID", { day: "numeric", month: "long" })}
-        </p>
-        <h1 className={g.judulHalaman}>Keluarga minggu ini</h1>
-      </header>
+    <div className="muncul space-y-5">
+      <KepalaHijau
+        atas={`Minggu mulai ${new Date(data.minggu_mulai).toLocaleDateString("id-ID", { day: "numeric", month: "long" })}`}
+        judul="Keluarga minggu ini"
+        rapat
+      />
 
       <ul className="space-y-3">
         {data.anggota.map((a) => {

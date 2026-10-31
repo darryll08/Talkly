@@ -16,27 +16,36 @@ import { Ikon } from "@/components/ikon";
 export default function HalamanMasuk() {
   return (
     <div className="min-h-dvh lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-      <aside className="relative hidden overflow-hidden bg-hijau-tua px-12 py-10 text-white lg:flex lg:flex-col lg:justify-between">
-        <Merek terang />
-        <div className="space-y-8">
+      <aside className="kepala-hijau relative isolate hidden overflow-hidden bg-hijau-tua px-12 py-10 text-white lg:flex lg:flex-col lg:justify-between">
+        <div className="relative z-10">
+          <Merek terang />
+        </div>
+        <div className="relative z-10 space-y-8">
           <div className="space-y-3">
-            <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-white">Latihan bicara di rumah</p>
-            <h2 className="max-w-md text-[38px] font-bold leading-[1.15]">
+            <p className="text-[15px] font-semibold text-teks-di-hijau">Latihan bicara di rumah</p>
+            <h2 className="judul max-w-md text-[48px] font-extrabold leading-[1.05]">
               Satu menit bermain, satu langkah lebih dekat ke kata pertama.
             </h2>
           </div>
-          <PratinjauHasil />
+          <div className="rotate-[-3deg] transition-transform duration-500 ease-pantul hover:rotate-0">
+            <PratinjauHasil />
+          </div>
         </div>
-        <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[14px] font-medium">
+        <ul className="relative z-10 flex flex-wrap gap-x-6 gap-y-2 text-[14px] font-medium">
           <li className="flex items-center gap-2"><Ikon nama="mikrofon" ukuran={18} /> Rekam saat bermain</li>
           <li className="flex items-center gap-2"><Ikon nama="pesan" ukuran={18} /> Langsung ke terapis</li>
           <li className="flex items-center gap-2"><Ikon nama="keluarga" ukuran={18} /> Untuk seluruh keluarga</li>
         </ul>
       </aside>
 
-      <main className="mx-auto flex w-full max-w-md flex-col gap-7 px-4 pb-10 pt-[calc(env(safe-area-inset-top)+1.5rem)] lg:justify-center lg:py-12">
-        <div className="lg:hidden">
-          <Merek />
+      <main className="mx-auto flex w-full max-w-md flex-col gap-7 px-4 pb-10 lg:justify-center lg:py-12">
+        <div className="kepala-hijau relative isolate -mx-4 overflow-hidden rounded-b-[32px] bg-hijau-tua px-5 pb-16 pt-[calc(env(safe-area-inset-top)+1.25rem)] text-white lg:hidden">
+          <div className="relative z-10 space-y-5">
+            <Merek terang />
+            <p className="font-judul max-w-xs text-[28px] font-extrabold leading-[1.1]">
+              Satu menit bermain, satu langkah lebih dekat ke kata pertama.
+            </p>
+          </div>
         </div>
         <Suspense>
           <Formulir />
@@ -61,7 +70,7 @@ function Formulir() {
   const sudahKeluar = cari.get("keluar") === "1";
 
   return (
-    <section className="muncul space-y-5">
+    <section className="muncul relative z-10 -mt-20 space-y-5 rounded-3xl bg-permukaan p-5 shadow-tumpuk lg:mt-0 lg:bg-transparent lg:p-0 lg:shadow-none">
       <header className="space-y-1">
         <h1 className={g.judulHalaman}>Masuk ke Talkly</h1>
         <p className="text-[16px] text-abu">{SUBJUDUL[jenis]}</p>

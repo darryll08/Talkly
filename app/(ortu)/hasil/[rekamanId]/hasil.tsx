@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParamRute } from "@/lib/perangkat/param";
+import { KepalaHijau } from "@/components/kepala-hijau";
 import * as g from "@/lib/gaya";
 import { API, type ResponseDari } from "@/lib/kontrak/api";
 
@@ -51,12 +52,11 @@ export function Hasil() {
 
   if (!data || !rekamanId) {
     return (
-      <div className="muncul space-y-5 pt-8">
-        <header className="space-y-1">
-          <p className={g.labelAtas}>Rekam 1 Menit</p>
-          <h1 className={g.judulHalaman}>Sedang dinilai</h1>
-        </header>
-        <SedangDinilai />
+      <div className="muncul space-y-5">
+        <KepalaHijau atas="Rekam 1 Menit" judul="Sedang dinilai" />
+        <div className="relative z-10 -mt-9">
+          <SedangDinilai />
+        </div>
         {galat ? <p className={g.kotakGalat}>{galat}</p> : null}
       </div>
     );
@@ -75,18 +75,19 @@ function UmpanBalik({ rekamanId, data }: { rekamanId: string; data: StatusRekama
   const panggilan = saya?.anggota.peran === "ibu" ? "Ibu" : saya?.anggota.peran === "ayah" ? "Ayah" : "Anda";
 
   return (
-    <div className="muncul space-y-4 pb-4 pt-6">
-      <header className="space-y-1">
-        <p className={g.labelAtas}>{data.rekaman_contoh ? "Rekaman contoh · Umpan balik" : "Umpan balik"}</p>
-        <p className="pt-1">
-          <span className={`${g.angkaBesar} text-[56px] leading-none text-hijau-tua`}>{ukuran.giliran}</span>
-        </p>
-        <h1 className="text-[22px] font-bold leading-tight">
-          giliran percakapan dalam {Math.round(h.mutu.durasi_s)} detik
-        </h1>
-      </header>
+    <div className="muncul space-y-4 pb-4">
+      <KepalaHijau
+        kembali="/hari-ini"
+        atas={data.rekaman_contoh ? "Rekaman contoh · Umpan balik" : "Umpan balik"}
+        judul={
+          <span className="flex items-baseline gap-3">
+            <span className="text-[72px] leading-none">{ukuran.giliran}</span>
+            <span className="text-[22px] leading-tight">giliran percakapan dalam {Math.round(h.mutu.durasi_s)} detik</span>
+          </span>
+        }
+      />
 
-      <section className="rounded-2xl bg-oranye-muda p-4">
+      <section className={`${g.tumpuk} bg-oranye-muda`}>
         <p className="flex items-center gap-1.5 text-[14px] font-semibold text-oranye-tua">
           <Ikon nama="bintang" isi ukuran={18} /> Yang sudah bagus
         </p>
@@ -110,7 +111,7 @@ function UmpanBalik({ rekamanId, data }: { rekamanId: string; data: StatusRekama
         </div>
         <div className="flex flex-col items-end">
           <span className="mb-1 px-1 text-xs text-abu">Untuk {namaAnak} sekarang, coba:</span>
-          <p className="max-w-[90%] rounded-[20px] rounded-br-md bg-hijau px-4 py-2.5 text-[20px] font-bold text-white">
+          <p className="font-judul max-w-[90%] rounded-[20px] rounded-br-md bg-hijau px-4 py-2.5 text-[24px] font-extrabold text-white">
             “{ub.versi_anak}”
           </p>
           <span className="mt-1 px-1 text-[14px] text-abu">lalu tunggu.</span>
@@ -242,12 +243,9 @@ const TIPS = [
 
 function Ditolak({ alasan }: { alasan: string | null }) {
   return (
-    <div className="muncul space-y-4 pb-4 pt-6">
-      <header className="space-y-1">
-        <p className={g.labelAtas}>Rekam 1 Menit</p>
-        <h1 className={g.judulHalaman}>Rekaman belum bisa dinilai</h1>
-      </header>
-      <section className="rounded-2xl bg-oranye-muda p-4 text-[17px] leading-snug">
+    <div className="muncul space-y-4 pb-4">
+      <KepalaHijau kembali="/hari-ini" atas="Rekam 1 Menit" judul="Rekaman belum bisa dinilai" />
+      <section className={`${g.tumpuk} bg-oranye-muda text-[17px] leading-snug`}>
         {alasan ?? "Suara dalam rekaman ini kurang jelas untuk dinilai."}
       </section>
       <p className="px-1 text-[15px] leading-snug text-abu">

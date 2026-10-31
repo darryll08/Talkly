@@ -4,6 +4,7 @@ import * as g from "@/lib/gaya";
 import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { Memuat } from "@/components/memuat";
+import { KepalaHijau } from "@/components/kepala-hijau";
 
 const angka = (x: number) => x.toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const bulat = (x: number) => x.toLocaleString("id-ID", { maximumFractionDigits: 1 });
@@ -21,13 +22,10 @@ export default function Kemajuan() {
   const maks = Math.max(5, ...terisi.map((t) => t.jeda_rata_s ?? 0));
 
   return (
-    <div className="muncul space-y-5 pt-6">
-      <header className="space-y-1">
-        <p className={g.labelAtas}>Latihan {data.anak.nama}</p>
-        <h1 className={g.judulHalaman}>Kemajuan</h1>
-      </header>
+    <div className="muncul space-y-5">
+      <KepalaHijau atas={`Latihan ${data.anak.nama}`} judul="Kemajuan" />
 
-      <section className={`${g.kartu} space-y-4`}>
+      <section className={`${g.tumpuk} space-y-4`}>
         <p className="text-[13px] font-semibold text-hijau-tua">Dari rekaman Anda · terukur</p>
         {strategi.data_cukup && strategi.jeda_rata_s.nilai !== null ? (
           <>
@@ -54,7 +52,7 @@ export default function Kemajuan() {
                           {t.jeda_rata_s !== null ? angka(t.jeda_rata_s) : "–"}
                         </span>
                         <div
-                          className={`w-full max-w-14 rounded-t-lg ${terakhir ? "bg-hijau" : "bg-hijau-lembut"}`}
+                          className={`w-full max-w-14 rounded-t-xl ${terakhir ? "bg-oranye" : "bg-hijau-lembut"}`}
                           style={{ height: `${Math.max(tinggi, 2)}%` }}
                         />
                         <span className="text-[12px] text-abu">{tanggal(t.minggu_mulai)}</span>

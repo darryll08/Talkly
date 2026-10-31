@@ -6,7 +6,7 @@ import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { useData } from "@/lib/perangkat/use-data";
 import { useSaya } from "@/lib/perangkat/saya";
-import { KepalaHalaman } from "@/components/kepala-halaman";
+import { KepalaHijau } from "@/components/kepala-hijau";
 import { Gelembung } from "@/components/gelembung";
 import { Memuat } from "@/components/memuat";
 import { Ikon } from "@/components/ikon";
@@ -48,7 +48,8 @@ export default function Pesan() {
 
   return (
     <div className="flex min-h-[calc(100dvh-80px)] flex-col">
-      <KepalaHalaman judul={`Pesan ${terapis}`} />
+      <KepalaHijau kembali="/hari-ini" atas="Pesan" judul={terapis} rapat />
+      <div className="h-4" />
       {galat && !data ? <p className={g.kotakGalat}>{galat}</p> : null}
       {!data && !galat ? <Memuat /> : null}
       {data ? (

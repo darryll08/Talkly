@@ -16,6 +16,7 @@ import { PasangAplikasi } from "@/components/pasang-aplikasi";
 import { KodeQr } from "@/components/kode-qr";
 import { Pil } from "@/components/pil";
 import { Ikon } from "@/components/ikon";
+import { KepalaHijau } from "@/components/kepala-hijau";
 
 const PERAN: Record<string, string> = { ibu: "Ibu", ayah: "Ayah", pengasuh: "Pengasuh", nenek: "Nenek", kakek: "Kakek", lainnya: "Anggota keluarga" };
 
@@ -27,18 +28,23 @@ export default function Profil() {
   const { anggota, anak } = saya;
 
   return (
-    <div className="muncul space-y-7 pb-4 pt-6">
-      <header className="flex flex-col items-center gap-2 text-center">
-        <Inisial nama={anggota.nama} ukuran={84} />
-        <h1 className="text-[24px] font-bold">{anggota.nama}</h1>
-        <p className="text-[15px] text-abu">
-          {PERAN[anggota.peran]}
-          {anggota.pengelola ? " · pengelola keluarga" : ""} · Program {anak.nama} bersama {anak.terapis.nama}
-        </p>
-      </header>
+    <div className="muncul space-y-7 pb-4">
+      <KepalaHijau
+        judul={
+          <span className="flex items-center gap-4">
+            <Inisial nama={anggota.nama} ukuran={64} nada="oranye" />
+            <span className="min-w-0">
+              {anggota.nama}
+              <span className="font-sans mt-1 block text-[14px] font-medium leading-snug text-teks-di-hijau">
+                {PERAN[anggota.peran]}
+                {anggota.pengelola ? " · pengelola keluarga" : ""} · Program {anak.nama} bersama {anak.terapis.nama}
+              </span>
+            </span>
+          </span>
+        }
+      />
 
-      <section className="space-y-2">
-        <h2 className={g.labelSeksi}>Izin rekaman</h2>
+      <section className="relative z-10 -mt-9 space-y-2">
         <IzinRekaman />
       </section>
 

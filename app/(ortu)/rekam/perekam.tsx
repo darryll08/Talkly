@@ -11,7 +11,7 @@ import { adaBerkas } from "@/lib/perangkat/panggil";
 import { useRekam, MIN_DETIK, MAKS_DETIK } from "@/lib/perangkat/use-rekam";
 import { unggahRekaman, idLokalBaru } from "@/lib/perangkat/antrean";
 import { simpanKlip } from "@/lib/perangkat/klip";
-import { KepalaHalaman } from "@/components/kepala-halaman";
+import { KepalaHijau } from "@/components/kepala-hijau";
 import { Memuat } from "@/components/memuat";
 import { Ikon } from "@/components/ikon";
 
@@ -100,19 +100,20 @@ export function Perekam() {
     const sisaTunggu = r.tandaTerakhir === null ? 0 : Math.ceil(LAMA_TUNGGU_S - (r.detik - r.tandaTerakhir));
     const sedangMenunggu = sisaTunggu > 0;
     return (
-      <div className="flex min-h-dvh flex-col items-center gap-6 py-8 text-center">
-        <p className="inline-flex items-center gap-2 text-[15px] font-semibold text-oranye-tua" role="status">
+      // Layar penuh hijau tua: selama merekam, perhatian hanya pada waktu dan jeda menunggu.
+      <div className="kepala-hijau relative isolate -mx-4 flex min-h-dvh flex-col items-center gap-6 overflow-hidden bg-hijau-tua px-4 pb-8 pt-[calc(env(safe-area-inset-top)+2rem)] text-center text-white">
+        <p className="relative z-10 inline-flex items-center gap-2 rounded-full bg-hijau px-3 py-1 text-[15px] font-semibold" role="status">
           <span className="titik-rekam h-2.5 w-2.5 rounded-full bg-oranye" /> Merekam
         </p>
         <CincinWaktu detik={r.detik} tunggu={sedangMenunggu ? sisaTunggu : null} />
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="relative z-10 flex flex-wrap justify-center gap-2">
           {kata.map((k: string) => (
-            <span key={k} className={g.labelKata}>
+            <span key={k} className="rounded-full bg-hijau px-3 py-1 text-sm font-semibold">
               {k}
             </span>
           ))}
         </div>
-        <p className="max-w-xs text-[16px] text-abu" aria-live="polite">
+        <p className="relative z-10 max-w-xs text-[16px] text-teks-di-hijau" aria-live="polite">
           {sedangMenunggu
             ? `Tunggu ${namaAnak} menjawab… jangan mengulang pertanyaan dulu.`
             : r.jumlahTanda > 0
@@ -125,28 +126,32 @@ export function Perekam() {
         {r.sempatDitinggal ? (
           <p className={g.kotakGalat}>Aplikasi sempat ditinggal, jadi rekaman ini mungkin ditolak. Sebaiknya rekam ulang.</p>
         ) : null}
-        <div className="mt-auto w-full space-y-3">
+        <div className="relative z-10 mt-auto w-full space-y-3">
           <button
             type="button"
             onClick={r.tandaiMenunggu}
             disabled={sedangMenunggu}
-            className={`${g.tombolKedua} ${sedangMenunggu ? "disabled:bg-hijau-muda disabled:text-hijau-tua disabled:ring-hijau/30" : ""}`}
+            className="tekan inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-hijau px-5 py-4 text-base font-semibold text-white ring-1 ring-hijau-lembut disabled:bg-oranye-muda disabled:text-oranye-tua disabled:ring-0"
           >
             {sedangMenunggu ? `Menunggu… ${sisaTunggu}` : "Saya mulai menunggu"}
           </button>
-          <button type="button" onClick={r.berhenti} className={g.tombolUtama}>
+          <button
+            type="button"
+            onClick={r.berhenti}
+            className="tekan inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-permukaan px-5 py-4 text-base font-semibold text-hijau-tua shadow-angkat"
+          >
             {r.cukupPanjang ? "Selesai merekam" : "Berhenti"}
           </button>
           <div className="grid grid-cols-2 gap-3">
-            <button type="button" onClick={ulangiDariAwal} className={`${g.tombolTeks} justify-center`}>
+            <button type="button" onClick={ulangiDariAwal} className={`${g.tombolTeks} justify-center text-teks-di-hijau`}>
               <Ikon nama="putar" ukuran={18} /> Ulang dari awal
             </button>
-            <button type="button" onClick={() => r.batal()} className={`${g.tombolTeks} justify-center text-oranye-tua`}>
+            <button type="button" onClick={() => r.batal()} className={`${g.tombolTeks} justify-center text-oranye-muda`}>
               <Ikon nama="silang" ukuran={18} /> Batal
             </button>
           </div>
           {!r.cukupPanjang ? (
-            <p className="text-[13px] text-abu">Rekaman baru bisa dinilai setelah {MIN_DETIK} detik.</p>
+            <p className="text-[13px] text-teks-di-hijau">Rekaman baru bisa dinilai setelah {MIN_DETIK} detik.</p>
           ) : null}
         </div>
       </div>
@@ -159,14 +164,14 @@ export function Perekam() {
   const terlaluPendek = !cadangan && (r.hasil?.durasi_s ?? 0) < MIN_DETIK;
   if (putar) {
     return (
-      <div className="space-y-5 pb-4">
-        <KepalaHalaman kembali="/hari-ini" judul="Rekam 1 Menit" />
+      <div className="pb-4">
         <div className="muncul space-y-5">
-          <header className="space-y-1">
-            <p className={g.labelAtas}>{cadangan ? "Rekaman cadangan · rekaman contoh" : `${Math.round(r.hasil?.durasi_s ?? 0)} detik`}</p>
-            <h1 className={g.judulHalaman}>{terlaluPendek ? "Rekaman terlalu pendek" : "Rekaman siap dikirim"}</h1>
-          </header>
-          <div className={g.kartu}>
+          <KepalaHijau
+            kembali="/hari-ini"
+            atas={cadangan ? "Rekaman cadangan · rekaman contoh" : `${Math.round(r.hasil?.durasi_s ?? 0)} detik`}
+            judul={terlaluPendek ? "Rekaman terlalu pendek" : "Rekaman siap dikirim"}
+          />
+          <div className={g.tumpuk}>
             <audio src={putar} controls className="w-full" />
           </div>
           {kiriman.keadaan === "antre" ? (
@@ -211,15 +216,15 @@ export function Perekam() {
 
   // ---------- Siap ----------
   return (
-    <div className="space-y-5 pb-4">
-      <KepalaHalaman kembali={item ? `/aktivitas/${item}` : "/hari-ini"} judul="Rekam 1 Menit" />
+    <div className="pb-4">
       <div className="muncul space-y-5">
-        <header className="space-y-1">
-          <p className={g.labelAtas}>{aktivitas.data?.judul ?? `Latihan ${namaAnak}`}</p>
-          <h1 className={g.judulHalaman}>Rekam 1 Menit</h1>
-        </header>
+        <KepalaHijau
+          kembali={item ? `/aktivitas/${item}` : "/hari-ini"}
+          atas={aktivitas.data?.judul ?? `Latihan ${namaAnak}`}
+          judul="Rekam 1 Menit"
+        />
 
-        <section className={`${g.kartu} space-y-4`}>
+        <section className={`${g.tumpuk} space-y-4`}>
           <div className="flex flex-wrap gap-2">
             {kata.map((k: string) => (
               <span key={k} className={g.labelKata}>
@@ -276,14 +281,19 @@ export function Perekam() {
 
         {r.galat ? <p className={g.kotakGalat}>{r.galat}</p> : null}
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           <button
             type="button"
             onClick={r.mulai}
             disabled={!izinPerekam || r.tahap === "meminta-izin"}
-            className={g.tombolUtama}
+            className="tekan flex w-full flex-col items-center gap-3 py-2 disabled:opacity-50"
           >
-            <Ikon nama="mikrofon" /> {r.tahap === "meminta-izin" ? "Meminta izin mikrofon…" : "Mulai merekam"}
+            <span className={`${g.tombolRekam.replace("tekan ", "")} h-24 w-24 ring-8`}>
+              <Ikon nama="mikrofon" ukuran={40} />
+            </span>
+            <span className="font-judul text-[22px] font-extrabold text-hijau-tua">
+              {r.tahap === "meminta-izin" ? "Meminta izin mikrofon…" : "Mulai merekam"}
+            </span>
           </button>
           {adaCadangan ? (
             <button type="button" onClick={pakaiCadangan} disabled={!izinPerekam} className={g.tombolKedua}>
@@ -304,15 +314,15 @@ function CincinWaktu({ detik, tunggu }: { detik: number; tunggu: number | null }
   const sudut40 = (MIN_DETIK / MAKS_DETIK) * 2 * Math.PI - Math.PI / 2;
   const aktif40 = detik >= MIN_DETIK;
   return (
-    <div className="relative h-[220px] w-[220px]">
+    <div className="relative z-10 h-[220px] w-[220px]">
       <svg viewBox="0 0 220 220" className="h-full w-full" aria-hidden="true">
-        <circle cx="110" cy="110" r={R} fill="none" stroke="var(--abu-muda)" strokeWidth="12" />
+        <circle cx="110" cy="110" r={R} fill="none" stroke="var(--hijau)" strokeWidth="12" />
         <circle
           cx="110"
           cy="110"
           r={R}
           fill="none"
-          stroke="var(--hijau)"
+          stroke="var(--oranye)"
           strokeWidth="12"
           strokeLinecap="round"
           strokeDasharray={K}
@@ -324,25 +334,25 @@ function CincinWaktu({ detik, tunggu }: { detik: number; tunggu: number | null }
           cx={110 + R * Math.cos(sudut40)}
           cy={110 + R * Math.sin(sudut40)}
           r="7"
-          fill={aktif40 ? "var(--hijau-tua)" : "var(--permukaan)"}
-          stroke={aktif40 ? "var(--permukaan)" : "var(--abu)"}
+          fill={aktif40 ? "var(--oranye)" : "var(--hijau-tua)"}
+          stroke="var(--permukaan)"
           strokeWidth="2.5"
         />
       </svg>
       {tunggu !== null ? (
-        <div className="absolute inset-[26px] flex flex-col items-center justify-center rounded-full bg-hijau-muda">
-          <span className="text-[13px] font-semibold text-hijau-tua">Tunggu</span>
-          <span className="text-[56px] font-bold leading-none tabular-nums text-hijau-tua" aria-live="off">
+        <div key={tunggu} className="centang-masuk absolute inset-[26px] flex flex-col items-center justify-center rounded-full bg-oranye-muda">
+          <span className="text-[13px] font-semibold text-oranye-tua">Tunggu</span>
+          <span className="font-judul text-[64px] font-extrabold leading-none tabular-nums text-oranye-tua" aria-live="off">
             {tunggu}
           </span>
-          <span className="text-[13px] text-hijau-tua">0:{String(sisa).padStart(2, "0")} tersisa</span>
+          <span className="text-[13px] text-oranye-tua">0:{String(sisa).padStart(2, "0")} tersisa</span>
         </div>
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-[44px] font-bold tabular-nums" aria-live="off">
+          <span className="font-judul text-[52px] font-extrabold leading-none tabular-nums" aria-live="off">
             0:{String(sisa).padStart(2, "0")}
           </span>
-          <span className="text-[13px] text-abu">{aktif40 ? "Sudah cukup untuk dinilai" : "tersisa"}</span>
+          <span className="text-[13px] text-teks-di-hijau">{aktif40 ? "Sudah cukup untuk dinilai" : "tersisa"}</span>
         </div>
       )}
     </div>

@@ -9,6 +9,7 @@ import { StatusAnak } from "@/components/terapis/status-anak";
 import { PitaPercakapan } from "@/components/terapis/pita-percakapan";
 import { AudioRekaman } from "@/components/terapis/audio-rekaman";
 import * as g from "@/lib/gaya";
+import { KepalaHijau } from "@/components/kepala-hijau";
 
 type Rentang = ResponseDari<"anakKartu">["strategi"]["jeda_rata_s"];
 const nombre = (n: number | null) =>
@@ -63,17 +64,26 @@ export function KartuAnak() {
     );
   return (
     <article className="muncul space-y-7">
-      <header className="flex flex-wrap items-center gap-4">
-        <Inisial nama={data.anak.nama} ukuran={56} />
-        <div className="min-w-0 flex-1">
-          <p className={g.labelAtas}>Kartu anak · persiapan sesi</p>
-          <h1 className={`${g.judulHalaman} break-words`}>{data.anak.nama}</h1>
-          <p className="text-sm text-abu">
-            {data.anak.usia_bulan} bulan · Tahap {data.anak.tahap}
-          </p>
-        </div>
-        <StatusAnak status={data.anak.status} pemicu={data.anak.pemicu} />
-      </header>
+      <KepalaHijau
+        bentuk="panel"
+        rapat
+        atas="Kartu anak · persiapan sesi"
+        judul={
+          <span className="flex items-center gap-4">
+            <Inisial nama={data.anak.nama} ukuran={56} nada="oranye" />
+            <span className="min-w-0 break-words">
+              {data.anak.nama}
+              <span className="font-sans block text-[14px] font-medium text-teks-di-hijau">
+                {data.anak.usia_bulan} bulan · Tahap {data.anak.tahap}
+              </span>
+            </span>
+          </span>
+        }
+      >
+        <span className="inline-flex rounded-2xl bg-permukaan p-2">
+          <StatusAnak status={data.anak.status} pemicu={data.anak.pemicu} />
+        </span>
+      </KepalaHijau>
       {data.anak.data_contoh && (
         <p className="text-sm text-abu">
           Data contoh · bukan hasil pengguna atau uji akurasi

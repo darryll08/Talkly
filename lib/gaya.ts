@@ -14,11 +14,18 @@ export const isian =
 
 export const kartu = "rounded-2xl bg-permukaan p-4 shadow-kartu";
 
+/** Kartu pertama yang menumpuk ke atas kepala hijau (KepalaHijau). */
+export const tumpuk = "relative z-10 -mt-9 rounded-3xl bg-permukaan p-5 shadow-tumpuk";
+
+/** Tombol rekam bulat oranye dengan cincin: aksi utama merekam di Hari ini dan kartu aktivitas. */
+export const tombolRekam =
+  "tekan inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-oranye text-white shadow-angkat ring-[6px] ring-oranye-muda";
+
 /** Daftar bergaya Pengaturan iPhone: satu kartu dengan pemisah tipis. */
 export const daftar = "divide-y divide-garis overflow-hidden rounded-2xl bg-permukaan shadow-kartu";
 export const barisDaftar = "flex min-h-14 items-center gap-3 px-4 py-3";
 
-export const judulHalaman = "text-[27px] font-bold";
+export const judulHalaman = "font-judul text-[30px] font-extrabold";
 export const labelAtas = "text-[13px] font-medium text-abu";
 export const labelSeksi = "px-1 text-xs font-semibold uppercase tracking-[0.08em] text-abu";
 
@@ -28,7 +35,7 @@ export const labelKata = "inline-flex items-center rounded-full bg-hijau-muda px
 /** Galat: teks dari server, berwarna oranye (tidak ada merah). */
 export const kotakGalat = "rounded-2xl bg-oranye-muda px-4 py-3 text-[15px] text-oranye-tua";
 
-export const angkaBesar = "font-bold tabular-nums tracking-tight";
+export const angkaBesar = "font-judul font-extrabold tabular-nums";
 
 /** Satu kolom aplikasi orang tua. */
 export const kolomOrtu = "mx-auto w-full max-w-md px-4";

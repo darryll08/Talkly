@@ -10,6 +10,7 @@ import { useSaya } from "@/lib/perangkat/saya";
 import { KepalaHalaman } from "@/components/kepala-halaman";
 import { Pil } from "@/components/pil";
 import { Ikon } from "@/components/ikon";
+import { KepalaHijau } from "@/components/kepala-hijau";
 
 type Bersuara = "ya" | "sedikit" | "belum";
 const LAINNYA = "lainnya";
@@ -79,13 +80,10 @@ export function Ceritakan() {
 
   return (
     <div className="pb-4">
-      <KepalaHalaman />
       <form onSubmit={simpan} className="muncul space-y-6">
-        <header className="space-y-1">
-          <p className={g.labelAtas}>Dilaporkan keluarga</p>
-          <h1 className={g.judulHalaman}>Ceritakan sendiri</h1>
-          <p className="pt-1 text-[16px] text-abu">Tiga pertanyaan singkat. Jawab dengan kata-kata Anda sendiri.</p>
-        </header>
+        <KepalaHijau kembali="/hari-ini" atas="Dilaporkan keluarga" judul="Ceritakan sendiri" rapat>
+          <p className="text-[16px] text-teks-di-hijau">Tiga pertanyaan singkat. Jawab dengan kata-kata Anda sendiri.</p>
+        </KepalaHijau>
 
         <Pil nama="aktivitas" label="1. Aktivitas apa yang dikerjakan hari ini?" nilai={aktivitas} ubah={setAktivitas} pilihan={pilihanAktivitas} />
 

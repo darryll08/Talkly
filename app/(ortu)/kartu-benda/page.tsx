@@ -7,6 +7,7 @@ import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { daftarKartuBenda, hapusKartuBenda, perkecilFoto, simpanKartuBenda, type KartuBenda } from "@/lib/perangkat/klip";
 import { KepalaHalaman } from "@/components/kepala-halaman";
 import { Ikon } from "@/components/ikon";
+import { KepalaHijau } from "@/components/kepala-hijau";
 
 type Tampil = KartuBenda & { url: string };
 
@@ -111,13 +112,10 @@ export default function KartuFotoBenda() {
 
   return (
     <div className="pb-4">
-      <KepalaHalaman />
       <div className="muncul space-y-6">
-        <header className="space-y-1">
-          <p className={g.labelAtas}>Kartu foto benda</p>
-          <h1 className={g.judulHalaman}>Benda kesukaan anak</h1>
-          <p className="pt-1 text-[16px] text-abu">Foto disimpan di ponsel ini saja dan tidak dikirim ke mana pun.</p>
-        </header>
+        <KepalaHijau kembali="/hari-ini" atas="Kartu foto benda" judul="Benda kesukaan anak" rapat>
+          <p className="text-[16px] text-teks-di-hijau">Foto disimpan di ponsel ini saja dan tidak dikirim ke mana pun.</p>
+        </KepalaHijau>
 
         <form onSubmit={buat} className="space-y-4">
           <label className="tekan flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl border-2 border-dashed border-hijau/40 bg-permukaan text-hijau-tua">

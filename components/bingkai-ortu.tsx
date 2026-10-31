@@ -18,7 +18,8 @@ export function BingkaiOrtu({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <main className={`mx-auto min-h-dvh w-full max-w-md px-4 pt-[env(safe-area-inset-top)] ${tanpaNav ? "pb-8" : RUANG_NAV}`}>
+      {/* Tanpa padding atas: KepalaHijau dan KepalaHalaman sudah memperhitungkan safe-area sendiri. */}
+      <main className={`mx-auto min-h-dvh w-full max-w-md px-4 ${tanpaNav ? "pb-8" : RUANG_NAV}`}>
         {children}
       </main>
       <NavOrtu pengelola={data?.anggota.pengelola ?? false} />

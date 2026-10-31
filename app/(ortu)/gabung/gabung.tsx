@@ -10,7 +10,7 @@ import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { lupakanSaya } from "@/lib/perangkat/saya";
 import { tandaiMasukContoh } from "@/lib/perangkat/sesi-contoh";
 import { Inisial } from "@/components/inisial";
-import { KepalaHalaman } from "@/components/kepala-halaman";
+import { KepalaHijau } from "@/components/kepala-hijau";
 
 type Undangan = z.output<NonNullable<(typeof API)["undanganLihat"]["response"]>>;
 
@@ -89,17 +89,15 @@ export function Gabung() {
   if (undangan) {
     return (
       <form onSubmit={gabung} className="muncul space-y-6">
-        <KepalaHalaman
+        <KepalaHijau
           saatKembali={() => {
             setUndangan(null);
             setGalat(null);
           }}
+          atas="Undangan Talkly"
+          judul={`Gabung ke program ${undangan.anak.nama}`}
         />
-        <header className="space-y-1">
-          <p className={g.labelAtas}>Undangan Talkly</p>
-          <h1 className={g.judulHalaman}>Gabung ke program {undangan.anak.nama}</h1>
-        </header>
-        <ul className={g.daftar}>
+        <ul className={`${g.daftar} relative z-10 -mt-9 shadow-tumpuk`}>
           <li className={g.barisDaftar}>
             <Inisial nama={undangan.anak.nama} nada="oranye" />
             <span>
@@ -158,12 +156,9 @@ export function Gabung() {
       }}
       className="muncul space-y-6"
     >
-      <KepalaHalaman kembali="/" />
-      <header className="space-y-1">
-        <p className={g.labelAtas}>Talkly</p>
-        <h1 className={g.judulHalaman}>Gabung dengan kode undangan</h1>
-        <p className="pt-1 text-[16px] text-abu">Kode ada di bawah QR dari terapis atau pengelola keluarga.</p>
-      </header>
+      <KepalaHijau kembali="/masuk" atas="Talkly" judul="Gabung dengan kode undangan" rapat>
+        <p className="text-[16px] text-teks-di-hijau">Kode ada di bawah QR dari terapis atau pengelola keluarga.</p>
+      </KepalaHijau>
       <input
         className={`${g.isian} py-4 text-center font-mono text-[26px] font-semibold tracking-[0.2em]`}
         value={kode}

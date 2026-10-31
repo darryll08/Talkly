@@ -9,6 +9,7 @@ import { useSaya } from "@/lib/perangkat/saya";
 import { KepalaHalaman } from "@/components/kepala-halaman";
 import { Pil } from "@/components/pil";
 import { Ikon } from "@/components/ikon";
+import { KepalaHijau } from "@/components/kepala-hijau";
 
 type Dibanding = "sama" | "lebih_banyak" | "lebih_sedikit";
 type Kondisi = "sehat" | "demam" | "batuk_pilek" | "rewel" | "lainnya";
@@ -79,12 +80,8 @@ export default function CatatanMalam() {
 
   return (
     <div className="pb-4">
-      <KepalaHalaman />
       <form onSubmit={simpan} className="muncul space-y-6">
-        <header className="space-y-1">
-          <p className={g.labelAtas}>Dilaporkan keluarga</p>
-          <h1 className={g.judulHalaman}>Catatan malam</h1>
-        </header>
+        <KepalaHijau kembali="/hari-ini" atas="Dilaporkan keluarga" judul="Catatan malam" rapat />
 
         <label className="block space-y-2">
           <span className="block text-[15px] font-semibold">Kata atau suara apa yang diucapkan {anak} hari ini?</span>

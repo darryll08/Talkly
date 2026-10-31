@@ -8,8 +8,8 @@ import { jumlahAntrean, kirimAntrean } from "@/lib/perangkat/antrean";
 import { notifikasiUji } from "@/lib/perangkat/notifikasi";
 import { useRekam } from "@/lib/perangkat/use-rekam";
 import { sudahTerpasang } from "@/components/pasang-aplikasi";
-import { KepalaHalaman } from "@/components/kepala-halaman";
 import { Ikon } from "@/components/ikon";
+import { KepalaHijau } from "@/components/kepala-hijau";
 
 type Baris = { nama: string; ok: boolean | null; catatan?: string };
 
@@ -74,12 +74,8 @@ export default function CekPerangkat() {
 
   return (
     <div className="space-y-5 pb-4">
-      <KepalaHalaman kembali="/" judul="Cek perangkat" />
       <div className="muncul space-y-5">
-        <header className="space-y-1">
-          <p className={g.labelAtas}>Talkly</p>
-          <h1 className={g.judulHalaman}>Cek perangkat</h1>
-        </header>
+        <KepalaHijau kembali="/" atas="Talkly" judul="Cek perangkat" rapat />
         <Daftar judul="Ponsel ini" baris={perangkat} />
         <Daftar judul="Layanan server" baris={server} />
 

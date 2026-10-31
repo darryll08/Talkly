@@ -7,6 +7,7 @@ import { API } from "@/lib/kontrak/api";
 import { panggil, GalatApi, pesanDari } from "@/lib/perangkat/panggil";
 import { useData } from "@/lib/perangkat/use-data";
 import { TopbarPanel } from "@/components/topbar-panel";
+import { KepalaHijau } from "@/components/kepala-hijau";
 import { Memuat } from "@/components/memuat";
 import { Inisial } from "@/components/inisial";
 import { Ikon } from "@/components/ikon";
@@ -27,20 +28,29 @@ export default function Admin() {
         {!data && !galat ? <Memuat /> : null}
         {data ? (
           <>
-            <header className="flex flex-wrap items-end justify-between gap-4">
-              <div className="space-y-1">
-                <p className={g.labelAtas}>Panel admin</p>
-                <h1 className={g.judulHalaman}>Klinik dan terapis</h1>
-                <p className="text-[15px] text-abu">Buat akun terapis di sini, lalu kirim email dan kata sandinya ke terapis.</p>
-              </div>
-              {!tambah ? (
-                <button type="button" onClick={() => { setTambah(true); setBaru(null); }} className={`${g.tombolUtama} w-auto! px-6`}>
-                  <Ikon nama="tambah" ukuran={20} /> Tambah terapis
-                </button>
-              ) : null}
-            </header>
+            <KepalaHijau
+              bentuk="panel"
+              atas="Panel admin"
+              judul="Klinik dan terapis"
+              kanan={
+                !tambah ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTambah(true);
+                      setBaru(null);
+                    }}
+                    className="tekan inline-flex min-h-12 shrink-0 items-center gap-2 rounded-2xl bg-oranye px-5 font-semibold text-foreground shadow-angkat"
+                  >
+                    <Ikon nama="tambah" ukuran={20} /> Tambah terapis
+                  </button>
+                ) : null
+              }
+            >
+              <p className="text-[15px] text-teks-di-hijau">Buat akun terapis di sini, lalu kirim email dan kata sandinya ke terapis.</p>
+            </KepalaHijau>
 
-            <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <dl className="relative z-10 mx-4 -mt-16 grid grid-cols-2 gap-3 sm:mx-6 sm:grid-cols-4">
               {(
                 [
                   ["Klinik", data.total.klinik],
@@ -49,9 +59,9 @@ export default function Admin() {
                   ["Keluarga aktif", data.total.keluarga],
                 ] as const
               ).map(([label, n]) => (
-                <div key={label} className={g.kartu}>
+                <div key={label} className="rounded-2xl bg-permukaan p-4 shadow-tumpuk">
                   <dt className="text-[13px] font-medium text-abu">{label}</dt>
-                  <dd className={`${g.angkaBesar} pt-1 text-[30px]`}>{n}</dd>
+                  <dd className={`${g.angkaBesar} pt-1 text-[38px] leading-none text-hijau-tua`}>{n}</dd>
                 </div>
               ))}
             </dl>

@@ -6,6 +6,8 @@ import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { Memuat } from "@/components/memuat";
 import { Inisial } from "@/components/inisial";
+import { Ikon } from "@/components/ikon";
+import { KepalaHijau } from "@/components/kepala-hijau";
 import { StatusAnak } from "@/components/terapis/status-anak";
 import * as g from "@/lib/gaya";
 
@@ -25,12 +27,22 @@ function MingguIni() {
   if (!data) return <Memuat label="Memuat sesi minggu ini" />;
   return (
     <div className="muncul space-y-8">
-      <header className="space-y-2">
-        <p className={g.labelAtas}>Selamat datang, {data.terapis.nama}</p>
-        <h1 className={g.judulHalaman}>Minggu ini</h1>
-        <p className="text-abu">Persiapan sesi tiga hari ke depan.</p>
-      </header>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <KepalaHijau
+        bentuk="panel"
+        atas={`Selamat datang, ${data.terapis.nama}`}
+        judul="Minggu ini"
+        kanan={
+          <Link
+            href="/terapis/anak/baru"
+            className="tekan inline-flex min-h-12 shrink-0 items-center gap-2 rounded-2xl bg-oranye px-5 font-semibold text-foreground shadow-angkat"
+          >
+            <Ikon nama="tambah" ukuran={20} /> Tambah anak
+          </Link>
+        }
+      >
+        <p className="text-teks-di-hijau">Persiapan sesi tiga hari ke depan.</p>
+      </KepalaHijau>
+      <div className="relative z-10 mx-4 !mt-[-4rem] grid grid-cols-2 gap-3 sm:mx-6 sm:grid-cols-4">
         {(
           [
             ["Anak", data.ringkasan.total],
@@ -39,19 +51,16 @@ function MingguIni() {
             ["Lanjut", data.ringkasan.lanjut],
           ] as const
         ).map(([judul, jumlah]) => (
-          <div key={judul} className={g.kartu}>
+          <div key={judul} className="rounded-2xl bg-permukaan p-4 shadow-tumpuk">
             <p className="text-sm text-abu">{judul}</p>
             <p
-              className={`mt-2 text-3xl ${g.angkaBesar} ${judul === "Bahas minggu ini" ? "text-oranye-tua" : "text-hijau-tua"}`}
+              className={`mt-1 text-[40px] leading-none ${g.angkaBesar} ${judul === "Bahas minggu ini" ? "text-oranye-tua" : "text-hijau-tua"}`}
             >
               {jumlah}
             </p>
           </div>
         ))}
       </div>
-      <Link href="/terapis/anak/baru" className={g.tombolTeks}>
-        + Tambah anak
-      </Link>
       {data.ringkasan.total === 0 && (
         <p className={g.kartu}>
           Belum ada anak. Tambahkan program anak pertama untuk memulai.
