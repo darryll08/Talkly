@@ -78,6 +78,10 @@ Kode layar mengikuti proposal v19: **D5 = Setelah sesi, D6 = Pesan keluarga**. D
 
 ### Aditya Saputra
 
+Menyiapkan layout dasbor terapis dan navigasi anak, form masuk terapis, daftar Minggu ini (D3), serta kartu anak (D4) dengan rentang strategi, pita percakapan, hasil per pengasuh, dan panel laporan keluarga terpisah. Contoh respons D memakai kontrak resmi dan ID keluarga yang sama dengan layar orang tua. Tes tambahan memeriksa kecocokan kontrak, konsistensi data antarperan, serta ringkasan 25 anak. Implementasi dibantu OpenAI Codex.
+
+Status: kode dan contoh tervalidasi; uji browser 390/1280 px, autentikasi nyata, serta integrasi endpoint/data rekaman masih belum selesai. D1, D2, D5, D6 dan pemutaran audio belum dibuat. Data contoh bukan hasil uji klinis atau data pengguna nyata.
+
 ## Bahan persiapan
 
 Disusun sebelum Hacking Day dan dipakai sebagai acuan, bukan kode produk:

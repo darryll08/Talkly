@@ -4,13 +4,16 @@ import { Memuat } from "@/components/memuat";
 import { MenuAnak } from "@/components/terapis/menu-anak";
 import { tombolTeks } from "@/lib/gaya";
 
-export default async function LayoutAnak({
+type Props = { children: ReactNode; params: Promise<{ id: string }> };
+
+export default function LayoutAnak(props: Props) {
+  return <Suspense fallback={<Memuat label="Memuat halaman anak" />}><IsiLayoutAnak {...props} /></Suspense>;
+}
+
+async function IsiLayoutAnak({
   children,
   params,
-}: {
-  children: ReactNode;
-  params: Promise<{ id: string }>;
-}) {
+}: Props) {
   const { id } = await params;
 
   return (
