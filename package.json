@@ -10,8 +10,9 @@
     "uji": "tsx --test uji/*.test.ts lib/**/*.test.ts",
     "uji:alur": "tsx uji/alur.ts",
     "uji:akurasi": "tsx uji/akurasi.ts",
-    "seed": "tsx supabase/seed.ts",
-    "periksa": "next typegen && tsc --noEmit && npm run lint && npm run uji && npm run build"
+    "seed": "node --env-file=.env.local node_modules/tsx/dist/cli.mjs supabase/seed.ts --dev",
+    "periksa": "next typegen && tsc --noEmit && npm run lint && npm run uji && npm run build",
+    "seed:produksi": "node --env-file=.env.vercel-produksi node_modules/tsx/dist/cli.mjs supabase/seed.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",

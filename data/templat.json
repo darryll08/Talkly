@@ -1,0 +1,20 @@
+[
+  { "id": "P01", "jenis": "pujian", "pemicu": "menunggu_cukup", "teks": "{sapaan} menunggu cukup lama sebanyak {jumlah} kali. Jeda seperti ini memberi {anak} waktu untuk mencoba bersuara." },
+  { "id": "P02", "jenis": "pujian", "pemicu": "anak_merespons", "teks": "{anak} bersuara {jumlah} kali setelah {sapaan} menunggu. Itu tanda {anak} ikut dalam percakapan." },
+  { "id": "P03", "jenis": "pujian", "pemicu": "perluasan", "teks": "Saat {anak} bersuara, {sapaan} menjawab \"{kutipan}\". Menambah satu kata seperti ini membantu {anak} mendengar kalimat berikutnya." },
+  { "id": "P04", "jenis": "pujian", "pemicu": "giliran", "teks": "Ada {giliran} giliran percakapan dalam satu menit: {sapaan} mengajak, {anak} bersuara, lalu {sapaan} menanggapi." },
+  { "id": "P05", "jenis": "pujian", "pemicu": "kata_target", "teks": "{sapaan} menyebut \"{kata}\" {jumlah} kali di saat yang pas, sehingga {anak} sering mendengarnya." },
+  { "id": "P06", "jenis": "pujian", "pemicu": "kalimat_pendek", "teks": "Kalimat {sapaan} pendek dan jelas, misalnya \"{kutipan}\". Kalimat seperti ini mudah ditiru {anak}." },
+  { "id": "P07", "jenis": "pujian", "pemicu": "tanpa_suruhan", "teks": "{sapaan} tidak menyuruh {anak} mengulang. {anak} bebas mencoba dengan caranya sendiri." },
+  { "id": "P08", "jenis": "pujian", "pemicu": "ikuti_minat", "teks": "{sapaan} mengikuti apa yang sedang diperhatikan {anak}, misalnya \"{kutipan}\". Anak lebih mudah bersuara tentang hal yang ia sukai." },
+  { "id": "P09", "jenis": "pujian", "pemicu": "umum", "teks": "Terima kasih sudah meluangkan satu menit bermain sambil merekam. Kebiasaan kecil setiap hari ini yang membantu {anak}." },
+  { "id": "S01", "jenis": "saran", "pemicu": "memotong", "teks": "Besok, setelah bertanya, coba diam dan hitung sampai lima dalam hati. Tadi rata-rata {sapaan} menunggu {jeda} detik." },
+  { "id": "S02", "jenis": "saran", "pemicu": "suruhan_beruntun", "teks": "Daripada \"ayo bilang\" berulang, coba sebut \"{kata}\" sekali lalu tunggu. {anak} lebih mudah mencoba tanpa didesak." },
+  { "id": "S03", "jenis": "saran", "pemicu": "pertanyaan_beruntun", "teks": "Tadi ada beberapa pertanyaan berturut-turut, misalnya \"{kutipan}\". Coba satu pertanyaan saja, lalu tunggu jawaban {anak}." },
+  { "id": "S04", "jenis": "saran", "pemicu": "kata_target_jarang", "teks": "Coba selipkan kata \"{kata}\" beberapa kali saat bermain, dengan suara pelan dan jelas." },
+  { "id": "S05", "jenis": "saran", "pemicu": "ajakan_sedikit", "teks": "Tawarkan pilihan, misalnya \"bebek atau bola?\", lalu tunggu. Pilihan memberi {anak} alasan untuk bersuara." },
+  { "id": "S06", "jenis": "saran", "pemicu": "perluasan_kurang", "teks": "Saat {anak} bersuara, ulangi suaranya lalu tambah satu kata, misalnya \"{kata}… {kata} lagi!\"." },
+  { "id": "S07", "jenis": "saran", "pemicu": "tanggapi_suara", "teks": "Setiap suara {anak} layak ditanggapi, walau belum jelas. Tiru suaranya, lalu lanjutkan percakapan." },
+  { "id": "S08", "jenis": "saran", "pemicu": "kalimat_panjang", "teks": "Coba pakai kalimat dua sampai tiga kata, misalnya \"{kata} mandi\". Kalimat pendek lebih mudah ditiru {anak}." },
+  { "id": "S09", "jenis": "saran", "pemicu": "umum", "teks": "Besok coba lagi di rutinitas yang sama. Duduk sejajar dengan {anak}, sebut satu kata, lalu tunggu sampai hitungan lima." }
+]
