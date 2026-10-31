@@ -21,3 +21,9 @@ Ditulis di akhir setiap titik integrasi supaya sesi berikutnya cukup membaca fil
 - B dan C: contoh response di `lib/kontrak/contoh/`, tinjau kontrak, setujui commit penguncian.
 
 **Kredit ElevenLabs:** belum dicek.
+
+## C · 31 Oktober 2026 sekitar 13.55 WIB
+
+Source dasbor D1-D6 dan login dibangun pada branch fitur/aditya-dasbor-terapis, commit b2b7fd0/e4315d2/ce2c8a0. Kontrak A serta komponen B dipakai; contoh D diregistrasikan atas persetujuan pengguna, tanpa mengubah skema. npm run periksa hijau: 48 pass, 35 skipped (UJI_URL kosong), 40 TODO (endpoint tahap berikutnya), build semua rute D lolos. Belum ada bukti visual 390/1280, screenshot, login nyata, aksi talkly-dev, audio/log dengar, atau hasil lintas peran. Pemutaran dari daftar rekaman terbaru dan varian fixture lengkap masih perlu dituntaskan.
+
+Belum dipush/PR: credential-manager gagal dijalankan di lingkungan alat; pengguna perlu push dari terminal lokal yang berfungsi. Jangan mencoba token alternatif atau mengklaim perubahan sudah ada di GitHub. Status WAITING pada dependensi eksternal; bukan tugas C selesai. Checkpoint utama TEAM_PROGRESS.md; pemeriksaan adaptif berikutnya sekitar 30 menit. Penggunaan Codex dicatat pada kontribusi Aditya.
