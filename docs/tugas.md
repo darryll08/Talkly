@@ -17,8 +17,8 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 ### 4.1 Basis data dan login
 - [x] A1.1 Migrasi skema (8bd3b49): `scripts/cek-skema.ts` lolos di TALKLY-DEV dan TALKLY (31 Okt). `supabase db diff` tidak dipakai; kedua proyek menjalankan file yang sama.
 - [ ] A1.2 RLS dan bucket audio privat terpasang di kedua proyek; anon 0 baris baru terbukti di tabel kosong. Uji ulang setelah seed + uji terapis A vs B.
-- [ ] A1.3 Gabung dan undangan · I2
-- [ ] A1.4 Masuk di HP baru dan kelola akun · I3
+- [x] A1.3 Gabung dan undangan: `uji/alur-keluarga.ts` 20 cek lolos (409 dipakai, 410 kedaluwarsa, 409 anggota kelima, 409 pendengaran kosong).
+- [ ] A1.4 Masuk (5 salah → 423, 15 menit disimulasikan → 204) dan ganti kode masuk selesai. Belum: push "dibuka di ponsel lain", hapus anggota.
 - [ ] A1.5 Izin rekaman · I3
 - [x] A1.6 Login terapis: Kak Nadia 204, kata sandi salah 401 (31 Okt, lokal ke TALKLY-DEV).
 
@@ -38,15 +38,15 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 
 ### 4.4 AI
 - [x] A4.1 GPT-6 Luna dengan validasi dan cadangan: 8 tes (kutipan palsu, batas waktu, ragu, versi anak, ID, diagnosis, penyamaran) + 1 panggilan asli 4,5 detik. Tes 10 transkrip asli menunggu rekaman N01–N15.
-- [ ] A4.2 Draf rencana minggu depan · I3
+- [x] A4.2 Draf rencana GPT-6 Luna dari bank, validasi + cadangan, satu draf aktif (K5), setujui → O3 (`uji/alur-terapis.ts`, AI asli 7 detik). 50 draf acak menunggu A7.3.
 - [ ] A4.3 Kartu benda dan ekstraksi catatan malam · I3
 
 ### 4.5 Laporan, kemajuan, status
-- [ ] A5.1 Laporan keluarga · I2
-- [ ] A5.2 Aturan status · I2
-- [ ] A5.3 Kurang tepat · I2
-- [ ] A5.4 Agregat dan kemajuan · I2
-- [ ] A5.5 Dasbor terapis · `GET /api/anak/:id/kartu` lolos kontrak, terapis lain 403 (31 Okt). Belum: minggu-ini, anak, aktivitas-bank, pesan.
+- [x] A5.1 Laporan: catatan malam dan Ceritakan sendiri, pesan untuk terapis ke Pesan keluarga, regresi → Bahas minggu ini dan tampil di kartu D4.
+- [x] A5.2 Aturan status: `uji/status.test.ts` setiap pemicu + 10/10 regresi.
+- [x] A5.3 Kurang tepat: tandai + Terapis meninjau; id keluarga lain 404.
+- [x] A5.4 Hari ini, aktivitas, kemajuan (lolos kontrak), agregat 14 hari dengan rentang. Angka seed riwayat menunggu A2.2.
+- [x] A5.5 Dasbor: minggu-ini, aktivitas-bank, anak (buat/lihat/ubah), kartu, undangan, setelah-sesi, pesan; terapis lain 403 (`uji/alur-terapis.ts` 19 cek).
 - [ ] A5.6 Pengingat dan push · I3
 
 ### 4.6–4.8
