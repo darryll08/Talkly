@@ -56,5 +56,6 @@ jobs:
         run: npx --yes vercel@latest build --prod --token="$VERCEL_TOKEN"
       - if: steps.cek.outputs.ada == '1'
         run: |
-          url=$(npx --yes vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          # --archive=tgz: satu berkas per deploy, supaya kuota unggah Hobby (5000 berkas/hari) tidak habis.
+          url=$(npx --yes vercel@latest deploy --prebuilt --prod --archive=tgz --token="$VERCEL_TOKEN")
           echo "Deploy: $url (oleh ${{ github.actor }}, commit ${{ github.sha }})" >> "$GITHUB_STEP_SUMMARY"
