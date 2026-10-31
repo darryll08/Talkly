@@ -4,6 +4,7 @@ import { bacaBody, galat, kosong } from "@/lib/server/respons";
 import { hapusSemuaSesi, pasangSesi } from "@/lib/server/sesi";
 import { db } from "@/lib/server/supabase";
 import { cocokKodeMasuk, idKodeMasuk } from "@/lib/keluarga/kode";
+import { kirimDiam, kirimKeAnggota } from "@/lib/keluarga/push";
 
 // O1c: masuk di ponsel baru dengan kode masuk pribadi. Lima kali salah → terkunci 15 menit (423).
 
@@ -37,6 +38,8 @@ export const POST = denganAkses(["publik"], async (req) => {
     return kunci ? galat(423, "Terlalu banyak percobaan. Coba lagi 15 menit lagi.") : galat(401, "Kode masuk belum cocok. Periksa lagi hurufnya.");
   }
 
+  // Beri tahu ponsel lama bahwa akun ini baru dibuka di ponsel lain (proposal 6.3).
+  kirimDiam(kirimKeAnggota([a.id], { judul: "Akun Anda dibuka di ponsel lain", isi: "Bila bukan Anda, ganti kode masuk di Profil.", url: "/profil" }));
   await db().from("anggota").update({ gagal_masuk: 0, terkunci_sampai: null, perangkat_terakhir: req.headers.get("user-agent")?.slice(0, 200) ?? null }).eq("id", a.id);
   await hapusSemuaSesi();
   await pasangSesi("anggota", a.id);

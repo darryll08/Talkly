@@ -5,6 +5,7 @@ import { bacaBody, galat } from "@/lib/server/respons";
 import { db } from "@/lib/server/supabase";
 import { seninWib, tanggalWib } from "@/lib/server/waktu";
 import { ID_BANK } from "@/lib/terapis/program";
+import { anggotaKeluarga, kirimDiam, kirimKeAnggota } from "@/lib/keluarga/push";
 
 // D5 → O3: terapis menyetujui draf (boleh disunting). Rencana baru berlaku Senin depan,
 // atau hari ini bila mulai_sekarang (dipakai demo supaya langsung tampil di ponsel keluarga).
@@ -46,5 +47,10 @@ export const POST = denganAkses(["terapis"], async (req, { saya, params }) => {
   await db().from("draf_rencana").update({ status: "disetujui", rencana_id: rencana.id, isi: body.isi }).eq("id", draf.id);
   if (body.isi.kata_target) await db().from("anak").update({ kata_target: body.isi.kata_target }).eq("id", draf.anak_id);
 
+  kirimDiam(
+    anggotaKeluarga(draf.anak_id).then((ids) =>
+      kirimKeAnggota(ids, { judul: `Rencana baru dari ${saya.terapis.nama}`, isi: body.isi.pesan_keluarga.slice(0, 120), url: "/hari-ini" }),
+    ),
+  );
   return Response.json({ rencana_id: rencana.id, minggu_mulai });
 });

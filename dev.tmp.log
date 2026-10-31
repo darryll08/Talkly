@@ -1,0 +1,39 @@
+▲ Next.js 16.4.3 (Turbopack)
+- Local:         http://localhost:3100
+- Network:       http://192.168.112.156:3100
+- Environments: .env.local
+✓ Ready in 483ms
+✓ Running next.config.ts took 44ms
+- Cache Components enabled
+- Partial Prefetching enabled
+
+ GET /api/tes-sambungan 200 in 1045ms (next.js: 95ms, application-code: 950ms)
+ POST /api/demo 204 in 257ms (next.js: 52ms, application-code: 206ms)
+ GET /api/minggu-ini 200 in 460ms (next.js: 28ms, application-code: 432ms)
+ GET /api/anak/22222222-2222-4222-8222-222222222222/kartu 200 in 1353ms (next.js: 635ms, application-code: 718ms)
+ POST /api/demo 204 in 105ms (next.js: 1.9ms, application-code: 103ms)
+ GET /api/kemajuan 200 in 295ms (next.js: 22ms, application-code: 273ms)
+ GET /api/tes-sambungan 200 in 944ms (next.js: 4ms, application-code: 940ms)
+ POST /api/demo 204 in 409ms (next.js: 3ms, application-code: 406ms)
+ POST /api/demo 204 in 136ms (next.js: 1.7ms, application-code: 134ms)
+ POST /api/demo 204 in 129ms (next.js: 3ms, application-code: 127ms)
+ GET /api/saya/izin 200 in 208ms (next.js: 81ms, application-code: 127ms)
+ GET /api/rekaman/13d70e44-235f-45e9-867d-434fecb2bbc1/audio 200 in 1380ms (next.js: 699ms, application-code: 681ms)
+ GET /api/rekaman/cb03f0a3-60bb-4f72-b4bd-3c927e34ddca/audio 403 in 361ms (next.js: 17ms, application-code: 344ms)
+ GET /api/rekaman/13d70e44-235f-45e9-867d-434fecb2bbc1/audio 401 in 29ms (next.js: 4ms, application-code: 25ms)
+ GET /api/cron/bersihkan-audio 401 in 83ms (next.js: 73ms, application-code: 10ms)
+ GET /api/cron/bersihkan-audio 200 in 511ms (next.js: 3ms, application-code: 507ms)
+ GET /api/cron/pengingat 200 in 6.7s (next.js: 135ms, application-code: 6.6s)
+ PATCH /api/saya/izin 200 in 617ms (next.js: 0.8ms, application-code: 616ms)
+ PATCH /api/saya/izin 200 in 228ms (next.js: 1.4ms, application-code: 227ms)
+ GET /api/keluarga-minggu-ini 200 in 647ms (next.js: 23ms, application-code: 623ms)
+ GET /api/keluarga-minggu-ini 401 in 121ms (next.js: 1.3ms, application-code: 120ms)
+ POST /api/push 204 in 300ms (next.js: 23ms, application-code: 278ms)
+ POST /api/kartu-benda 200 in 3.0s (next.js: 84ms, application-code: 2.9s)
+ POST /api/kartu-benda 422 in 99ms (next.js: 0.9ms, application-code: 98ms)
+ POST /api/laporan 200 in 3.6s (next.js: 25ms, application-code: 3.6s)
+ POST /api/laporan 200 in 1023ms (next.js: 1.0ms, application-code: 1022ms)
+ DELETE /api/anggota/33333333-3333-4333-8333-333333333333 403 in 747ms (next.js: 656ms, application-code: 92ms)
+ DELETE /api/anggota/66666666-6666-4666-8666-666666666666 404 in 179ms (next.js: 6ms, application-code: 173ms)
+ DELETE /api/anggota/44444444-4444-4444-8444-444444444444 204 in 386ms (next.js: 0.7ms, application-code: 385ms)
+ GET /api/saya 401 in 114ms (next.js: 22ms, application-code: 92ms)

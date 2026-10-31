@@ -16,15 +16,15 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 
 ### 4.1 Basis data dan login
 - [x] A1.1 Migrasi skema (8bd3b49): `scripts/cek-skema.ts` lolos di TALKLY-DEV dan TALKLY (31 Okt). `supabase db diff` tidak dipakai; kedua proyek menjalankan file yang sama.
-- [ ] A1.2 RLS dan bucket audio privat terpasang di kedua proyek; anon 0 baris baru terbukti di tabel kosong. Uji ulang setelah seed + uji terapis A vs B.
+- [x] A1.2 RLS dengan data terisi (`uji/rls.ts`): anon 0 baris di 18 tabel; Kak Nadia 25 anak tanpa Nara; Kak Uji hanya Nara, tidak bisa membaca rekaman/hasil/laporan Raka; terapis tidak bisa menulis langsung.
 - [x] A1.3 Gabung dan undangan: `uji/alur-keluarga.ts` 20 cek lolos (409 dipakai, 410 kedaluwarsa, 409 anggota kelima, 409 pendengaran kosong).
-- [ ] A1.4 Masuk (5 salah → 423, 15 menit disimulasikan → 204) dan ganti kode masuk selesai. Belum: push "dibuka di ponsel lain", hapus anggota.
-- [ ] A1.5 Izin rekaman · I3
+- [x] A1.4 Masuk (423/204), ganti kode masuk, push "dibuka di ponsel lain", hapus anggota beserta rekaman/audio (`uji/alur-tambahan.ts`).
+- [x] A1.5 Izin rekaman: tiga izin dengan penyedia/negara/Pasal 56; mematikan izin dengar menghapus audio (audio_dihapus ≥ 1).
 - [x] A1.6 Login terapis: Kak Nadia 204, kata sandi salah 401 (31 Okt, lokal ke TALKLY-DEV).
 
 ### 4.2 Data contoh
 - [x] A2.1 17 aktivitas, 18 templat (9 pujian/9 saran, semua pemicu), `uji/konten.test.ts` lolos tanpa kata terlarang. Disusun dari proposal karena berkas konten klinis tidak ditemukan; perlu tinjauan terapis.
-- [ ] A2.2 Seed demo · I2. Sudah: klinik, Kak Nadia, Raka, Ibu Sari, Mbak Sri, rencana minggu ini, Keluarga Uji B (dev), idempoten. Belum: riwayat 3 minggu dan 24 anak lain.
+- [x] A2.2 Seed: 25 anak (1 Bahas, 4 Meninjau), riwayat Raka 3 minggu (O10 Ibu Sari 2,1 → 3,0 → 3,8 detik), idempoten, sudah di TALKLY dan TALKLY-DEV.
 - [x] A2.3 Mode demo, K9 lolos (demo Ibu Sari → Kak Nadia → GET /api/saya 401).
 
 ### 4.3 Pipeline satu rekaman
@@ -34,12 +34,12 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 - [x] A3.4 Perekam = ucapan terbanyak; dewasa lain bicara panjang bukan anak; jejak hening dipakai bila label tidak ada.
 - [x] A3.5 Jeda 4,8 → anak bersuara → ibu menanggapi = 1 giliran; tiga "ayo bilang" = 1 suruhan beruntun (16 tes).
 - [x] A3.6 STT gagal → dinilai dari jejak ponsel, penyedia `tidak_ada`, status naik (dicoba lewat berkas palsu).
-- [ ] A3.7 Hapus audio · I3
+- [x] A3.7 Cron bersihkan audio: audio lewat 7 hari dihapus, tanpa rahasia 401.
 
 ### 4.4 AI
 - [x] A4.1 GPT-6 Luna dengan validasi dan cadangan: 8 tes (kutipan palsu, batas waktu, ragu, versi anak, ID, diagnosis, penyamaran) + 1 panggilan asli 4,5 detik. Tes 10 transkrip asli menunggu rekaman N01–N15.
 - [x] A4.2 Draf rencana GPT-6 Luna dari bank, validasi + cadangan, satu draf aktif (K5), setujui → O3 (`uji/alur-terapis.ts`, AI asli 7 detik). 50 draf acak menunggu A7.3.
-- [ ] A4.3 Kartu benda dan ekstraksi catatan malam · I3
+- [x] A4.3 Kartu benda (nama saja) dan ekstraksi kata dari catatan: 5 catatan contoh (`uji/ekstrak.test.ts`), AI asli mengekstrak "cing", catatan regresi tidak menambah kata.
 
 ### 4.5 Laporan, kemajuan, status
 - [x] A5.1 Laporan: catatan malam dan Ceritakan sendiri, pesan untuk terapis ke Pesan keluarga, regresi → Bahas minggu ini dan tampil di kartu D4.
@@ -47,10 +47,10 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 - [x] A5.3 Kurang tepat: tandai + Terapis meninjau; id keluarga lain 404.
 - [x] A5.4 Hari ini, aktivitas, kemajuan (lolos kontrak), agregat 14 hari dengan rentang. Angka seed riwayat menunggu A2.2.
 - [x] A5.5 Dasbor: minggu-ini, aktivitas-bank, anak (buat/lihat/ubah), kartu, undangan, setelah-sesi, pesan; terapis lain 403 (`uji/alur-terapis.ts` 19 cek).
-- [ ] A5.6 Pengingat dan push · I3
+- [ ] A5.6 Push (langganan, rencana disetujui, balasan terapis, aktivitas pengasuh, ponsel lain) dan cron pengingat hari ke-2/3. Belum: notifikasi uji tiba di HP Android.
 
 ### 4.6–4.8
-- [ ] A6.1 Pemutaran audio tercatat · I3
+- [x] A6.1 Audio terapis: tautan 5 menit, log_dengar +1, izin dengar mati 403.
 - [ ] A7.1 Naskah dan kunci (N01, N02 jam 4–6; sisanya jam 12–16)
 - [ ] A7.2 Skrip akurasi · I3
 - [ ] A7.3 Regresi dan rencana · I3

@@ -3,6 +3,7 @@ import { cekTerapisMenangani, denganAkses } from "@/lib/server/akses";
 import { bacaBody, galat } from "@/lib/server/respons";
 import { db } from "@/lib/server/supabase";
 import { daftarPesan, kirimPesan } from "@/lib/keluarga/pesan";
+import { anggotaKeluarga, kirimDiam, kirimKeAnggota } from "@/lib/keluarga/push";
 
 // D6 Pesan keluarga (dasbor): membaca menandai pesan keluarga sudah dibaca.
 
@@ -21,5 +22,7 @@ export const POST = denganAkses(["terapis"], async (req, { saya, params }) => {
   if (tolak) return tolak;
   const body = await bacaBody(req, API.anakPesanKirim.request.omit({ id: true }));
   if (body instanceof Response) return body;
-  return Response.json(await kirimPesan(params.id, { terapis: saya.terapis.id }, body.isi));
+  const pesan = await kirimPesan(params.id, { terapis: saya.terapis.id }, body.isi);
+  kirimDiam(anggotaKeluarga(params.id).then((ids) => kirimKeAnggota(ids, { judul: `Balasan dari ${saya.terapis.nama}`, isi: body.isi.slice(0, 120), url: "/pesan" })));
+  return Response.json(pesan);
 });

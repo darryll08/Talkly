@@ -5,6 +5,8 @@ import { db } from "@/lib/server/supabase";
 import { tanggalWib } from "@/lib/server/waktu";
 import { tandaRegresi } from "@/lib/status/aturan";
 import { evaluasiStatus } from "@/lib/status/evaluasi";
+import { ekstrakUcapanAnak } from "@/lib/ai/ekstrak";
+import { anakRingkas } from "@/lib/keluarga/anggota";
 
 // O9 Catatan malam dan O8 Ceritakan sendiri. Pesan untuk terapis ikut masuk ke Pesan keluarga beserta konteksnya.
 // Setelah disimpan, status anak dievaluasi ulang; regresi langsung menaikkan ke Bahas minggu ini.
@@ -21,7 +23,10 @@ export const POST = denganAkses(["anggota"], async (req, { saya }) => {
 
   const catatan = body.jenis === "catatan_malam" ? body.isi.catatan : body.isi.cerita;
   const regresi = body.jenis === "catatan_malam" ? body.isi.regresi || tandaRegresi(catatan) : tandaRegresi(catatan);
-  const kataBaru = body.jenis === "catatan_malam" ? [...new Set(body.isi.kata_baru.map((k) => k.toLowerCase()))] : [];
+  // Kata baru = yang dipilih/diketik keluarga + yang diucapkan anak menurut catatan bebas (A4.3, K12).
+  // Catatan regresi menyebut kata yang hilang, bukan yang diucapkan, jadi tidak diekstrak.
+  const diekstrak = body.jenis === "catatan_malam" && catatan.trim() && !regresi ? await ekstrakUcapanAnak(catatan, (await anakRingkas(a.anak_id)).nama) : [];
+  const kataBaru = body.jenis === "catatan_malam" ? [...new Set([...body.isi.kata_baru, ...diekstrak].map((k) => k.toLowerCase()))] : [];
 
   const { data: laporan, error } = await db()
     .from("laporan_keluarga")

@@ -3,6 +3,7 @@ import { galat, kosong } from "@/lib/server/respons";
 import { db } from "@/lib/server/supabase";
 import { anakRingkas } from "@/lib/keluarga/anggota";
 import { isiKata, kataUntuk, tanggalWib } from "@/lib/keluarga/aktivitas";
+import { anggotaKeluarga, kirimDiam, kirimKeAnggota } from "@/lib/keluarga/push";
 
 // O4 Kartu aktivitas (GET) dan "Sudah, tanpa rekam" (POST).
 
@@ -62,5 +63,13 @@ export const POST = denganAkses(["anggota"], async (_req, { saya, params }) => {
       { onConflict: "anggota_id,rencana_item_id,tanggal", ignoreDuplicates: true },
     );
   if (error) throw error;
+  // Pengelola keluarga diberi kabar saat pengasuh menyelesaikan aktivitas.
+  if (!saya.anggota.pengelola) {
+    kirimDiam(
+      anggotaKeluarga(saya.anggota.anak_id, { kecuali: saya.anggota.id, hanyaPengelola: true }).then((ids) =>
+        kirimKeAnggota(ids, { judul: "Kabar keluarga", isi: `${saya.anggota.nama} sudah mengerjakan "${item.judul}".`, url: "/hari-ini" }),
+      ),
+    );
+  }
   return kosong();
 });
