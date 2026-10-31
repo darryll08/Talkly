@@ -7,7 +7,7 @@ import * as g from "@/lib/gaya";
 import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
-import { daftarKartuBenda, pilihKartuUntuk, type KartuBenda } from "@/lib/perangkat/klip";
+import { daftarKartuBenda, kataKartu, pilihKartuUntuk, type KartuBenda } from "@/lib/perangkat/klip";
 import { useSaya } from "@/lib/perangkat/saya";
 import { Memuat } from "@/components/memuat";
 import { KepalaHalaman } from "@/components/kepala-halaman";
@@ -74,15 +74,39 @@ export function KartuAktivitas() {
         <section className={`${g.tumpuk} text-center`}>
           <p className="text-[13px] font-bold text-hijau">Kata minggu ini</p>
           <p className="font-judul mt-1 text-[34px] font-extrabold leading-tight text-hijau-tua">{data.kata_target.join(" · ")}</p>
-          {fotoBenda ? (
-            // eslint-disable-next-line @next/next/no-img-element -- blob lokal dari IndexedDB
+        </section>
+
+        {fotoBenda ? (
+          <Link href="/kartu-benda" className="tekan flex items-center gap-4 rounded-3xl bg-oranye-muda p-3 pr-4 ring-2 ring-oranye/40">
+            {/* eslint-disable-next-line @next/next/no-img-element -- blob lokal dari IndexedDB */}
             <img
               src={fotoBenda.url}
               alt={`Foto ${fotoBenda.kartu.nama_benda}`}
-              className="mx-auto mt-3 h-28 w-28 rounded-2xl object-cover"
+              className="h-28 w-28 shrink-0 rounded-2xl object-cover shadow-kartu"
             />
-          ) : null}
-        </section>
+            <span className="min-w-0">
+              <span className="flex items-center gap-1 text-[13px] font-bold text-oranye-tua">
+                <Ikon nama="kamera" ukuran={14} /> Kartu foto benda
+              </span>
+              <span className="font-judul block text-[28px] font-extrabold leading-tight text-foreground">{kataKartu(fotoBenda.kartu)}</span>
+              <span className="block text-[14px] leading-snug text-oranye-tua">
+                Tunjukkan sambil menyebut &ldquo;{kataKartu(fotoBenda.kartu)}&rdquo;, lalu kembali ke benda aslinya.
+              </span>
+            </span>
+          </Link>
+        ) : (
+          <Link
+            href="/kartu-benda"
+            className="tekan flex items-center gap-3 rounded-3xl border-2 border-dashed border-oranye/40 bg-permukaan p-4 text-oranye-tua"
+          >
+            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-oranye-muda">
+              <Ikon nama="kamera" ukuran={24} />
+            </span>
+            <span className="text-[15px] font-semibold leading-snug">
+              Foto benda kesukaan anak untuk &ldquo;{data.kata_target[0]}&rdquo; agar muncul di sini
+            </span>
+          </Link>
+        )}
 
         <ol className={g.daftar}>
           {data.langkah.map((l, i) => (
@@ -105,10 +129,6 @@ export function KartuAktivitas() {
             <p className="mt-1 text-[15px] leading-snug">{data.bila_belum}</p>
           </div>
         </section>
-
-        <Link href="/kartu-benda" className={`${g.tombolTeks}`}>
-          <Ikon nama="kamera" ukuran={20} /> {fotoBenda ? "Ganti kartu foto benda" : "Buat kartu foto benda"}
-        </Link>
 
         <div className="space-y-3 pt-2">
           {saya?.anggota.izin_nilai !== false ? (

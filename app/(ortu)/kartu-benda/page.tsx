@@ -8,36 +8,85 @@ import {
   daftarKartuBenda,
   hapusKartuBenda,
   kartuDipakai,
+  kartuUntukKata,
+  kataKartu,
+  lepasKartuBenda,
+  lupakanPilihanKartu,
   pakaiKartuBenda,
   perkecilFoto,
   simpanKartuBenda,
   type KartuBenda,
 } from "@/lib/perangkat/klip";
+import { useSaya } from "@/lib/perangkat/saya";
 import { KepalaHalaman } from "@/components/kepala-halaman";
 import { Ikon } from "@/components/ikon";
 import { KepalaHijau } from "@/components/kepala-hijau";
 
 type Tampil = KartuBenda & { url: string };
 
+/** Pilihan kata target untuk satu kartu. "" = kartu bebas (tidak dihubungkan ke kata target). */
+function PilihKata({ kata, nilai, ubah }: { kata: string[]; nilai: string; ubah: (k: string) => void }) {
+  if (kata.length === 0) return null;
+  const chip = (aktif: boolean) =>
+    `tekan inline-flex min-h-11 items-center gap-1 rounded-full px-4 text-[15px] font-semibold ${
+      aktif ? "bg-hijau text-white" : "bg-permukaan text-foreground ring-1 ring-garis"
+    }`;
+  return (
+    <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Untuk kata">
+      {kata.map((k) => (
+        <button key={k} type="button" role="radio" aria-checked={nilai === k} onClick={() => ubah(k)} className={chip(nilai === k)}>
+          {nilai === k ? <Ikon nama="centang" ukuran={16} /> : null}
+          {k}
+        </button>
+      ))}
+      <button type="button" role="radio" aria-checked={nilai === ""} onClick={() => ubah("")} className={chip(nilai === "")}>
+        Lainnya
+      </button>
+    </div>
+  );
+}
+
 // O4b Kartu foto benda. Foto disimpan di ponsel saja; hanya nama benda yang dikirim ke server.
+// Kartu dihubungkan ke salah satu kata target supaya fotonya muncul di kartu aktivitas.
 export default function KartuFotoBenda() {
+  const { data: saya } = useSaya();
+  const kataTarget = saya?.anak.kata_target ?? [];
   const [foto, setFoto] = useState<{ blob: Blob; url: string } | null>(null);
   const [nama, setNama] = useState("");
+  const [untuk, setUntuk] = useState<string | null>(null);
   const [proses, setProses] = useState(false);
   const [galat, setGalat] = useState<string | null>(null);
   const [daftar, setDaftar] = useState<Tampil[]>([]);
   const [buka, setBuka] = useState<Tampil | null>(null);
   const [dipakai, setDipakai] = useState<Record<string, string>>({});
 
-  /** Kartu yang tampil di kartu aktivitas untuk kata ini: pilihan keluarga, atau yang terbaru. */
-  function sedangDipakai(k: Tampil) {
-    const id = dipakai[k.kata];
-    return id ? id === k.id : daftar.find((x) => x.kata === k.kata)?.id === k.id;
-  }
+  // Tanpa pilihan eksplisit, kata target yang sama dengan nama benda dipilih otomatis.
+  const namaRapi = nama.trim().toLowerCase();
+  const untukKata = untuk ?? (kataTarget.includes(namaRapi) ? namaRapi : "");
+
+  // Sebelum data anak termuat, kartu yang punya untuk_kata dianggap terhubung agar label tidak berkedip.
+  const terhubung = (k: KartuBenda) => (saya ? kataTarget.includes(kataKartu(k)) : Boolean(k.untuk_kata));
+  const sedangDipakai = (k: KartuBenda) => terhubung(k) && kartuUntukKata(daftar, kataKartu(k), dipakai)?.id === k.id;
 
   function pakai(k: Tampil) {
     pakaiKartuBenda(k);
     setDipakai(kartuDipakai());
+  }
+
+  function lepas(k: Tampil) {
+    lepasKartuBenda(kataKartu(k));
+    setDipakai(kartuDipakai());
+  }
+
+  async function hubungkan(k: Tampil, kata: string) {
+    const baru: Tampil = { ...k, untuk_kata: kata || undefined };
+    const { url: _url, ...simpanan } = baru;
+    void _url;
+    await simpanKartuBenda(simpanan);
+    if (kata) pakaiKartuBenda(baru);
+    setDipakai(kartuDipakai());
+    setBuka(baru);
+    await muat();
   }
 
   async function gantiFoto(e: React.ChangeEvent<HTMLInputElement>) {
@@ -103,14 +152,16 @@ export default function KartuFotoBenda() {
         contoh_kalimat: r.contoh_kalimat,
         foto: foto.blob,
         dibuat: Date.now(),
+        untuk_kata: untukKata || undefined,
       };
       await simpanKartuBenda(kartu);
-      // Kartu baru langsung dipakai untuk katanya; kartu lama tetap tersimpan dan bisa dipilih lagi.
-      pakaiKartuBenda(kartu);
+      // Kartu baru yang terhubung ke kata target langsung dipakai; kartu lama tetap tersimpan dan bisa dipilih lagi.
+      if (untukKata) pakaiKartuBenda(kartu);
       setDipakai(kartuDipakai());
       setBuka({ ...kartu, url: foto.url });
       setFoto(null);
       setNama("");
+      setUntuk(null);
       await muat();
     } catch (err) {
       setGalat(pesanDari(err));
@@ -121,18 +172,21 @@ export default function KartuFotoBenda() {
 
   async function hapus(id: string) {
     await hapusKartuBenda(id);
+    lupakanPilihanKartu(id);
+    setDipakai(kartuDipakai());
     if (buka?.id === id) setBuka(null);
     await muat();
   }
 
   if (buka) {
+    const kata = kataKartu(buka);
     return (
       <div className="pb-4">
         <KepalaHalaman kembali="/kartu-benda" />
         <div className="muncul space-y-4">
           {/* eslint-disable-next-line @next/next/no-img-element -- blob lokal */}
           <img src={buka.url} alt={buka.nama_benda} className="aspect-square w-full rounded-3xl object-cover shadow-kartu" />
-          <p className="text-center text-[44px] font-bold text-hijau-tua">{buka.kata}</p>
+          <p className="font-judul text-center text-[44px] font-extrabold text-hijau-tua">{buka.kata}</p>
           <div className="space-y-2">
             {buka.contoh_kalimat.map((k) => (
               <p key={k} className="ml-auto w-fit max-w-[85%] rounded-[20px] rounded-br-md bg-hijau px-4 py-2.5 text-[18px] font-semibold text-white">
@@ -143,14 +197,29 @@ export default function KartuFotoBenda() {
           <p className="rounded-2xl bg-permukaan p-4 text-[15px] leading-snug text-abu shadow-kartu">
             Tunjukkan beberapa detik sambil menyebut katanya, lalu kembalikan perhatian ke benda aslinya.
           </p>
+
+          <section className="space-y-2">
+            <h2 className={g.labelSeksi}>Tampil di aktivitas untuk kata</h2>
+            <PilihKata kata={kataTarget} nilai={terhubung(buka) ? kata : ""} ubah={(k) => hubungkan(buka, k)} />
+          </section>
+
           {galat ? <p className={g.kotakGalat}>{galat}</p> : null}
-          {sedangDipakai(buka) ? (
-            <p className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-permukaan text-[16px] font-semibold ring-1 ring-garis">
-              <Ikon nama="centang" ukuran={20} /> Dipakai di kartu aktivitas &ldquo;{buka.kata}&rdquo;
+          {!terhubung(buka) ? (
+            <p className="rounded-2xl bg-abu-muda px-4 py-3 text-[15px] text-abu">
+              Belum terhubung ke kata target, jadi foto ini tidak muncul di kartu aktivitas.
             </p>
+          ) : sedangDipakai(buka) ? (
+            <div className="space-y-2">
+              <p className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-hijau-muda text-[16px] font-semibold text-hijau-tua">
+                <Ikon nama="centang" ukuran={20} /> Tampil di kartu aktivitas &ldquo;{kata}&rdquo;
+              </p>
+              <button type="button" onClick={() => lepas(buka)} className={`${g.tombolTeks} w-full justify-center text-abu`}>
+                Batal pilih
+              </button>
+            </div>
           ) : (
             <button type="button" onClick={() => pakai(buka)} className={g.tombolUtama}>
-              Pakai kartu ini untuk &ldquo;{buka.kata}&rdquo;
+              Pilih untuk &ldquo;{kata}&rdquo;
             </button>
           )}
           <label className={`${g.tombolKedua} cursor-pointer`}>
@@ -189,6 +258,15 @@ export default function KartuFotoBenda() {
             <span className="block text-[15px] font-semibold">Nama benda</span>
             <input className={g.isian} value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Misalnya: bebek" maxLength={40} />
           </label>
+          {kataTarget.length > 0 ? (
+            <div className="space-y-2">
+              <span className="block text-[15px] font-semibold">Untuk kata</span>
+              <PilihKata kata={kataTarget} nilai={untukKata} ubah={setUntuk} />
+              <p className="text-[14px] text-abu">
+                {untukKata ? `Foto akan muncul di kartu aktivitas "${untukKata}".` : "Pilih kata target agar fotonya muncul di kartu aktivitas."}
+              </p>
+            </div>
+          ) : null}
           {galat ? <p className={g.kotakGalat}>{galat}</p> : null}
           <button type="submit" disabled={!foto || !nama.trim() || proses} className={g.tombolUtama}>
             {proses ? "Membuat kartu…" : "Buat kartu"}
@@ -199,29 +277,47 @@ export default function KartuFotoBenda() {
           <section className="space-y-2">
             <h2 className={g.labelSeksi}>Kartu tersimpan</h2>
             <ul className="grid grid-cols-2 gap-3">
-              {daftar.map((k) => (
-                <li key={k.id} className="overflow-hidden rounded-2xl bg-permukaan shadow-kartu">
-                  <button type="button" onClick={() => setBuka(k)} className="tekan block w-full text-left">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- blob lokal */}
-                    <img src={k.url} alt={k.nama_benda} className="aspect-square w-full object-cover" />
-                    <span className="block px-3 pt-2 text-[17px] font-bold">{k.kata}</span>
-                  </button>
-                  <div className="flex items-center justify-between px-1">
-                    {sedangDipakai(k) ? (
-                      <span className="inline-flex min-h-11 items-center gap-1 px-2 text-[14px] font-semibold">
-                        <Ikon nama="centang" ukuran={16} /> Dipakai
+              {daftar.map((k) => {
+                const aktif = sedangDipakai(k);
+                return (
+                  <li
+                    key={k.id}
+                    className={`relative overflow-hidden rounded-2xl bg-permukaan shadow-kartu ${aktif ? "ring-2 ring-hijau" : ""}`}
+                  >
+                    {aktif ? (
+                      <span className="absolute left-2 top-2 z-10 inline-flex items-center gap-1 rounded-full bg-hijau px-2 py-0.5 text-[12px] font-semibold text-white">
+                        <Ikon nama="centang" ukuran={12} /> Dipilih
                       </span>
-                    ) : (
-                      <button type="button" onClick={() => pakai(k)} className={`${g.tombolTeks} px-2 text-[14px]`}>
-                        Pakai
-                      </button>
-                    )}
-                    <button type="button" onClick={() => hapus(k.id)} className={`${g.tombolTeks} px-2 text-[14px] text-abu`}>
-                      Hapus
+                    ) : null}
+                    <button type="button" onClick={() => setBuka(k)} className="tekan block w-full text-left">
+                      {/* eslint-disable-next-line @next/next/no-img-element -- blob lokal */}
+                      <img src={k.url} alt={k.nama_benda} className="aspect-square w-full object-cover" />
+                      <span className="block px-3 pt-2 text-[17px] font-bold">{k.kata}</span>
+                      <span className="block px-3 text-[13px] text-abu">
+                        {terhubung(k) ? `Untuk kata "${kataKartu(k)}"` : "Belum terhubung"}
+                      </span>
                     </button>
-                  </div>
-                </li>
-              ))}
+                    <div className="flex items-center justify-between px-1">
+                      {!terhubung(k) ? (
+                        <button type="button" onClick={() => setBuka(k)} className={`${g.tombolTeks} px-2 text-[14px]`}>
+                          Hubungkan
+                        </button>
+                      ) : aktif ? (
+                        <button type="button" onClick={() => lepas(k)} className={`${g.tombolTeks} px-2 text-[14px] text-abu`}>
+                          Batal pilih
+                        </button>
+                      ) : (
+                        <button type="button" onClick={() => pakai(k)} className={`${g.tombolTeks} px-2 text-[14px]`}>
+                          Pilih
+                        </button>
+                      )}
+                      <button type="button" onClick={() => hapus(k.id)} className={`${g.tombolTeks} px-2 text-[14px] text-abu`}>
+                        Hapus
+                      </button>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </section>
         ) : null}
