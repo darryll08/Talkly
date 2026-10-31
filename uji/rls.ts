@@ -36,7 +36,7 @@ async function utama() {
   const uji = await masuk(EMAIL_TERAPIS_CONTOH.uji);
   const anakNadia = (await nadia.from("anak").select("id")).data ?? [];
   const anakUji = (await uji.from("anak").select("id")).data ?? [];
-  cek(anakNadia.length === 25 && !anakNadia.some((a) => a.id === ID_CONTOH.nara), `Kak Nadia melihat ${anakNadia.length} anak, tanpa Nara`);
+  cek(anakNadia.length === 10 && !anakNadia.some((a) => a.id === ID_CONTOH.nara), `Kak Nadia melihat ${anakNadia.length} anak, tanpa Nara`);
   cek(anakUji.length === 1 && anakUji[0].id === ID_CONTOH.nara, `Kak Uji hanya melihat Nara (${anakUji.length})`);
   const rekUji = (await uji.from("rekaman").select("id").eq("anak_id", ID_CONTOH.raka)).data ?? [];
   const lapUji = (await uji.from("laporan_keluarga").select("id").eq("anak_id", ID_CONTOH.raka)).data ?? [];

@@ -147,7 +147,7 @@ async function utama() {
   );
   await cek("riwayat status", db.from("riwayat_status").insert({ anak_id: ID_CONTOH.raka, status: "lanjut", pemicu: "Program baru", waktu: new Date(Date.now() - 21 * 86_400_000).toISOString() }));
 
-  // 5b. Riwayat tiga minggu Raka dan 8 anak lain (total 9 anak contoh di D3).
+  // 5b. Riwayat tiga minggu Raka dan 9 anak lain (total 10 anak contoh di D3).
   await riwayatRaka(db, nadiaId, (item ?? []).map((i) => i.id));
   await anakLain(db, nadiaId);
 

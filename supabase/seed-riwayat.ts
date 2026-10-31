@@ -171,12 +171,12 @@ export async function riwayatRaka(db: SupabaseClient, nadiaId: string, itemRenca
   await sisip(db, "riwayat_status", { anak_id: ID_CONTOH.raka, status: "terapis_meninjau", pemicu, waktu: waktu(1, 21) });
 }
 
-/** Anak contoh selain Raka. Delapan cukup untuk demo: empat kasus status khusus dan empat yang lanjut. */
-export const ANAK_LAIN = ["Alya", "Bima", "Citra", "Dafa", "Elsa", "Gita", "Mika", "Salsa"];
+/** Anak contoh selain Raka. Sembilan cukup untuk demo: empat kasus status khusus dan lima yang lanjut. */
+export const ANAK_LAIN = ["Alya", "Bima", "Citra", "Dafa", "Elsa", "Gita", "Hana", "Mika", "Salsa"];
 const NAMA = ANAK_LAIN;
 const KATA = [["bola", "mau", "lagi", "buka", "susu"], ["mobil", "jalan", "mau", "lagi", "tutup"], ["kucing", "mamam", "minum", "mau", "lagi"]];
 
-/** 8 anak lain milik Kak Nadia dengan status bervariasi, total 9 anak contoh di D3. */
+/** 9 anak lain milik Kak Nadia dengan status bervariasi, total 10 anak contoh di D3. */
 export async function anakLain(db: SupabaseClient, nadiaId: string) {
   const anak: object[] = [];
   const anggota: object[] = [];
