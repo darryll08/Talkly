@@ -43,3 +43,6 @@ next-env.d.ts
 
 # lokal
 /.claude
+
+# berkas sementara lokal (log server dev, keluaran uji)
+*.tmp.*
