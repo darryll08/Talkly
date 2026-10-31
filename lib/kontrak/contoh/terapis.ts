@@ -56,6 +56,13 @@ export const CONTOH_BANK = {
   aktivitas: [{ id: "MANDI-01", judul: "Bebek di bak mandi", rutinitas: "Mandi sore", tahap: 1 }],
 } satisfies ResponseDari<"aktivitasBank">;
 
+export const CONTOH_DRAF = {
+  id: id(300),
+  isi: { item: [{ aktivitas_id: "MANDI-01", anggota_id: null, urutan: 1 }], pesan_keluarga: "Contoh rencana: berlatih menunggu saat bermain bebek.", kata_target: ["bebek", "mandi", "air", "lagi", "mau"] },
+  dasar: [{ aktivitas_id: "MANDI-01", alasan: "Contoh dasar penyusunan untuk meninjau tampilan; bukan rekomendasi klinis nyata." }],
+  status: "aktif", sumber: "cadangan", dibuat: "2026-10-31T10:00:00+07:00",
+} satisfies NonNullable<ResponseDari<"setelahSesiLihat">["draf"]>;
+
 export const CONTOH_TERAPIS = {
   mingguIni: CONTOH_MINGGU_INI,
   aktivitasBank: CONTOH_BANK,
@@ -64,8 +71,10 @@ export const CONTOH_TERAPIS = {
   anakUbah: { id: ID_RAKA },
   anakUndangan: { undangan: [] },
   setelahSesiLihat: { catatan: null, draf: null },
-  setelahSesiSimpan: { catatan_id: id(200), draf: null },
+  setelahSesiSimpan: { catatan_id: id(200), draf: CONTOH_DRAF },
+  rencanaSetujui: { rencana_id: ID.rencana, minggu_mulai: "2026-11-02" },
   anakPesanLihat: CONTOH_ORTU.pesanLihat,
+  anakPesanKirim: { id: id(400), dari: "terapis", nama: "Kak Nadia", isi: "Ini respons pesan contoh, bukan pesan yang dikirim ke keluarga nyata.", konteks: null, dibuat: "2026-10-31T10:00:00+07:00" },
   anakKartu: {
     anak: { ...CONTOH_ORTU.kemajuan.anak, usia_bulan: 28, status: "terapis_meninjau", pemicu: "Laporan keluarga perlu ditinjau terapis.", pendengaran: "normal", data_contoh: true },
     strategi: CONTOH_ORTU.kemajuan.strategi,
@@ -89,7 +98,7 @@ export const CONTOH_TERAPIS = {
     saran_sesi: ["Bahas kabar keluarga dan praktikkan jeda menunggu saat sesi."],
   },
 } satisfies {
-  [N in "mingguIni" | "aktivitasBank" | "anakBuat" | "anakLihat" | "anakUbah" | "anakUndangan" | "setelahSesiLihat" | "setelahSesiSimpan" | "anakPesanLihat" | "anakKartu"]: ResponseDari<N>;
+  [N in "mingguIni" | "aktivitasBank" | "anakBuat" | "anakLihat" | "anakUbah" | "anakUndangan" | "setelahSesiLihat" | "setelahSesiSimpan" | "anakPesanLihat" | "anakPesanKirim" | "rencanaSetujui" | "anakKartu"]: ResponseDari<N>;
 };
 
 export const CONTOH_ANAK_NAMA_PANJANG = {

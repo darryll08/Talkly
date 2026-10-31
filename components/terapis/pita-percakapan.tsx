@@ -1,4 +1,5 @@
 import type { ResponseDari } from "@/lib/kontrak/api";
+import { AudioRekaman } from "./audio-rekaman";
 
 type Rekaman = NonNullable<ResponseDari<"anakKartu">["rekaman_terpilih"]>;
 export function PitaPercakapan({ rekaman }: { rekaman: Rekaman }) {
@@ -15,7 +16,7 @@ export function PitaPercakapan({ rekaman }: { rekaman: Rekaman }) {
         {rekaman.suara_anak.map((a, i) => <rect key={i} x={x(a.t_mulai)} y="72" width={Math.max(2, x(a.t_selesai) - x(a.t_mulai))} height="18" rx="3" className="fill-oranye"><title>Suara anak pada {a.t_mulai} detik</title></rect>)}
         {[0, durasi / 2, durasi].map((t) => <text key={t} x={x(t)} y="108" textAnchor="middle" fontSize="12" fill="currentColor">{t.toFixed(0)} dtk</text>)}
       </svg>
-      <ol className="space-y-2 text-sm">{rekaman.ajakan.map((a, i) => <li key={i} className="rounded-xl bg-background p-3"><span className="font-semibold tabular-nums">{a.t_mulai.toFixed(1)} dtk</span> · “{a.teks}”<p className="mt-1 text-abu">Jeda {a.jeda_s.toFixed(1)} detik · {a.kategori.replaceAll("_", " ")}</p></li>)}</ol>
+      <ol className="space-y-2 text-sm">{rekaman.ajakan.map((a, i) => <li key={i} className="rounded-xl bg-background p-3"><span className="font-semibold tabular-nums">{a.t_mulai.toFixed(1)} dtk</span> · “{a.teks}”<p className="mt-1 text-abu">Jeda {a.jeda_s.toFixed(1)} detik · {a.kategori.replaceAll("_", " ")}</p>{rekaman.bisa_didengar && <AudioRekaman id={rekaman.id} mulai={a.t_mulai} />}</li>)}</ol>
     </figure>
   );
 }

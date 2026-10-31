@@ -80,7 +80,9 @@ Kode layar mengikuti proposal v19: **D5 = Setelah sesi, D6 = Pesan keluarga**. D
 
 Menyiapkan layout dasbor terapis dan navigasi anak, form masuk terapis, daftar Minggu ini (D3), serta kartu anak (D4) dengan rentang strategi, pita percakapan, hasil per pengasuh, dan panel laporan keluarga terpisah. Contoh respons D memakai kontrak resmi dan ID keluarga yang sama dengan layar orang tua. Tes tambahan memeriksa kecocokan kontrak, konsistensi data antarperan, serta ringkasan 25 anak. Implementasi dibantu OpenAI Codex.
 
-Status: kode dan contoh tervalidasi; uji browser 390/1280 px, autentikasi nyata, serta integrasi endpoint/data rekaman masih belum selesai. D1, D2, D5, D6 dan pemutaran audio belum dibuat. Data contoh bukan hasil uji klinis atau data pengguna nyata.
+Menambahkan form program D1 (baru/ubah), undangan keluarga D2 dengan QR dan polling saat tab terlihat, catatan setelah sesi D5 dengan penyuntingan/persetujuan draf, pesan keluarga D6, serta permintaan audio berizin saat ditekan. Form dan aksi menggunakan kontrak/pemanggil API bersama; mode contoh menjelaskan bahwa data tidak tersimpan/dikirim ke keluarga nyata.
+
+Status: uji browser 390/1280 px, autentikasi nyata, penyimpanan/pengiriman lintas peran, pemutaran audio/log dengar, serta integrasi endpoint/data rekaman masih belum selesai. Data contoh bukan hasil uji klinis atau data pengguna nyata. Tidak ada screenshot atau hasil integrasi yang dinyatakan lolos sebelum diperiksa.
 
 ## Bahan persiapan
 
