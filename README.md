@@ -83,7 +83,6 @@ Kode layar mengikuti proposal v19: **D5 = Setelah sesi, D6 = Pesan keluarga**. D
 Disusun sebelum Hacking Day dan dipakai sebagai acuan, bukan kode produk:
 - Concept Proposal Talkly v19/v20 (Tabel 2 aturan status, Tabel 5 lapis fitur, subbab 4.1–4.4, Lampiran 1–9).
 - Dokumen rancangan tim: alur layar final, rancangan produk, konten klinis berbasis riset (aktivitas EMT dan templat).
-- Repositori latihan terpisah (`darryll08/latihan_lomba`) untuk gerbang uji G0 (subbab 4.4 proposal): mencoba Scribe pada berkas Opus dan menyusun naskah rekaman uji.
 
 Seluruh kode di repositori ini ditulis selama Hacking Day (31 Okt 2026 12.00 – 1 Nov 2026 12.00 WIB); riwayat commit tidak di-squash.
 
