@@ -65,13 +65,13 @@
   "vokalisasi_anak": 2,
   "suruhan_beruntun": 0,
   "jeda_manual_s": [
+    3.35,
+    0.9,
     null,
+    1.4,
+    3.55,
+    1.25,
     null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
+    1.1
   ]
 }

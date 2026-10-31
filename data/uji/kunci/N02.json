@@ -79,14 +79,14 @@
   "vokalisasi_anak": 2,
   "suruhan_beruntun": 0,
   "jeda_manual_s": [
+    1.2,
     null,
+    1.4,
+    3.95,
+    1.7,
     null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
+    0.8,
+    1.25,
     null,
     null
   ]

@@ -125,7 +125,7 @@ Mesin ukur diuji pada 15 skenario percakapan bernaskah: jeda pendek dan panjang,
 
 | Ukuran | Target | Hasil |
 |---|---|---|
-| Selisih jeda rata-rata | ≤ 0,5 detik | 0,22 detik (57 jeda) |
+| Selisih jeda rata-rata | ≤ 0,5 detik | 0,28 detik (94 jeda) |
 | Ketepatan pengenalan ajakan (F1) | ≥ 80% | 84% (presisi 82%, recall 86%) |
 | Kesesuaian kategori ajakan | ≥ 80% | 86% dari 115 ajakan |
 | Kesesuaian perluasan | ≥ 80% | 85% dari 13 skenario |

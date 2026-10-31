@@ -402,7 +402,7 @@ export type Kunci = {
   giliran: number;
   vokalisasi_anak: number;
   suruhan_beruntun: number;
-  /** Diisi manual dari Audacity, urutan sama dengan `ajakan`. null = belum diukur. */
+  /** Jeda pembanding (Audacity atau jejak level ponsel lewat uji/jeda-jejak.ts), urutan sama dengan `ajakan`. null = belum diukur. */
   jeda_manual_s: (number | null)[];
 };
 
