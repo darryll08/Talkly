@@ -35,12 +35,13 @@ export const POST = denganAkses(["publik"], async (req) => {
     return kosong();
   }
 
-  if (body.sebagai === "ibu_alya") {
-    // Keluarga kedua: anak lain di klinik contoh, supaya terlihat tiap akun punya datanya sendiri.
+  if (body.sebagai === "ibu_alya" || body.sebagai === "ibu_bima" || body.sebagai === "ibu_citra") {
+    // Keluarga lain di klinik contoh (seed anakLain), supaya terlihat tiap akun punya datanya sendiri.
+    const nama = { ibu_alya: "Ibu Alya", ibu_bima: "Ibu Bima", ibu_citra: "Ibu Citra" }[body.sebagai];
     const { data } = await db()
       .from("anggota")
       .select("id, anak_id, anak!inner (klinik_id)")
-      .eq("nama", "Ibu Alya")
+      .eq("nama", nama)
       .eq("anak.klinik_id", ID_CONTOH.klinik)
       .eq("aktif", true)
       .maybeSingle();

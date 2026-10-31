@@ -12,14 +12,16 @@ import { tandaiMasukContoh } from "@/lib/perangkat/sesi-contoh";
 
 export const DEMO = process.env.NEXT_PUBLIC_DEMO === "1";
 
-export type Persona = "ibu_sari" | "mbak_sri" | "ibu_alya" | "kak_nadia" | "admin";
+export type Persona = "ibu_sari" | "mbak_sri" | "ibu_alya" | "ibu_bima" | "ibu_citra" | "kak_nadia" | "admin";
 
 type Sesi = "anggota" | "terapis" | "admin";
 
 const PERSONA: { sebagai: Persona; nama: string; peran: string; tujuan: string; sesi: Sesi }[] = [
   { sebagai: "ibu_sari", nama: "Ibu Sari", peran: "Ibu Raka · riwayat 3 minggu", tujuan: "/hari-ini", sesi: "anggota" },
   { sebagai: "mbak_sri", nama: "Mbak Sri", peran: "Pengasuh Raka", tujuan: "/hari-ini", sesi: "anggota" },
-  { sebagai: "ibu_alya", nama: "Ibu Alya", peran: "Ibu Alya · keluarga lain", tujuan: "/hari-ini", sesi: "anggota" },
+  { sebagai: "ibu_alya", nama: "Ibu Alya", peran: "Ibu Alya · kata lama hilang, dibahas minggu ini", tujuan: "/hari-ini", sesi: "anggota" },
+  { sebagai: "ibu_bima", nama: "Ibu Bima", peran: "Ibu Bima · 5 hari belum latihan", tujuan: "/hari-ini", sesi: "anggota" },
+  { sebagai: "ibu_citra", nama: "Ibu Citra", peran: "Ibu Citra · baru mulai program", tujuan: "/hari-ini", sesi: "anggota" },
   { sebagai: "kak_nadia", nama: "Kak Nadia", peran: "Terapis wicara · 25 anak", tujuan: "/terapis", sesi: "terapis" },
   { sebagai: "admin", nama: "Admin Talkly", peran: "Kelola klinik dan akun terapis", tujuan: "/admin", sesi: "admin" },
 ];

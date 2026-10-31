@@ -11,12 +11,24 @@ import { pasangContoh, GalatApi, type Endpoint } from "./panggil";
 type Data = Record<string, unknown> | undefined;
 const KUNCI_PERSONA = "talkly:contoh-persona";
 
-function persona(): "ibu_sari" | "mbak_sri" {
+/** Keluarga lain di klinik contoh: data Raka dipakai ulang dengan nama anak yang diganti (hanya mode data contoh). */
+const KELUARGA_LAIN: Record<string, string> = { ibu_alya: "Alya", ibu_bima: "Bima", ibu_citra: "Citra" };
+
+function persona(): string {
   try {
-    return localStorage.getItem(KUNCI_PERSONA) === "mbak_sri" ? "mbak_sri" : "ibu_sari";
+    return localStorage.getItem(KUNCI_PERSONA) ?? "ibu_sari";
   } catch {
     return "ibu_sari";
   }
+}
+
+function untukKeluargaLain(nama: NamaEndpoint, hasil: unknown): unknown {
+  const anak = KELUARGA_LAIN[persona()];
+  if (!anak || hasil === null || hasil === undefined) return hasil;
+  if (nama === "kemajuan" && anak !== "Alya") hasil = VARIAN_ORTU.kemajuanBelumCukup;
+  let teks = JSON.stringify(hasil).replaceAll("Ibu Sari", `Ibu ${anak}`).replaceAll("Raka", anak);
+  if (nama === "hariIni" && anak === "Bima") teks = teks.replaceAll('"selesai_hari_ini":true', '"selesai_hari_ini":false');
+  return JSON.parse(teks);
 }
 
 const salin = <T>(x: T): T => structuredClone(x);
@@ -106,7 +118,8 @@ const PENANGAN: { [N in NamaEndpoint]?: (d: Data) => unknown } = {
   },
   demo: (d) => {
     try {
-      if (d?.sebagai === "ibu_sari" || d?.sebagai === "mbak_sri") localStorage.setItem(KUNCI_PERSONA, String(d.sebagai));
+      if (d?.sebagai === "ibu_sari" || d?.sebagai === "mbak_sri" || String(d?.sebagai) in KELUARGA_LAIN)
+        localStorage.setItem(KUNCI_PERSONA, String(d!.sebagai));
     } catch {}
     return null;
   },
@@ -122,9 +135,9 @@ export function pasang() {
     await new Promise((ok) => setTimeout(ok, 300));
     if (!nama) galat(404, `Endpoint ${e.metode} ${e.path} tidak ada di kontrak.`);
     const f = PENANGAN[nama];
-    if (f) return f(data);
+    if (f) return untukKeluargaLain(nama, f(data));
     if (!("response" in API[nama])) return null;
-    if (nama in CONTOH) return salin(CONTOH[nama]);
+    if (nama in CONTOH) return untukKeluargaLain(nama, salin(CONTOH[nama]));
     galat(404, `Belum ada data contoh untuk ${nama}.`);
   });
 }

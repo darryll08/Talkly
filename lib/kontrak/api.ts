@@ -728,7 +728,7 @@ export const API = {
     metode: "POST",
     path: "/api/demo",
     akses: ["publik"],
-    request: z.object({ sebagai: z.enum(["ibu_sari", "mbak_sri", "ibu_alya", "kak_nadia", "admin", "uji_b"]) }),
+    request: z.object({ sebagai: z.enum(["ibu_sari", "mbak_sri", "ibu_alya", "ibu_bima", "ibu_citra", "kak_nadia", "admin", "uji_b"]) }),
     galat: { 404: "Mode demo tidak aktif" },
     layar: ["Beranda"],
     titik: "I1",
