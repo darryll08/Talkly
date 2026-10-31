@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { Memuat } from "@/components/memuat";
 import { Inisial } from "@/components/inisial";
@@ -24,7 +24,7 @@ const PINTASAN: { href: string; label: string; ikon: NamaIkon }[] = [
 
 // O3 Hari ini: cukup menjawab apa yang perlu dikerjakan hari ini. Tanpa skor.
 export default function HariIni() {
-  const { data, galat, dariCache } = useData(api.hariIni, undefined, { simpanLokal: "hari-ini" });
+  const { data, galat, dariCache } = useData(API.hariIni, undefined, { simpanLokal: "hari-ini" });
 
   if (galat && !data) return <div className={`${g.kotakGalat} mt-6`}>{galat}</div>;
   if (!data) return <Memuat />;
@@ -156,10 +156,7 @@ export default function HariIni() {
             {data.kabar_keluarga.map((k, i) => (
               <li key={i} className={g.barisDaftar}>
                 <Inisial nama={k.nama} ukuran={32} />
-                <span className="flex-1 text-[15px]">
-                  <span className="font-semibold">{k.nama}</span> {k.isi}
-                </span>
-                <span className="text-[13px] tabular-nums text-abu">{k.waktu}</span>
+                <span className="flex-1 text-[15px]">{k.kalimat}</span>
               </li>
             ))}
           </ul>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { daftarKartuBenda, hapusKartuBenda, perkecilFoto, simpanKartuBenda, type KartuBenda } from "@/lib/perangkat/klip";
 import { KepalaHalaman } from "@/components/kepala-halaman";
@@ -56,7 +56,7 @@ export default function KartuFotoBenda() {
     setProses(true);
     setGalat(null);
     try {
-      const r = await panggil(api.kartuBenda, { nama_benda: nama.trim() });
+      const r = await panggil(API.kartuBenda, { nama_benda: nama.trim() });
       const kartu: KartuBenda = {
         id: crypto.randomUUID(),
         nama_benda: nama.trim(),

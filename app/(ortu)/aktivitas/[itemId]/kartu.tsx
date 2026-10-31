@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { daftarKartuBenda, type KartuBenda } from "@/lib/perangkat/klip";
@@ -16,7 +16,7 @@ import { Ikon } from "@/components/ikon";
 // O4 Kartu aktivitas: terbaca dalam sekitar 15 detik.
 export function KartuAktivitas() {
   const itemId = decodeURIComponent(useParams<{ itemId: string }>().itemId);
-  const { data, galat } = useData(api.aktivitas, { itemId });
+  const { data, galat } = useData(API.aktivitasLihat, { itemId });
   const { data: saya } = useSaya();
   const [tercatat, setTercatat] = useState(false);
   const [kirim, setKirim] = useState(false);
@@ -45,7 +45,7 @@ export function KartuAktivitas() {
     setKirim(true);
     setGalatTulis(null);
     try {
-      await panggil(api.tandaiAktivitas, { itemId });
+      await panggil(API.aktivitasSelesai, { itemId });
       setTercatat(true);
     } catch (e) {
       setGalatTulis(pesanDari(e));

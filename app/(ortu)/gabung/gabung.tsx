@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { z } from "zod";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { lupakanSaya } from "@/lib/perangkat/saya";
 import { Inisial } from "@/components/inisial";
 
-type Undangan = z.output<NonNullable<(typeof api)["cekUndangan"]["response"]>>;
+type Undangan = z.output<NonNullable<(typeof API)["undanganLihat"]["response"]>>;
 
 const NAMA_PERAN: Record<string, string> = {
   ibu: "Ibu",
@@ -38,7 +38,7 @@ export function Gabung() {
     setProses("cek");
     setGalat(null);
     try {
-      const u = await panggil(api.cekUndangan, { kode: k });
+      const u = await panggil(API.undanganLihat, { kode: k });
       if (u.status === "dipakai") setGalat("Kode undangan ini sudah dipakai. Minta undangan baru dari terapis atau pengelola keluarga.");
       else if (u.status === "kedaluwarsa") setGalat("Kode undangan ini sudah kedaluwarsa (berlaku 7 hari). Minta undangan baru.");
       else setUndangan(u);
@@ -53,7 +53,7 @@ export function Gabung() {
   useEffect(() => {
     if (awal.length >= 6) {
       let batal = false;
-      panggil(api.cekUndangan, { kode: awal })
+      panggil(API.undanganLihat, { kode: awal })
         .then((u) => {
           if (batal) return;
           if (u.status === "menunggu") setUndangan(u);
@@ -71,7 +71,7 @@ export function Gabung() {
     setProses("gabung");
     setGalat(null);
     try {
-      const r = await panggil(api.gabung, { kode, nama: nama.trim() });
+      const r = await panggil(API.gabung, { kode, nama: nama.trim() });
       try {
         sessionStorage.setItem(KUNCI_KODE_MASUK, r.kode_masuk);
       } catch {}
@@ -115,7 +115,7 @@ export function Gabung() {
         </ul>
         <p className="rounded-2xl bg-hijau-muda px-4 py-3 text-[16px] text-hijau-tua">
           Anda bergabung sebagai <span className="font-semibold">{NAMA_PERAN[undangan.peran]}</span>
-          {undangan.diundang_oleh ? `, diundang oleh ${undangan.diundang_oleh}` : ""}.
+          .
         </p>
         <label className="block space-y-2">
           <span className="block text-[15px] font-semibold">Nama panggilan Anda</span>

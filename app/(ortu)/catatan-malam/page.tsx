@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { useSaya } from "@/lib/perangkat/saya";
 import { KepalaHalaman } from "@/components/kepala-halaman";
@@ -11,7 +11,7 @@ import { Pil } from "@/components/pil";
 import { Ikon } from "@/components/ikon";
 
 type Dibanding = "sama" | "lebih_banyak" | "lebih_sedikit";
-type Kondisi = "sehat" | "demam" | "rewel" | "sakit" | "lainnya";
+type Kondisi = "sehat" | "demam" | "batuk_pilek" | "rewel" | "lainnya";
 
 // O9 Catatan malam. Data laporan keluarga (oranye), terpisah dari angka terukur.
 export default function CatatanMalam() {
@@ -32,15 +32,17 @@ export default function CatatanMalam() {
     setKirim(true);
     setGalat(null);
     try {
-      const r = await panggil(api.laporan, {
+      const r = await panggil(API.laporan, {
         jenis: "catatan_malam",
         isi: {
-          kata: kata.split(",").map((k) => k.trim()).filter(Boolean),
-          dibanding_biasanya: dibanding,
-          kondisi,
+          kata_baru: kata.split(",").map((k) => k.trim()).filter(Boolean),
+          catatan: [dibanding === "lebih_banyak" ? "Lebih banyak bersuara dibanding biasanya." : "", berbeda.trim()]
+            .filter(Boolean)
+            .join(" "),
+          kondisi: kondisi ?? "sehat",
           regresi,
-          berbeda: berbeda.trim(),
-          pesan_terapis: pesan.trim(),
+          lebih_sedikit_bersuara: dibanding === "lebih_sedikit",
+          pesan_untuk_terapis: pesan.trim() || undefined,
         },
       });
       setHasil(r);
@@ -116,8 +118,8 @@ export default function CatatanMalam() {
           pilihan={[
             { nilai: "sehat", label: "Sehat" },
             { nilai: "demam", label: "Demam" },
+            { nilai: "batuk_pilek", label: "Batuk pilek" },
             { nilai: "rewel", label: "Rewel" },
-            { nilai: "sakit", label: "Sakit" },
             { nilai: "lainnya", label: "Lainnya" },
           ]}
         />

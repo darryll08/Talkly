@@ -1,7 +1,7 @@
 "use client";
 
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { Memuat } from "@/components/memuat";
 
@@ -11,7 +11,7 @@ const tanggal = (iso: string) => new Date(iso).toLocaleDateString("id-ID", { day
 
 // O10 Kemajuan: cara orang tua (terukur, hijau) dan kata anak (dilaporkan, oranye). Tanpa perbandingan dengan anak lain.
 export default function Kemajuan() {
-  const { data, galat } = useData(api.kemajuan);
+  const { data, galat } = useData(API.kemajuan);
   if (galat && !data) return <div className={`${g.kotakGalat} mt-6`}>{galat}</div>;
   if (!data) return <Memuat />;
 
@@ -29,12 +29,12 @@ export default function Kemajuan() {
 
       <section className={`${g.kartu} space-y-4`}>
         <p className="text-[13px] font-semibold text-hijau-tua">Dari rekaman Anda · terukur</p>
-        {strategi.data_cukup && strategi.jeda_rata_s !== null ? (
+        {strategi.data_cukup && strategi.jeda_rata_s.nilai !== null ? (
           <>
             <div>
               <p className="text-[15px] text-abu">Rata-rata jeda menunggu minggu ini</p>
               <p className={`${g.angkaBesar} text-[48px] leading-tight text-hijau-tua`}>
-                {angka(strategi.jeda_rata_s)}
+                {angka(strategi.jeda_rata_s.nilai)}
                 <span className="ml-1 text-[20px] font-semibold">detik</span>
               </p>
               {awal !== null && terisi.length > 1 ? (
@@ -66,11 +66,11 @@ export default function Kemajuan() {
               </figure>
             ) : null}
 
-            {strategi.giliran_per_menit !== null ? (
+            {strategi.giliran_per_menit.nilai !== null ? (
               <div className="flex items-baseline justify-between border-t border-garis pt-3">
                 <span className="text-[15px]">Giliran percakapan</span>
                 <span className="text-[17px] font-bold tabular-nums text-hijau-tua">
-                  {bulat(strategi.giliran_per_menit)} per menit
+                  {bulat(strategi.giliran_per_menit.nilai)} per menit
                 </span>
               </div>
             ) : null}
@@ -95,10 +95,10 @@ export default function Kemajuan() {
                 key={k.kata}
                 title={`Sejak ${tanggal(k.sejak)}`}
                 className={`inline-flex items-center gap-1 rounded-full bg-permukaan px-3 py-1 text-[15px] font-semibold ${
-                  k.sumber === "dikonfirmasi" ? "text-foreground" : "text-oranye-tua ring-1 ring-inset ring-oranye"
+                  k.sumber === "dikonfirmasi_terapis" ? "text-foreground" : "text-oranye-tua ring-1 ring-inset ring-oranye"
                 }`}
               >
-                {k.sumber === "dikonfirmasi" ? <span aria-label="dikonfirmasi terapis">✓</span> : null}
+                {k.sumber === "dikonfirmasi_terapis" ? <span aria-label="dikonfirmasi terapis">✓</span> : null}
                 {k.kata}
               </li>
             ))}

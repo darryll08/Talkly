@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { useData } from "@/lib/perangkat/use-data";
 import { muatSaya } from "@/lib/perangkat/saya";
@@ -12,7 +12,7 @@ type Kunci = "izin_nilai" | "izin_dengar" | "izin_klip";
 
 // Tiga izin rekaman milik orang yang suaranya direkam (O2, O12). Semua mati sampai dinyalakan.
 export function IzinRekaman() {
-  const { data, galat, setData } = useData(api.izin);
+  const { data, galat, setData } = useData(API.izinLihat);
   const [simpan, setSimpan] = useState<Kunci | null>(null);
   const [pesan, setPesan] = useState<string | null>(null);
 
@@ -21,8 +21,8 @@ export function IzinRekaman() {
     setSimpan(kunci);
     setPesan(null);
     try {
-      const r = await panggil(api.ubahIzin, { [kunci]: nyala });
-      setData(r);
+      const r = await panggil(API.izinUbah, { [kunci]: nyala });
+      setData({ ...data, izin: r.izin });
       muatSaya(true);
       if (r.audio_dihapus) setPesan(`${r.audio_dihapus} audio yang tersimpan sudah dihapus.`);
     } catch (e) {

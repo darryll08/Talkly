@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { jumlahAntrean, kirimAntrean } from "@/lib/perangkat/antrean";
 import { notifikasiUji } from "@/lib/perangkat/notifikasi";
@@ -44,8 +44,18 @@ export default function CekPerangkat() {
   useEffect(() => {
     let batal = false;
     periksaPerangkat().then((b) => !batal && setPerangkat(b));
-    panggil(api.tesSambungan)
-      .then((d) => !batal && setServer(d.layanan.map((l) => ({ nama: l.nama, ok: l.ok, catatan: l.catatan ?? undefined }))))
+    panggil(API.tesSambungan)
+      .then(
+        (d) =>
+          !batal &&
+          setServer(
+            ([["Supabase", d.supabase], ["ElevenLabs", d.elevenlabs], ["OpenAI", d.openai], ["Push", d.push]] as const).map(([nama, l]) => ({
+              nama,
+              ok: l.ok,
+              catatan: l.pesan,
+            })),
+          ),
+      )
       .catch((e) => !batal && setServer([{ nama: "Server", ok: false, catatan: pesanDari(e) }]));
     return () => {
       batal = true;

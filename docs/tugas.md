@@ -59,4 +59,33 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 
 ## B (Wayan)
 
+Semua layar B dicek di browser 390 px dengan `NEXT_PUBLIC_PAKAI_CONTOH=1` (31 Okt): tanpa scroll samping, tanpa galat console. Belum ada yang dites di HP Android atau dengan server asli; kartu dengan bukti HP belum dicentang.
+
+### 4.0 Fondasi (I0)
+- [x] B0.1 Siapkan laptop. Commit atas nama Satyadsadhana tampil di GitHub. Deploy otomatis belum dicek (menunggu secret Vercel A0.8).
+- [x] B0.2 Pemanggil API: `lib/perangkat/panggil.ts`, `saya.ts`, `use-data.ts`. `grep 'fetch("/api'` hanya di panggil.ts (31 Okt, 128d149 + commit ini).
+- [ ] B0.3 Sistem tampilan dan `/dev/gaya` ada (128d149); screenshot `docs/layar/gaya.png` dan pemeriksaan C belum.
+- [x] B0.4 Contoh layar O di `lib/kontrak/contoh/ortu.ts`, lolos `uji/kontrak.test.ts` (31 Okt, commit ini).
+
+### 4.2 Perangkat ponsel
+- [ ] B1.1 PWA: manifest, ikon, sw.js, halaman offline ada. Lighthouse dan uji mode pesawat belum.
+- [ ] B1.2 Perekam `use-rekam.ts` ada. Belum dites di HP Android.
+- [x] B1.3 Jejak nada: tes 150/300/450 Hz ±5% tanpa salah oktaf lolos (`lib/perangkat/jejak.test.ts`, 128d149).
+- [ ] B1.4 Antrean unggah ada. Uji mode pesawat belum.
+- [ ] B1.5 Klip lokal ada. Belum dites dengan rekaman asli.
+- [ ] B1.6 Notifikasi ada. Belum dites di HP (VAPID belum ada di laptop B).
+- [ ] B1.7 Cek perangkat ada. Screenshot dari HP belum.
+
+### 4.3–4.5 Layar orang tua
+- [ ] B2.0 Layout dan nav. Build lolos; belum dicek di HP dengan notch.
+- [ ] B2.1 O3 Hari ini · tampil dari contoh; menunggu endpoint A.
+- [ ] B2.2 O4 Kartu aktivitas · tampil dari contoh; menunggu endpoint A.
+- [ ] B2.3 O5 Rekam 1 Menit · menunggu HP + endpoint A.
+- [ ] B2.4 O5b, O6, O7 · tampil dari contoh; menunggu rekaman asli.
+- [ ] B2.5 O9 Catatan malam · menunggu endpoint A.
+- [ ] B2.6 O10 Kemajuan · menunggu endpoint A.
+- [ ] B3.1 O1 Gabung · B3.2 O2 Mulai · B3.3 O1c Masuk · B3.4 O4b Kartu benda · B3.5 O8 Ceritakan · B3.6 O11 Keluarga · B3.7 O12 Profil · B3.8 Pesan: semua tampil dari contoh; menunggu endpoint A.
+- [ ] B4.1 Beranda dan mode demo · tampil; menunggu `POST /api/demo`.
+- [ ] B5.1 Kontribusi Wayan di README.
+
 ## C (Aditya)

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { panggil, GalatApi, pesanDari } from "@/lib/perangkat/panggil";
 import { lupakanSaya } from "@/lib/perangkat/saya";
 
@@ -20,7 +20,7 @@ export default function Masuk() {
     setProses(true);
     setGalat(null);
     try {
-      await panggil(api.masuk, { kode_masuk: kode.trim() });
+      await panggil(API.masuk, { kode_masuk: kode.trim() });
       lupakanSaya();
       router.replace("/hari-ini");
     } catch (err) {

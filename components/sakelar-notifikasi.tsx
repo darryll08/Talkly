@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import {
   aktifkanNotifikasi,
@@ -30,7 +30,7 @@ export function SakelarNotifikasi() {
       setKeadaan(
         nyala
           ? await aktifkanNotifikasi(async (sub) => {
-              await panggil(api.push, sub as { endpoint: string; keys: { p256dh: string; auth: string } });
+              await panggil(API.pushDaftar, sub as { endpoint: string; keys: { p256dh: string; auth: string } });
             })
           : await matikanNotifikasi(),
       );

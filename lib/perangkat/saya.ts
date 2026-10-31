@@ -5,9 +5,9 @@
 import { useEffect, useSyncExternalStore } from "react";
 import type { z } from "zod";
 import { panggil, GalatApi, pesanDari } from "./panggil";
-import { api } from "./sementara/api";
+import { API } from "@/lib/kontrak/api";
 
-export type Saya = z.output<NonNullable<(typeof api)["saya"]["response"]>>;
+export type Saya = z.output<NonNullable<(typeof API)["saya"]["response"]>>;
 
 type Keadaan = { data: Saya | null; galat: string | null; belumMasuk: boolean; memuat: boolean };
 
@@ -25,7 +25,7 @@ export function muatSaya(paksa = false): Promise<void> {
   if (janji && !paksa) return janji;
   if (sudahDimuat && !paksa) return Promise.resolve();
   ubah({ memuat: true, galat: null });
-  janji = panggil(api.saya)
+  janji = panggil(API.saya)
     .then((data) => {
       sudahDimuat = true;
       ubah({ data, belumMasuk: false, memuat: false });

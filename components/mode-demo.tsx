@@ -6,7 +6,7 @@ import * as g from "@/lib/gaya";
 import { Inisial } from "./inisial";
 import { Ikon } from "./ikon";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { lupakanSaya } from "@/lib/perangkat/saya";
 
 const DEMO = process.env.NEXT_PUBLIC_DEMO === "1";
@@ -30,7 +30,7 @@ export function ModeDemo() {
     setGalat(null);
     setProses(p.sebagai);
     try {
-      await panggil(api.demo, { sebagai: p.sebagai });
+      await panggil(API.demo, { sebagai: p.sebagai });
       lupakanSaya();
       router.push(p.tujuan);
     } catch (e) {

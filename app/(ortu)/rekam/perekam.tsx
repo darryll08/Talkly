@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { useSaya } from "@/lib/perangkat/saya";
 import { adaBerkas } from "@/lib/perangkat/panggil";
@@ -27,9 +27,9 @@ export function Perekam() {
   const router = useRouter();
   const item = useSearchParams().get("item");
   const { data: saya } = useSaya();
-  const aktivitas = useData(api.aktivitas, { itemId: item ?? "" }, { aktif: Boolean(item) });
+  const aktivitas = useData(API.aktivitasLihat, { itemId: item ?? "" }, { aktif: Boolean(item) });
   const pengelola = saya?.anggota.pengelola ?? false;
-  const keluarga = useData(api.keluargaMingguIni, undefined, { aktif: pengelola });
+  const keluarga = useData(API.keluargaMingguIni, undefined, { aktif: pengelola });
   const r = useRekam();
 
   const [perekamId, setPerekamId] = useState<string | null>(null);
@@ -97,7 +97,7 @@ export function Perekam() {
         </p>
         <CincinWaktu detik={r.detik} />
         <div className="flex flex-wrap justify-center gap-2">
-          {kata.map((k) => (
+          {kata.map((k: string) => (
             <span key={k} className={g.labelKata}>
               {k}
             </span>
@@ -173,7 +173,7 @@ export function Perekam() {
 
         <section className={`${g.kartu} space-y-4`}>
           <div className="flex flex-wrap gap-2">
-            {kata.map((k) => (
+            {kata.map((k: string) => (
               <span key={k} className={g.labelKata}>
                 {k}
               </span>

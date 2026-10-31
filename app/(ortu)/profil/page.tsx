@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { z } from "zod";
 import * as g from "@/lib/gaya";
-import { api, type Peran } from "@/lib/perangkat/sementara/api";
+import { API, type Peran } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { useData } from "@/lib/perangkat/use-data";
 import { useSaya, lupakanSaya } from "@/lib/perangkat/saya";
@@ -68,7 +68,7 @@ function KodeMasuk() {
     setProses(true);
     setGalat(null);
     try {
-      const r = await panggil(api.kodeMasukBaru);
+      const r = await panggil(API.kodeMasukBaru);
       setKode(r.kode_masuk);
       setTanya(false);
     } catch (e) {
@@ -113,7 +113,7 @@ function KodeMasuk() {
 }
 
 function AnggotaKeluarga() {
-  const { data, muatUlang } = useData(api.keluargaMingguIni);
+  const { data, muatUlang } = useData(API.keluargaMingguIni);
   const [cabut, setCabut] = useState<string | null>(null);
   const [proses, setProses] = useState(false);
   const [galat, setGalat] = useState<string | null>(null);
@@ -122,7 +122,7 @@ function AnggotaKeluarga() {
     setProses(true);
     setGalat(null);
     try {
-      await panggil(api.cabutAnggota, { id });
+      await panggil(API.anggotaHapus, { id });
       setCabut(null);
       muatUlang();
     } catch (e) {
@@ -180,7 +180,7 @@ function AnggotaKeluarga() {
   );
 }
 
-type Undangan = z.output<NonNullable<(typeof api)["buatUndangan"]["response"]>>;
+type Undangan = z.output<NonNullable<(typeof API)["undanganBuat"]["response"]>>;
 
 function UndangPengasuh({ anakId }: { anakId: string }) {
   const [peran, setPeran] = useState<Peran>("pengasuh");
@@ -192,7 +192,7 @@ function UndangPengasuh({ anakId }: { anakId: string }) {
     setProses(true);
     setGalat(null);
     try {
-      setUndangan(await panggil(api.buatUndangan, { anak_id: anakId, peran }));
+      setUndangan(await panggil(API.undanganBuat, { anak_id: anakId, peran }));
     } catch (e) {
       setGalat(pesanDari(e));
     } finally {
@@ -266,7 +266,7 @@ function Akun({ nama }: { nama: string }) {
     setProses(true);
     setGalat(null);
     try {
-      await panggil(api.keluar);
+      await panggil(API.keluar);
       lupakanSaya();
       router.replace("/");
     } catch (e) {
@@ -280,7 +280,7 @@ function Akun({ nama }: { nama: string }) {
     setProses(true);
     setGalat(null);
     try {
-      await panggil(api.cabutAnggota, { id: saya.anggota.id });
+      await panggil(API.anggotaHapus, { id: saya.anggota.id });
       lupakanSaya();
       router.replace("/");
     } catch (e) {

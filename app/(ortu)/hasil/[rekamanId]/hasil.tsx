@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import * as g from "@/lib/gaya";
-import { api, type StatusRekaman } from "@/lib/perangkat/sementara/api";
+import { API, type ResponseDari } from "@/lib/kontrak/api";
+
+type StatusRekaman = ResponseDari<"rekamanLihat">;
 import { panggil, GalatApi, pesanDari } from "@/lib/perangkat/panggil";
 import { useSaya } from "@/lib/perangkat/saya";
 import { ambilKlip } from "@/lib/perangkat/klip";
@@ -25,7 +27,7 @@ export function Hasil() {
     let t: ReturnType<typeof setTimeout>;
     const tanya = async () => {
       try {
-        const d = await panggil(api.rekaman, { id: rekamanId });
+        const d = await panggil(API.rekamanLihat, { id: rekamanId });
         if (batal) return;
         setGalat(null);
         if (d.status === "antre") t = setTimeout(tanya, JEDA_TANYA_MS);
@@ -57,14 +59,15 @@ export function Hasil() {
       </div>
     );
   }
-  if (data.status === "ditolak" || !data.hasil) return <Ditolak rekamanId={rekamanId} alasan={data.alasan_tolak} />;
+  if (data.status === "ditolak" || !data.hasil?.umpan_balik || !data.hasil.ukuran) return <Ditolak alasan={data.alasan_tolak} />;
   return <UmpanBalik rekamanId={rekamanId} data={data} />;
 }
 
 function UmpanBalik({ rekamanId, data }: { rekamanId: string; data: StatusRekaman }) {
   const { data: saya } = useSaya();
   const h = data.hasil!;
-  const ub = h.umpan_balik;
+  const ub = h.umpan_balik!;
+  const ukuran = h.ukuran!;
   const namaAnak = saya?.anak.nama ?? "anak";
   const namaTerapis = saya?.anak.terapis.nama ?? "terapis";
   const panggilan = saya?.anggota.peran === "ibu" ? "Ibu" : saya?.anggota.peran === "ayah" ? "Ayah" : "Anda";
@@ -74,7 +77,7 @@ function UmpanBalik({ rekamanId, data }: { rekamanId: string; data: StatusRekama
       <header className="space-y-1">
         <p className={g.labelAtas}>{data.rekaman_contoh ? "Rekaman contoh · Umpan balik" : "Umpan balik"}</p>
         <p className="pt-1">
-          <span className={`${g.angkaBesar} text-[56px] leading-none text-hijau-tua`}>{h.ukuran.giliran}</span>
+          <span className={`${g.angkaBesar} text-[56px] leading-none text-hijau-tua`}>{ukuran.giliran}</span>
         </p>
         <h1 className="text-[22px] font-bold leading-tight">
           giliran percakapan dalam {Math.round(h.mutu.durasi_s)} detik
@@ -190,7 +193,7 @@ function KurangTepat({ rekamanId, namaTerapis }: { rekamanId: string; namaTerapi
     setTahap("kirim");
     setGalat(null);
     try {
-      await panggil(api.kurangTepat, { id: rekamanId });
+      await panggil(API.rekamanKurangTepat, { id: rekamanId });
       setTahap("selesai");
     } catch (e) {
       setGalat(pesanDari(e));
@@ -235,7 +238,7 @@ const TIPS = [
   "Terus ajak bicara seperti biasa ke balita, sampai sedikitnya 40 detik.",
 ];
 
-function Ditolak({ rekamanId, alasan }: { rekamanId: string; alasan: string | null }) {
+function Ditolak({ alasan }: { alasan: string | null }) {
   return (
     <div className="muncul space-y-4 pb-4 pt-6">
       <header className="space-y-1">
@@ -265,7 +268,7 @@ function Ditolak({ rekamanId, alasan }: { rekamanId: string; alasan: string | nu
         <Link href="/rekam" className={g.tombolUtama}>
           Rekam ulang
         </Link>
-        <Link href={`/ceritakan?rekaman=${encodeURIComponent(rekamanId)}`} className={g.tombolKedua}>
+        <Link href="/ceritakan" className={g.tombolKedua}>
           Ceritakan sendiri
         </Link>
       </div>

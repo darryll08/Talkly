@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { useData } from "@/lib/perangkat/use-data";
+import { useSaya } from "@/lib/perangkat/saya";
 import { KepalaHalaman } from "@/components/kepala-halaman";
 import { Gelembung } from "@/components/gelembung";
 import { Memuat } from "@/components/memuat";
@@ -15,7 +16,10 @@ const waktu = (iso: string) =>
 
 // Pesan antara keluarga dan terapis, tetap di Talkly (bukan WhatsApp).
 export default function Pesan() {
-  const { data, galat, muatUlang } = useData(api.pesan);
+  const { data, galat, muatUlang } = useData(API.pesanLihat);
+  const { data: saya } = useSaya();
+  const namaSaya = saya?.anggota.nama;
+  const terapis = saya?.anak.terapis.nama ?? "terapis";
   const [isi, setIsi] = useState("");
   const [kirim, setKirim] = useState(false);
   const [galatKirim, setGalatKirim] = useState<string | null>(null);
@@ -32,7 +36,7 @@ export default function Pesan() {
     setKirim(true);
     setGalatKirim(null);
     try {
-      await panggil(api.kirimPesan, { isi: isi.trim() });
+      await panggil(API.pesanKirim, { isi: isi.trim() });
       setIsi("");
       muatUlang();
     } catch (err) {
@@ -44,7 +48,7 @@ export default function Pesan() {
 
   return (
     <div className="flex min-h-[calc(100dvh-80px)] flex-col">
-      <KepalaHalaman judul={data ? `Pesan ${data.terapis.nama}` : "Pesan"} />
+      <KepalaHalaman judul={`Pesan ${terapis}`} />
       {galat && !data ? <p className={g.kotakGalat}>{galat}</p> : null}
       {!data && !galat ? <Memuat /> : null}
       {data ? (
@@ -54,7 +58,7 @@ export default function Pesan() {
             <p className="py-10 text-center text-[15px] text-abu">Belum ada pesan.</p>
           ) : (
             data.pesan.map((p) => (
-              <Gelembung key={p.id} milikSendiri={p.dari === "saya"} nama={p.dari === "saya" ? "Anda" : p.nama} waktu={waktu(p.dibuat)} konteks={p.konteks}>
+              <Gelembung key={p.id} milikSendiri={p.dari === "keluarga" && p.nama === namaSaya} nama={p.dari === "keluarga" && p.nama === namaSaya ? "Anda" : p.nama} waktu={waktu(p.dibuat)} konteks={p.konteks}>
                 {p.isi}
               </Gelembung>
             ))

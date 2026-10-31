@@ -2,41 +2,46 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import * as g from "@/lib/gaya";
-import { api } from "@/lib/perangkat/sementara/api";
+import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
+import { useData } from "@/lib/perangkat/use-data";
 import { useSaya } from "@/lib/perangkat/saya";
 import { KepalaHalaman } from "@/components/kepala-halaman";
+import { Pil } from "@/components/pil";
 import { Ikon } from "@/components/ikon";
+
+type Bersuara = "ya" | "sedikit" | "belum";
+const LAINNYA = "lainnya";
 
 // O8 Ceritakan sendiri: untuk hari ketika rekaman ditolak atau keluarga tidak ingin merekam.
 // Disimpan sebagai data laporan, terpisah dari grafik data terukur.
 export function Ceritakan() {
-  const rekamanId = useSearchParams().get("rekaman");
   const { data: saya } = useSaya();
+  const hariIni = useData(API.hariIni);
   const anak = saya?.anak.nama ?? "anak";
   const terapis = saya?.anak.terapis.nama ?? "terapis";
-  const [jawab, setJawab] = useState({ aktivitas: "", sempat_menunggu: "", yang_dilakukan_anak: "", pesan_terapis: "" });
+  const [aktivitas, setAktivitas] = useState<string | null>(null);
+  const [bersuara, setBersuara] = useState<Bersuara | null>(null);
+  const [cerita, setCerita] = useState("");
+  const [pesan, setPesan] = useState("");
   const [kirim, setKirim] = useState(false);
   const [galat, setGalat] = useState<string | null>(null);
   const [selesai, setSelesai] = useState<string | null>(null);
 
-  const isi = (k: keyof typeof jawab) => (e: React.ChangeEvent<HTMLTextAreaElement>) => setJawab((j) => ({ ...j, [k]: e.target.value }));
-
   async function simpan(e: React.FormEvent) {
     e.preventDefault();
+    if (!bersuara) return;
     setKirim(true);
     setGalat(null);
     try {
-      const r = await panggil(api.laporan, {
+      const r = await panggil(API.laporan, {
         jenis: "ceritakan_sendiri",
         isi: {
-          aktivitas: jawab.aktivitas.trim(),
-          sempat_menunggu: jawab.sempat_menunggu.trim(),
-          yang_dilakukan_anak: jawab.yang_dilakukan_anak.trim(),
-          pesan_terapis: jawab.pesan_terapis.trim(),
-          rekaman_id: rekamanId,
+          aktivitas_id: aktivitas && aktivitas !== LAINNYA ? aktivitas : null,
+          anak_bersuara: bersuara,
+          cerita: cerita.trim(),
+          pesan_untuk_terapis: pesan.trim() || undefined,
         },
       });
       setSelesai(r.pesan);
@@ -67,10 +72,9 @@ export function Ceritakan() {
     );
   }
 
-  const pertanyaan: { k: keyof typeof jawab; label: string; contoh: string }[] = [
-    { k: "aktivitas", label: "Aktivitas apa yang dikerjakan hari ini?", contoh: "Misalnya: main bebek sebelum mandi" },
-    { k: "sempat_menunggu", label: `Apakah sempat menunggu ${anak} bersuara?`, contoh: "Misalnya: sempat, dua kali sampai hitungan lima" },
-    { k: "yang_dilakukan_anak", label: `Apa yang ${anak} lakukan atau ucapkan?`, contoh: "Misalnya: bilang \"bek\" sambil menunjuk" },
+  const pilihanAktivitas = [
+    ...(hariIni.data?.aktivitas ?? []).map((a) => ({ nilai: a.aktivitas_id, label: a.judul })),
+    { nilai: LAINNYA, label: "Lainnya" },
   ];
 
   return (
@@ -82,28 +86,39 @@ export function Ceritakan() {
           <h1 className={g.judulHalaman}>Ceritakan sendiri</h1>
           <p className="pt-1 text-[16px] text-abu">Tiga pertanyaan singkat. Jawab dengan kata-kata Anda sendiri.</p>
         </header>
-        {pertanyaan.map((p, i) => (
-          <label key={p.k} className="block space-y-2">
-            <span className="flex gap-2 text-[15px] font-semibold">
-              <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-oranye-muda text-[13px] font-bold text-oranye-tua">
-                {i + 1}
-              </span>
-              {p.label}
-            </span>
-            <textarea className={`${g.isian} min-h-20`} value={jawab[p.k]} onChange={isi(p.k)} placeholder={p.contoh} />
-          </label>
-        ))}
+
+        <Pil nama="aktivitas" label="1. Aktivitas apa yang dikerjakan hari ini?" nilai={aktivitas} ubah={setAktivitas} pilihan={pilihanAktivitas} />
+
+        <Pil
+          nama="bersuara"
+          label={`2. Saat Anda menunggu, apakah ${anak} bersuara?`}
+          nilai={bersuara}
+          ubah={setBersuara}
+          pilihan={[
+            { nilai: "ya", label: "Ya" },
+            { nilai: "sedikit", label: "Sedikit" },
+            { nilai: "belum", label: "Belum" },
+          ]}
+        />
+
+        <label className="block space-y-2">
+          <span className="block text-[15px] font-semibold">3. Apa yang {anak} lakukan atau ucapkan?</span>
+          <textarea
+            className={`${g.isian} min-h-24`}
+            value={cerita}
+            onChange={(e) => setCerita(e.target.value)}
+            placeholder={'Misalnya: bilang "bek" sambil menunjuk bebek'}
+          />
+        </label>
+
         <label className="block space-y-2">
           <span className="block text-[15px] font-semibold">Pesan untuk {terapis}</span>
-          <textarea className={`${g.isian} min-h-20`} value={jawab.pesan_terapis} onChange={isi("pesan_terapis")} placeholder="Boleh dikosongkan" />
+          <textarea className={`${g.isian} min-h-20`} value={pesan} onChange={(e) => setPesan(e.target.value)} placeholder="Boleh dikosongkan" />
           <span className="block text-[13px] text-abu">Bila diisi, pesan ini juga masuk ke halaman Pesan.</span>
         </label>
+
         {galat ? <p className={g.kotakGalat}>{galat}</p> : null}
-        <button
-          type="submit"
-          disabled={kirim || !(jawab.aktivitas.trim() || jawab.yang_dilakukan_anak.trim())}
-          className={g.tombolUtama}
-        >
+        <button type="submit" disabled={kirim || !bersuara || !cerita.trim()} className={g.tombolUtama}>
           {kirim ? "Menyimpan…" : "Simpan cerita"}
         </button>
       </form>
