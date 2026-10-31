@@ -8,7 +8,7 @@ import { periksaMatriks } from "../lib/kontrak/layar";
 
 // Penjaga K1 dan K3. Naikkan TITIK_SEKARANG setiap kali satu titik integrasi ditutup:
 // endpoint dengan titik ≤ TITIK_SEKARANG wajib punya route, sisanya dicatat sebagai todo.
-const TITIK_SEKARANG: Titik = "I1";
+const TITIK_SEKARANG: Titik = "I2";
 const URUT: Titik[] = ["I0", "I1", "I2", "I3"];
 
 const AKAR = join(import.meta.dirname, "..");
