@@ -5,7 +5,7 @@ import { Suspense, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as g from "@/lib/gaya";
 import { API } from "@/lib/kontrak/api";
-import { panggil, GalatApi, pesanDari } from "@/lib/perangkat/panggil";
+import { panggil, GalatApi, pesanDari, PAKAI_CONTOH } from "@/lib/perangkat/panggil";
 import { lupakanSaya } from "@/lib/perangkat/saya";
 import { tandaiMasukContoh } from "@/lib/perangkat/sesi-contoh";
 import { Merek, PratinjauHasil } from "@/components/merek";
@@ -52,12 +52,12 @@ export default function HalamanMasuk() {
   );
 }
 
-type Jenis = "keluarga" | "terapis" | "admin";
+type Jenis = "keluarga" | "email";
 
 function Formulir() {
   const cari = useSearchParams();
   const awal = cari.get("sebagai");
-  const [jenis, setJenis] = useState<Jenis>(awal === "terapis" || awal === "admin" ? awal : "keluarga");
+  const [jenis, setJenis] = useState<Jenis>(awal === "terapis" || awal === "admin" ? "email" : "keluarga");
   const sudahKeluar = cari.get("keluar") === "1";
 
   return (
@@ -73,8 +73,8 @@ function Formulir() {
         </p>
       ) : null}
 
-      <div role="tablist" aria-label="Masuk sebagai" className="grid grid-cols-3 gap-1 rounded-2xl bg-abu-muda p-1">
-        {(["keluarga", "terapis", "admin"] as const).map((j) => (
+      <div role="tablist" aria-label="Masuk sebagai" className="grid grid-cols-2 gap-1 rounded-2xl bg-abu-muda p-1">
+        {(["keluarga", "email"] as const).map((j) => (
           <button
             key={j}
             type="button"
@@ -90,16 +90,15 @@ function Formulir() {
         ))}
       </div>
 
-      {jenis === "keluarga" ? <MasukKeluarga /> : <MasukEmail key={jenis} jenis={jenis} />}
+      {jenis === "keluarga" ? <MasukKeluarga /> : <MasukEmail />}
     </section>
   );
 }
 
-const LABEL: Record<Jenis, string> = { keluarga: "Keluarga", terapis: "Terapis", admin: "Admin" };
+const LABEL: Record<Jenis, string> = { keluarga: "Keluarga", email: "Terapis / Admin" };
 const SUBJUDUL: Record<Jenis, string> = {
   keluarga: "Lanjutkan latihan bicara anak Anda.",
-  terapis: "Buka dasbor anak-anak yang Anda dampingi.",
-  admin: "Kelola klinik dan akun terapis Talkly.",
+  email: "Masuk dengan email dan kata sandi dari admin Talkly.",
 };
 
 function MasukKeluarga() {
@@ -153,8 +152,24 @@ function MasukKeluarga() {
   );
 }
 
-/** Terapis dan admin sama-sama masuk dengan email + kata sandi; akunnya dibuat admin, bukan daftar sendiri. */
-function MasukEmail({ jenis }: { jenis: "terapis" | "admin" }) {
+/**
+ * Terapis dan admin sama-sama masuk dengan email + kata sandi, jadi satu formulir. Akun dicoba sebagai terapis dulu;
+ * bila bukan terapis (401), dicoba sebagai admin. Tujuan setelah masuk mengikuti akun yang cocok.
+ */
+async function masukDenganEmail(email: string, kata_sandi: string): Promise<"terapis" | "admin"> {
+  // Mode data contoh menerima semua akun, jadi perannya ditebak dari alamat email.
+  if (PAKAI_CONTOH) return email.startsWith("admin") ? "admin" : "terapis";
+  try {
+    await panggil(API.terapisMasuk, { email, kata_sandi });
+    return "terapis";
+  } catch (err) {
+    if (!(err instanceof GalatApi && err.status === 401)) throw err;
+  }
+  await panggil(API.adminMasuk, { email, kata_sandi });
+  return "admin";
+}
+
+function MasukEmail() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [kataSandi, setKataSandi] = useState("");
@@ -166,9 +181,9 @@ function MasukEmail({ jenis }: { jenis: "terapis" | "admin" }) {
     setProses(true);
     setGalat(null);
     try {
-      await panggil(jenis === "admin" ? API.adminMasuk : API.terapisMasuk, { email: email.trim(), kata_sandi: kataSandi });
-      tandaiMasukContoh(jenis);
-      router.replace(jenis === "admin" ? "/admin" : "/terapis");
+      const peran = await masukDenganEmail(email.trim(), kataSandi);
+      tandaiMasukContoh(peran);
+      router.replace(peran === "admin" ? "/admin" : "/terapis");
     } catch (err) {
       setGalat(err instanceof GalatApi && err.status === 401 ? "Email atau kata sandi salah." : pesanDari(err));
       setProses(false);
@@ -183,7 +198,7 @@ function MasukEmail({ jenis }: { jenis: "terapis" | "admin" }) {
           className={g.isian}
           type="email"
           autoComplete="username"
-          placeholder={jenis === "admin" ? "nama@talkly.id" : "nama@klinik.id"}
+          placeholder="nama@klinik.id"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -204,10 +219,10 @@ function MasukEmail({ jenis }: { jenis: "terapis" | "admin" }) {
       </label>
       {galat ? <p role="alert" className={g.kotakGalat}>{galat}</p> : null}
       <button type="submit" disabled={proses || !email.trim() || kataSandi.length < 6} className={g.tombolUtama}>
-        {proses ? "Memeriksa…" : jenis === "admin" ? "Masuk ke panel admin" : "Masuk ke dasbor"}
+        {proses ? "Memeriksa…" : "Masuk"}
       </button>
       <p className="text-center text-[14px] leading-snug text-abu">
-        {jenis === "admin" ? "Khusus tim Talkly." : "Akun terapis dibuat oleh admin Talkly untuk klinik Anda."}
+        Terapis diarahkan ke dasbor anak, admin ke panel admin. Akun terapis dibuat oleh admin Talkly.
       </p>
     </form>
   );
