@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "uji": "tsx --test uji/*.test.ts",
+    "uji": "tsx --test uji/*.test.ts lib/**/*.test.ts",
     "uji:alur": "tsx uji/alur.ts",
     "uji:akurasi": "tsx uji/akurasi.ts",
     "seed": "tsx supabase/seed.ts",

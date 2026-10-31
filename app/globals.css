@@ -1,26 +1,139 @@
 @import "tailwindcss";
 
+/* Token warna Talkly (Lampiran 1 proposal v19). Tidak ada merah di mana pun:
+   hijau = tombol utama dan angka terukur, oranye = pujian dan laporan keluarga. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f3f6f5;
+  --permukaan: #ffffff;
+  --garis: rgb(31 42 40 / 0.08);
+  --foreground: #1f2a28;
+  --hijau: #3a9d8f;
+  --hijau-tua: #2c7a6f;
+  --hijau-muda: #e6f4f1;
+  --oranye: #e8833a;
+  --oranye-tua: #b85f1e;
+  --oranye-muda: #fdf0e6;
+  --abu: #66726f;
+  --abu-muda: #e9eeec;
+  --ease-pegas: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-permukaan: var(--permukaan);
+  --color-garis: var(--garis);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-hijau: var(--hijau);
+  --color-hijau-tua: var(--hijau-tua);
+  --color-hijau-muda: var(--hijau-muda);
+  --color-oranye: var(--oranye);
+  --color-oranye-tua: var(--oranye-tua);
+  --color-oranye-muda: var(--oranye-muda);
+  --color-abu: var(--abu);
+  --color-abu-muda: var(--abu-muda);
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --ease-pegas: var(--ease-pegas);
+  --shadow-kartu: 0 1px 2px rgb(31 42 40 / 0.04), 0 4px 16px rgb(31 42 40 / 0.04);
+  --shadow-angkat: 0 2px 6px rgb(44 122 111 / 0.18), 0 10px 24px rgb(44 122 111 / 0.18);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+h1 {
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+button,
+a,
+label,
+summary {
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 2px solid var(--hijau);
+  outline-offset: 2px;
+}
+
+/* Umpan balik tekan muncul saat jari menyentuh, bukan saat dilepas. */
+.tekan {
+  transition: transform 160ms var(--ease-pegas), opacity 160ms var(--ease-pegas);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.tekan:active:not(:disabled) {
+  transform: scale(0.97);
+  transition-duration: 60ms;
+}
+
+@keyframes muncul {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.muncul {
+  animation: muncul 360ms var(--ease-pegas) both;
+}
+
+@keyframes denyut {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.kerangka {
+  background: var(--abu-muda);
+  border-radius: 0.75rem;
+  animation: denyut 1.4s ease-in-out infinite;
+}
+
+@keyframes titik-rekam {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+.titik-rekam {
+  animation: titik-rekam 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tekan:active:not(:disabled) {
+    transform: none;
+    opacity: 0.7;
+  }
+  @keyframes muncul {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .kerangka,
+  .titik-rekam {
+    animation: none;
+  }
 }
