@@ -6,38 +6,38 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 
 ### 4.0 Fondasi (I0)
 - [x] A0.1 Kerangka proyek. Dikerjakan B (commit b281a99) atas kesepakatan tim; repo publik dan collaborator diatur A.
-- [ ] A0.2 Supabase, kunci, Vercel. `vercel.json` dan `/api/tes-sambungan` ada; menunggu migrasi untuk cek Supabase ok, dan secret Vercel untuk deploy otomatis.
+- [x] A0.2 Supabase (TALKLY-DEV lokal, TALKLY produksi, Singapura), env Vercel Production, `/api/tes-sambungan` di produksi 4/4 ok (31 Okt).
 - [x] A0.3 Akses dan sesi (`lib/server/`), tes tanda tangan `uji/tanda.test.ts` lolos.
 - [ ] A0.4 Kontrak bertiga. Skema dan matriks ditulis A; menunggu contoh B dan C serta persetujuan sebelum commit penguncian.
 - [x] A0.5 Tes penjaga `uji/kontrak.test.ts`, `uji/akses.test.ts` (endpoint I1–I3 masih todo).
 - [ ] A0.6 README dan deklarasi. Kerangka, arsitektur, teknologi, bahan persiapan, AI Use dan Third-Party sudah diisi.
 - [ ] A0.7 `scripts/asap.sh` ada; belum dijalankan ke produksi (endpoint belum ada).
-- [ ] A0.8 Workflow deploy ada; menunggu secret `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+- [x] A0.8 Deploy otomatis lewat GitHub Actions dengan secret Vercel: run untuk 9f549aa dan d882fb9 sukses (31 Okt). Commit B tayang.
 
 ### 4.1 Basis data dan login
-- [ ] A1.1 Migrasi skema · I1
-- [ ] A1.2 RLS dan storage · I1
+- [x] A1.1 Migrasi skema (8bd3b49): `scripts/cek-skema.ts` lolos di TALKLY-DEV dan TALKLY (31 Okt). `supabase db diff` tidak dipakai; kedua proyek menjalankan file yang sama.
+- [ ] A1.2 RLS dan bucket audio privat terpasang di kedua proyek; anon 0 baris baru terbukti di tabel kosong. Uji ulang setelah seed + uji terapis A vs B.
 - [ ] A1.3 Gabung dan undangan · I2
 - [ ] A1.4 Masuk di HP baru dan kelola akun · I3
 - [ ] A1.5 Izin rekaman · I3
-- [ ] A1.6 Login terapis · I1
+- [x] A1.6 Login terapis: Kak Nadia 204, kata sandi salah 401 (31 Okt, lokal ke TALKLY-DEV).
 
 ### 4.2 Data contoh
-- [ ] A2.1 Bank aktivitas dan templat · I1
-- [ ] A2.2 Seed demo · I2
-- [ ] A2.3 Mode demo · I1
+- [x] A2.1 17 aktivitas, 18 templat (9 pujian/9 saran, semua pemicu), `uji/konten.test.ts` lolos tanpa kata terlarang. Disusun dari proposal karena berkas konten klinis tidak ditemukan; perlu tinjauan terapis.
+- [ ] A2.2 Seed demo · I2. Sudah: klinik, Kak Nadia, Raka, Ibu Sari, Mbak Sri, rencana minggu ini, Keluarga Uji B (dev), idempoten. Belum: riwayat 3 minggu dan 24 anak lain.
+- [x] A2.3 Mode demo, K9 lolos (demo Ibu Sari → Kak Nadia → GET /api/saya 401).
 
 ### 4.3 Pipeline satu rekaman
-- [ ] A3.1 Terima unggahan · I1
-- [ ] A3.2 STT · I1
-- [ ] A3.3 Mutu · I1
-- [ ] A3.4 Perekam dan suara anak · I1
-- [ ] A3.5 Ajakan, jeda, giliran · I1
-- [ ] A3.6 Cadangan STT gagal · I2
+- [x] A3.1 Unggah: 202, id_lokal ganda → satu baris, 422 tanpa izin, 404 keluarga lain (`uji/alur-rekaman.ts`).
+- [ ] A3.2 STT Scribe → Deepgram, transkrip disimpan di `rekaman.meta.transkrip` dan diputar ulang. Belum dicoba dengan rekaman suara asli dari HP.
+- [x] A3.3 Mutu: 4 tes tolak (pendek, sepi, terputus, TV) + 1 lolos.
+- [x] A3.4 Perekam = ucapan terbanyak; dewasa lain bicara panjang bukan anak; jejak hening dipakai bila label tidak ada.
+- [x] A3.5 Jeda 4,8 → anak bersuara → ibu menanggapi = 1 giliran; tiga "ayo bilang" = 1 suruhan beruntun (16 tes).
+- [x] A3.6 STT gagal → dinilai dari jejak ponsel, penyedia `tidak_ada`, status naik (dicoba lewat berkas palsu).
 - [ ] A3.7 Hapus audio · I3
 
 ### 4.4 AI
-- [ ] A4.1 Penilaian satu rekaman · I1
+- [x] A4.1 GPT-6 Luna dengan validasi dan cadangan: 8 tes (kutipan palsu, batas waktu, ragu, versi anak, ID, diagnosis, penyamaran) + 1 panggilan asli 4,5 detik. Tes 10 transkrip asli menunggu rekaman N01–N15.
 - [ ] A4.2 Draf rencana minggu depan · I3
 - [ ] A4.3 Kartu benda dan ekstraksi catatan malam · I3
 
@@ -46,7 +46,7 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 - [ ] A5.2 Aturan status · I2
 - [ ] A5.3 Kurang tepat · I2
 - [ ] A5.4 Agregat dan kemajuan · I2
-- [ ] A5.5 Dasbor terapis · I1/I2
+- [ ] A5.5 Dasbor terapis · `GET /api/anak/:id/kartu` lolos kontrak, terapis lain 403 (31 Okt). Belum: minggu-ini, anak, aktivitas-bank, pesan.
 - [ ] A5.6 Pengingat dan push · I3
 
 ### 4.6–4.8

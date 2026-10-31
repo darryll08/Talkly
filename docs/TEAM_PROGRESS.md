@@ -1,5 +1,19 @@
 # Talkly — checkpoint C
 
+## Instruksi terbaru: kirim C ke main
+
+Pemeriksaan ulang sesi 58850 selesai: typegen, TypeScript, lint, 89 tes pass, 35 skipped, 30 TODO, dan build seluruh rute berhasil dengan satu worker. Pengurangan worker hanya pada environment proses lokal, konfigurasi proyek A tidak diubah. Pemeriksaan akses nyata/HP tetap belum selesai.
+
+Pengguna secara eksplisit mengizinkan memasukkan pekerjaan C ke main pada permintaan ini; larangan merge sebelumnya tidak berlaku untuk pengiriman ini. Tetap jangan force-push, mengubah folder A/B di luar hasil merge upstream, atau mengklaim integrasi nyata sudah selesai. Main terakhir yang disinkronkan: 73b8966 (termasuk login terapis dan endpoint kartu anak D4). Branch C menerima main melalui merge normal, mempertahankan commit yang sudah ter-push. Perbaikan C: tombol audio pada daftar terbaru, contoh keadaan kosong/nama panjang, contoh aktivitas bersumber dari bank resmi A, dan format kode C yang dirapikan. Uji terbaru 89 pass, 35 skipped, 30 TODO; build lokal sempat terkena EPERM folder .next dan sedang diverifikasi ulang. Tidak ada pengujian HP/visual atau login database nyata yang diklaim selesai.
+
+## Diagnosis 404 terapis setelah push
+
+Produksi https://talkly-orcin.vercel.app/terapis/masuk terverifikasi HTTP 404. origin/main c4bd3f3 tidak memuat app/(terapis), hanya branch C memuatnya. PR #1 masih open/draft, belum merged, mergeable true/clean; jangan merge tanpa review/izin sesuai pembagian. Check periksa GitHub Actions berhasil untuk head 7113e77; job deploy produksi PR dilewati sesuai workflow. Vercel menyediakan preview branch Ready: https://talkly-git-fitur-aditya-dasbor-terapis-darryls-projects.vercel.app/terapis/masuk, tetapi pemeriksaan HTTP diarahkan ke Login Vercel (bukan bukti UI terapis teruji). Perlu pemilik/anggota dengan akses Vercel untuk mencoba preview, atau review manusia lalu merge/deploy melalui A agar rute ada di produksi. Endpoint backend aplikasi belum tersedia di main (hanya tes-sambungan), sehingga lolos review/merge UI pun belum membuktikan autentikasi/data nyata. Tugas C masih perlu uji visual, varian fixture, pemutar dari daftar terbaru dan integrasi; bukan hanya menunggu. Jangan memperbaiki 404 produksi dengan mengedit folder B/deploy A atau merge sendiri.
+
+## Pembaruan 31 Oktober 14.03 WIB
+
+Pengguna berhasil push lewat CMD host setelah autentikasi browser. HEAD lokal dan origin/fitur/aditya-dasbor-terapis sama: 7113e77c29ef24776f0526a09aa5961e61b9273f. Empat commit C sudah ada di GitHub. Draft PR #1 dibuat sebagai aditt24: https://github.com/darryll08/Talkly/pull/1. Belum merge. Main kini c4bd3f3; kompatibilitas/perubahan sejak d882fb9 belum ditinjau. Respons awal PR melaporkan mergeable false; perlu periksa apakah konflik nyata atau status awal GitHub. Jangan force-push atau rebase commit yang sudah dipush; sinkronkan main melalui merge normal pada branch C saat aman dan jalankan pemeriksaan untuk perubahan yang relevan. Konflik diselesaikan dengan mempertahankan pekerjaan A/B. Catatan lama di bawah tentang belum push/PR sudah historis; autentikasi Git di lingkungan alat belum otomatis dinyatakan berfungsi hanya karena CMD host berhasil.
+
 Terakhir diperiksa: 31 Oktober 2026 sekitar 13.55 WIB. Ikuti checkpoint ini sebelum membaca ulang sumber. Pembagian Prompt Orang C sudah dikonfirmasi pengguna. Codex membantu Aditya; bukan anggota manusia keempat.
 
 ## Repo dan commit

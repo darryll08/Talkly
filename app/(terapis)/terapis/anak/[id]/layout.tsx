@@ -7,13 +7,14 @@ import { tombolTeks } from "@/lib/gaya";
 type Props = { children: ReactNode; params: Promise<{ id: string }> };
 
 export default function LayoutAnak(props: Props) {
-  return <Suspense fallback={<Memuat label="Memuat halaman anak" />}><IsiLayoutAnak {...props} /></Suspense>;
+  return (
+    <Suspense fallback={<Memuat label="Memuat halaman anak" />}>
+      <IsiLayoutAnak {...props} />
+    </Suspense>
+  );
 }
 
-async function IsiLayoutAnak({
-  children,
-  params,
-}: Props) {
+async function IsiLayoutAnak({ children, params }: Props) {
   const { id } = await params;
 
   return (

@@ -3,5 +3,9 @@ import { Memuat } from "@/components/memuat";
 import { KartuAnak } from "./kartu";
 
 export default function HalamanKartu() {
-  return <Suspense fallback={<Memuat label="Memuat kartu anak" />}><KartuAnak /></Suspense>;
+  return (
+    <Suspense fallback={<Memuat label="Memuat kartu anak" />}>
+      <KartuAnak />
+    </Suspense>
+  );
 }

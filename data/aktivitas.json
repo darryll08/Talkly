@@ -1,0 +1,223 @@
+[
+  {
+    "id": "MANDI-01",
+    "judul": "Main bebek sebelum mandi",
+    "rutinitas": "mandi",
+    "tahap": 1,
+    "langkah": [
+      "Pegang mainan bebek di dekat wajah Anda, lalu sebut \"{kata}\" pelan dua kali.",
+      "Diam dan hitung sampai lima dalam hati sambil menatap anak.",
+      "Begitu anak bersuara atau menunjuk, berikan bebeknya dan ulangi \"{kata}\"."
+    ],
+    "bila_mencoba": "Ulangi suaranya dengan jelas, lalu tambah satu kata: \"{kata} mandi!\"",
+    "bila_belum": "Tidak apa-apa. Sebut \"{kata}\" sekali lagi sambil memberikan bebeknya, tanpa menyuruh mengulang."
+  },
+  {
+    "id": "MANDI-02",
+    "judul": "Siram air, lalu berhenti",
+    "rutinitas": "mandi",
+    "tahap": 1,
+    "langkah": [
+      "Siram air ke tangan anak sambil berkata \"air… air…\".",
+      "Berhenti menyiram dan tunggu sampai hitungan lima.",
+      "Bila anak bersuara, menatap, atau menyodorkan tangan, siram lagi sambil berkata \"lagi!\"."
+    ],
+    "bila_mencoba": "Tiru suaranya, lalu jawab dengan dua kata: \"air lagi!\"",
+    "bila_belum": "Contohkan sendiri: \"lagi?\" lalu siram. Coba lagi di siraman berikutnya."
+  },
+  {
+    "id": "MANDI-03",
+    "judul": "Gosok bagian tubuh",
+    "rutinitas": "mandi",
+    "tahap": 2,
+    "langkah": [
+      "Tanyakan pilihan sambil memegang sabun: \"tangan atau kaki?\"",
+      "Tunggu sampai hitungan lima sebelum mulai menggosok.",
+      "Gosok bagian yang dipilih anak sambil menyebut namanya."
+    ],
+    "bila_mencoba": "Ulangi kata anak dan tambah satu kata: \"kaki… gosok kaki!\"",
+    "bila_belum": "Tunjuk keduanya, sebut lagi pilihannya pelan, lalu gosok bagian yang ditatap anak."
+  },
+  {
+    "id": "MAKAN-01",
+    "judul": "Satu suap, tunggu \"mau\"",
+    "rutinitas": "makan",
+    "tahap": 1,
+    "langkah": [
+      "Angkat sendok berisi makanan kesukaan anak setinggi mata Anda.",
+      "Tunggu sampai hitungan lima. Jangan langsung menyuapkan.",
+      "Begitu anak bersuara atau membuka mulut, suapkan sambil berkata \"{kata}\"."
+    ],
+    "bila_mencoba": "Ulangi suaranya dan tambah satu kata: \"mamam… mamam nasi!\"",
+    "bila_belum": "Sebut \"mau?\" sekali dengan nada ceria, lalu suapkan tanpa mendesak."
+  },
+  {
+    "id": "MAKAN-02",
+    "judul": "Pilih camilan",
+    "rutinitas": "makan",
+    "tahap": 2,
+    "langkah": [
+      "Pegang dua camilan di kiri dan kanan, sebut namanya satu per satu.",
+      "Tanyakan \"yang mana?\" lalu diam sampai hitungan lima.",
+      "Berikan yang dipilih anak sambil menyebut namanya sekali lagi."
+    ],
+    "bila_mencoba": "Ulangi pilihannya dengan jelas dan tambah satu kata: \"biskuit… biskuit enak!\"",
+    "bila_belum": "Angkat sedikit camilan yang ditatap anak, sebut namanya, lalu berikan."
+  },
+  {
+    "id": "MAKAN-03",
+    "judul": "Gelas kosong, minta \"lagi\"",
+    "rutinitas": "makan",
+    "tahap": 1,
+    "langkah": [
+      "Tuang sedikit air ke gelas anak, cukup satu teguk.",
+      "Setelah habis, pegang botol dan tunggu sampai hitungan lima.",
+      "Bila anak bersuara atau menyodorkan gelas, tuang lagi sambil berkata \"lagi\"."
+    ],
+    "bila_mencoba": "Tiru suaranya lalu sambung: \"minum lagi!\"",
+    "bila_belum": "Contohkan dengan bertanya \"lagi?\" lalu tuang. Ulangi di teguk berikutnya."
+  },
+  {
+    "id": "MAIN-01",
+    "judul": "Mobil siap… jalan!",
+    "rutinitas": "bermain",
+    "tahap": 1,
+    "langkah": [
+      "Pegang mobil mainan di garis start, katakan \"siap… siap…\".",
+      "Tahan mobilnya dan tunggu sampai hitungan lima.",
+      "Begitu anak bersuara, luncurkan mobil sambil berkata \"jalan!\"."
+    ],
+    "bila_mencoba": "Ulangi suaranya dengan semangat dan tambah satu kata: \"jalan… mobil jalan!\"",
+    "bila_belum": "Luncurkan sambil berkata \"jalan!\" dan ulangi permainannya. Anak sering mencoba di putaran ketiga."
+  },
+  {
+    "id": "MAIN-02",
+    "judul": "Cilukba",
+    "rutinitas": "bermain",
+    "tahap": 1,
+    "langkah": [
+      "Tutup wajah Anda dengan kain sambil berkata \"mana…?\".",
+      "Diam di balik kain sampai hitungan lima.",
+      "Buka kain saat anak bersuara atau menarik kain, lalu katakan \"ba!\"."
+    ],
+    "bila_mencoba": "Tiru suaranya, tertawa bersama, lalu ulangi permainannya.",
+    "bila_belum": "Buka kain sambil berkata \"ba!\" dengan ceria, lalu ulangi."
+  },
+  {
+    "id": "MAIN-03",
+    "judul": "Menara balok, lalu roboh",
+    "rutinitas": "bermain",
+    "tahap": 2,
+    "langkah": [
+      "Susun balok bersama, sebut \"satu… lagi…\" tiap menambah balok.",
+      "Sebelum merobohkan, tanyakan \"roboh?\" lalu tunggu sampai hitungan lima.",
+      "Robohkan saat anak bersuara, sambil berkata \"roboh!\"."
+    ],
+    "bila_mencoba": "Ulangi kata anak dan tambah satu kata: \"roboh… menara roboh!\"",
+    "bila_belum": "Robohkan sambil berkata \"roboh!\", lalu ajak menyusun lagi."
+  },
+  {
+    "id": "MAIN-04",
+    "judul": "Nyanyi, berhenti sebelum kata terakhir",
+    "rutinitas": "bermain",
+    "tahap": 2,
+    "langkah": [
+      "Nyanyikan lagu yang sering didengar anak, misalnya \"Cicak-cicak di dinding\".",
+      "Berhenti tepat sebelum kata terakhir satu baris, lalu tunggu sampai hitungan lima.",
+      "Bila anak bersuara, lanjutkan lagunya dengan gembira."
+    ],
+    "bila_mencoba": "Ulangi suaranya sebagai bagian lagu, lalu lanjutkan bait berikutnya.",
+    "bila_belum": "Lanjutkan lagunya sendiri dan coba berhenti lagi di baris berikutnya."
+  },
+  {
+    "id": "MAIN-05",
+    "judul": "Tiup gelembung",
+    "rutinitas": "bermain",
+    "tahap": 1,
+    "langkah": [
+      "Tiup gelembung sabun beberapa kali sambil berkata \"tiup!\".",
+      "Tutup botolnya, pegang di depan anak, dan tunggu sampai hitungan lima.",
+      "Bila anak bersuara atau menunjuk, buka dan tiup lagi sambil berkata \"lagi!\"."
+    ],
+    "bila_mencoba": "Tiru suaranya lalu tambah: \"tiup lagi!\"",
+    "bila_belum": "Contohkan \"tiup?\" dengan nada bertanya, lalu tiup lagi."
+  },
+  {
+    "id": "PAKAI-01",
+    "judul": "Kaus kaki di mana?",
+    "rutinitas": "berpakaian",
+    "tahap": 1,
+    "langkah": [
+      "Pegang satu kaus kaki dan tunjukkan ke anak sambil berkata \"kaus kaki\".",
+      "Tunggu sampai hitungan lima sebelum memakaikannya.",
+      "Pakaikan saat anak bersuara atau menyodorkan kaki, sambil berkata \"pakai!\"."
+    ],
+    "bila_mencoba": "Ulangi suaranya dan tambah satu kata: \"pakai… pakai kaus kaki!\"",
+    "bila_belum": "Pakaikan sambil menyebut \"pakai\" dan coba lagi di kaus kaki kedua."
+  },
+  {
+    "id": "PAKAI-02",
+    "judul": "Pilih baju",
+    "rutinitas": "berpakaian",
+    "tahap": 2,
+    "langkah": [
+      "Tunjukkan dua baju, sebut warnanya: \"merah atau biru?\"",
+      "Diam dan tunggu sampai hitungan lima.",
+      "Pakaikan baju yang dipilih sambil menyebut warnanya sekali lagi."
+    ],
+    "bila_mencoba": "Ulangi pilihannya dan sambung dua kata: \"biru… baju biru!\"",
+    "bila_belum": "Angkat baju yang ditatap anak, sebut warnanya, lalu pakaikan."
+  },
+  {
+    "id": "BELANJA-01",
+    "judul": "Masukkan ke keranjang",
+    "rutinitas": "berbelanja",
+    "tahap": 2,
+    "langkah": [
+      "Di warung atau pasar, pegang satu barang dan sebut namanya pelan.",
+      "Tanyakan \"masuk?\" sambil memegang barang di atas keranjang, lalu tunggu sampai hitungan lima.",
+      "Masukkan saat anak bersuara, sambil berkata \"masuk!\"."
+    ],
+    "bila_mencoba": "Ulangi kata anak lalu tambah satu kata: \"masuk… pisang masuk!\"",
+    "bila_belum": "Masukkan sambil berkata \"masuk!\" dan ulangi di barang berikutnya."
+  },
+  {
+    "id": "MAKAN-04",
+    "judul": "Ceritakan isi piring",
+    "rutinitas": "makan",
+    "tahap": 3,
+    "langkah": [
+      "Tunjuk satu makanan di piring dan tanyakan \"ini apa?\"",
+      "Tunggu sampai hitungan lima sambil tetap menatap piring bersama anak.",
+      "Tanggapi jawaban anak dengan kalimat dua sampai tiga kata."
+    ],
+    "bila_mencoba": "Ulangi ucapan anak dan tambah satu kata: \"ayam… ayam goreng!\"",
+    "bila_belum": "Jawab sendiri pelan, \"ayam\", lalu lanjut makan dan coba lagi dengan makanan lain."
+  },
+  {
+    "id": "MAIN-06",
+    "judul": "Boneka makan dan tidur",
+    "rutinitas": "bermain",
+    "tahap": 3,
+    "langkah": [
+      "Ajak boneka \"makan\" bersama anak sambil berkata \"boneka makan\".",
+      "Berhenti dan tanyakan \"boneka mau apa?\", lalu tunggu sampai hitungan lima.",
+      "Lakukan yang dikatakan anak dan ucapkan kalimatnya dengan lengkap."
+    ],
+    "bila_mencoba": "Lengkapi ucapannya: anak berkata \"bobok\", Anda jawab \"boneka bobok!\"",
+    "bila_belum": "Tawarkan dua pilihan: \"makan atau bobok?\" lalu tunggu lagi."
+  },
+  {
+    "id": "TIDUR-01",
+    "judul": "Selamat malam untuk semua",
+    "rutinitas": "tidur",
+    "tahap": 4,
+    "langkah": [
+      "Sebelum tidur, sebut satu benda di kamar: \"selamat malam, lampu\".",
+      "Tunjuk benda berikutnya dan tunggu sampai hitungan lima.",
+      "Bila anak menyebutnya, ucapkan kalimat lengkapnya bersama-sama."
+    ],
+    "bila_mencoba": "Lengkapi menjadi kalimat: \"selamat malam, boneka!\"",
+    "bila_belum": "Ucapkan sendiri pelan, lalu tunjuk benda lain dan tunggu lagi."
+  }
+]
