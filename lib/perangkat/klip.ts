@@ -71,8 +71,10 @@ export function pakaiKartuBenda(k: Pick<KartuBenda, "id" | "kata" | "untuk_kata"
 /** Kartu dihapus: pilihan yang menunjuk kartu itu dibuang, sehingga kata itu kembali memakai kartu terbaru. */
 export function lupakanPilihanKartu(id: string) {
   try {
-    const sisa = Object.fromEntries(Object.entries(kartuDipakai()).filter(([, v]) => v !== id));
-    localStorage.setItem(KUNCI_DIPAKAI, JSON.stringify(sisa));
+    for (const kunci of [KUNCI_DIPAKAI, KUNCI_AKTIVITAS]) {
+      const lama = JSON.parse(localStorage.getItem(kunci) ?? "{}") as Record<string, string>;
+      localStorage.setItem(kunci, JSON.stringify(Object.fromEntries(Object.entries(lama).filter(([, v]) => v !== id))));
+    }
   } catch {}
 }
 
@@ -85,6 +87,36 @@ export function lepasKartuBenda(kata: string) {
 export function kartuUntukKata(daftar: KartuBenda[], kata: string, pilihan = kartuDipakai()): KartuBenda | undefined {
   if (kata in pilihan) return pilihan[kata] ? daftar.find((x) => x.id === pilihan[kata]) : undefined;
   return daftar.find((x) => kataKartu(x) === kata);
+}
+
+// Pilihan foto per aktivitas (item rencana), supaya mandi dan makan bisa memakai foto berbeda.
+// Nilai "" = aktivitas itu sengaja tanpa foto. Tanpa pilihan, dipakai kartu yang cocok dengan kata targetnya.
+const KUNCI_AKTIVITAS = "talkly:kartu-benda-aktivitas";
+
+export function kartuAktivitas(): Record<string, string> {
+  try {
+    return JSON.parse(localStorage.getItem(KUNCI_AKTIVITAS) ?? "{}") as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
+/** id kosong = lepas foto dari aktivitas ini. */
+export function pakaiDiAktivitas(itemId: string, id: string) {
+  try {
+    localStorage.setItem(KUNCI_AKTIVITAS, JSON.stringify({ ...kartuAktivitas(), [itemId]: id }));
+  } catch {}
+}
+
+/** Kartu untuk satu aktivitas: pilihan khusus aktivitas itu, lalu kartu yang cocok dengan kata targetnya. */
+export function kartuUntukAktivitas(daftar: KartuBenda[], itemId: string, kata: string[]): KartuBenda | undefined {
+  const pilihan = kartuAktivitas();
+  if (itemId in pilihan) {
+    if (!pilihan[itemId]) return undefined;
+    const dipilih = daftar.find((x) => x.id === pilihan[itemId]);
+    if (dipilih) return dipilih;
+  }
+  return pilihKartuUntuk(daftar, kata);
 }
 
 /** Kartu untuk kata target pertama yang punya foto. */
