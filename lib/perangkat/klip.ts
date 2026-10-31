@@ -28,12 +28,19 @@ export type KartuBenda = {
   contoh_kalimat: string[];
   foto: Blob;
   dibuat: number;
-  /** Kata target yang dihubungkan keluarga (bebek, mamam, …). Kosong = kartu bebas, tidak muncul di aktivitas. */
+  /** Kata target yang dihubungkan keluarga (bebek, mamam, …), atau LAINNYA untuk benda di luar kata target. */
   untuk_kata?: string;
 };
 
+/** Slot kartu di luar kata target. Kartu Lainnya yang dipilih tampil di aktivitas yang belum punya foto kata. */
+export const LAINNYA = "*lainnya";
+
 /** Kata yang dipakai untuk mencocokkan kartu dengan kata target aktivitas. */
 export const kataKartu = (k: Pick<KartuBenda, "kata" | "untuk_kata">) => k.untuk_kata ?? k.kata;
+
+/** Slot pilihan kartu: kata targetnya bila ada di daftar kata target anak, selain itu Lainnya. */
+export const slotKartu = (k: Pick<KartuBenda, "kata" | "untuk_kata">, kataTarget: string[]) =>
+  kataTarget.includes(kataKartu(k)) ? kataKartu(k) : LAINNYA;
 
 export async function simpanKartuBenda(k: KartuBenda) {
   await simpan("kartu_benda", k);
@@ -64,17 +71,16 @@ function tulisDipakai(kata: string, id: string) {
   } catch {}
 }
 
-export function pakaiKartuBenda(k: Pick<KartuBenda, "id" | "kata" | "untuk_kata">) {
-  tulisDipakai(kataKartu(k), k.id);
+/** Pilih kartu untuk slotnya (kata target atau LAINNYA). */
+export function pakaiKartuBenda(slot: string, id: string) {
+  tulisDipakai(slot, id);
 }
 
 /** Kartu dihapus: pilihan yang menunjuk kartu itu dibuang, sehingga kata itu kembali memakai kartu terbaru. */
 export function lupakanPilihanKartu(id: string) {
   try {
-    for (const kunci of [KUNCI_DIPAKAI, KUNCI_AKTIVITAS]) {
-      const lama = JSON.parse(localStorage.getItem(kunci) ?? "{}") as Record<string, string>;
-      localStorage.setItem(kunci, JSON.stringify(Object.fromEntries(Object.entries(lama).filter(([, v]) => v !== id))));
-    }
+    const sisa = Object.fromEntries(Object.entries(kartuDipakai()).filter(([, v]) => v !== id));
+    localStorage.setItem(KUNCI_DIPAKAI, JSON.stringify(sisa));
   } catch {}
 }
 
@@ -86,47 +92,18 @@ export function lepasKartuBenda(kata: string) {
 /** Kartu yang tampil untuk satu kata: pilihan keluarga, atau yang terbaru bila belum pernah dipilih. */
 export function kartuUntukKata(daftar: KartuBenda[], kata: string, pilihan = kartuDipakai()): KartuBenda | undefined {
   if (kata in pilihan) return pilihan[kata] ? daftar.find((x) => x.id === pilihan[kata]) : undefined;
-  return daftar.find((x) => kataKartu(x) === kata);
+  // Kartu Lainnya hanya tampil bila dipilih keluarga.
+  return kata === LAINNYA ? undefined : daftar.find((x) => kataKartu(x) === kata);
 }
 
-// Pilihan foto per aktivitas (item rencana), supaya mandi dan makan bisa memakai foto berbeda.
-// Nilai "" = aktivitas itu sengaja tanpa foto. Tanpa pilihan, dipakai kartu yang cocok dengan kata targetnya.
-const KUNCI_AKTIVITAS = "talkly:kartu-benda-aktivitas";
-
-export function kartuAktivitas(): Record<string, string> {
-  try {
-    return JSON.parse(localStorage.getItem(KUNCI_AKTIVITAS) ?? "{}") as Record<string, string>;
-  } catch {
-    return {};
-  }
-}
-
-/** id kosong = lepas foto dari aktivitas ini. */
-export function pakaiDiAktivitas(itemId: string, id: string) {
-  try {
-    localStorage.setItem(KUNCI_AKTIVITAS, JSON.stringify({ ...kartuAktivitas(), [itemId]: id }));
-  } catch {}
-}
-
-/** Kartu untuk satu aktivitas: pilihan khusus aktivitas itu, lalu kartu yang cocok dengan kata targetnya. */
-export function kartuUntukAktivitas(daftar: KartuBenda[], itemId: string, kata: string[]): KartuBenda | undefined {
-  const pilihan = kartuAktivitas();
-  if (itemId in pilihan) {
-    if (!pilihan[itemId]) return undefined;
-    const dipilih = daftar.find((x) => x.id === pilihan[itemId]);
-    if (dipilih) return dipilih;
-  }
-  return pilihKartuUntuk(daftar, kata);
-}
-
-/** Kartu untuk kata target pertama yang punya foto. */
+/** Kartu untuk aktivitas: foto kata target pertama yang ada, lalu kartu Lainnya yang dipilih. */
 export function pilihKartuUntuk(daftar: KartuBenda[], kata: string[]): KartuBenda | undefined {
   const pilihan = kartuDipakai();
   for (const k of kata) {
     const kartu = kartuUntukKata(daftar, k, pilihan);
     if (kartu) return kartu;
   }
-  return undefined;
+  return kartuUntukKata(daftar, LAINNYA, pilihan);
 }
 
 /** Perkecil foto ke sisi terpanjang 900 px, JPEG kualitas 0,85. */

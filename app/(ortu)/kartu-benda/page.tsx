@@ -1,30 +1,27 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import * as g from "@/lib/gaya";
 import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
-import { useData } from "@/lib/perangkat/use-data";
 import {
   daftarKartuBenda,
   hapusKartuBenda,
-  kartuAktivitas,
   kartuDipakai,
-  kartuUntukAktivitas,
-  kataKartu,
+  kartuUntukKata,
+  LAINNYA,
+  lepasKartuBenda,
   lupakanPilihanKartu,
-  pakaiDiAktivitas,
   pakaiKartuBenda,
   perkecilFoto,
   simpanKartuBenda,
+  slotKartu,
   type KartuBenda,
 } from "@/lib/perangkat/klip";
 import { useSaya } from "@/lib/perangkat/saya";
 import { KepalaHalaman } from "@/components/kepala-halaman";
 import { Ikon } from "@/components/ikon";
 import { KepalaHijau } from "@/components/kepala-hijau";
-import { Memuat } from "@/components/memuat";
 
 type Tampil = KartuBenda & { url: string };
 
@@ -51,27 +48,11 @@ function PilihKata({ kata, nilai, ubah }: { kata: string[]; nilai: string; ubah:
 }
 
 // O4b Kartu foto benda. Foto disimpan di ponsel saja; hanya nama benda yang dikirim ke server.
-// Kartu dihubungkan ke salah satu kata target supaya fotonya muncul di kartu aktivitas.
-// Dibuka dari kartu aktivitas (?aktivitas=…&judul=…&kata=…), halaman ini memilih foto khusus aktivitas itu.
-export default function HalamanKartuBenda() {
-  return (
-    <Suspense fallback={<Memuat />}>
-      <KartuFotoBenda />
-    </Suspense>
-  );
-}
-
-function KartuFotoBenda() {
-  const cari = useSearchParams();
-  const router = useRouter();
-  const aktivitas = cari.get("aktivitas");
-  const judulAktivitas = cari.get("judul") ?? "aktivitas ini";
-  const kataAktivitas = (cari.get("kata") ?? "").split(",").filter(Boolean);
+// Kartu dihubungkan ke kata target (saran dari bank) atau Lainnya. Kartu Lainnya yang dipilih tampil, dengan
+// namanya sendiri, di kartu aktivitas yang belum punya foto untuk kata targetnya.
+export default function KartuFotoBenda() {
   const { data: saya } = useSaya();
   const kataTarget = saya?.anak.kata_target ?? [];
-  const [diAktivitas, setDiAktivitas] = useState<Record<string, string>>({});
-  const { data: hariIni } = useData(API.hariIni, undefined, { simpanLokal: "hari-ini" });
-  const aktivitasHariIni = hariIni?.aktivitas ?? [];
   const [foto, setFoto] = useState<{ blob: Blob; url: string } | null>(null);
   const [nama, setNama] = useState("");
   const [untuk, setUntuk] = useState<string | null>(null);
@@ -79,39 +60,32 @@ function KartuFotoBenda() {
   const [galat, setGalat] = useState<string | null>(null);
   const [daftar, setDaftar] = useState<Tampil[]>([]);
   const [buka, setBuka] = useState<Tampil | null>(null);
-  const [, setDipakai] = useState<Record<string, string>>({});
+  const [dipakai, setDipakai] = useState<Record<string, string>>({});
 
   // Tanpa pilihan eksplisit, kata target yang sama dengan nama benda dipilih otomatis.
   const namaRapi = nama.trim().toLowerCase();
-  const untukKata = untuk ?? (kataTarget.includes(namaRapi) ? namaRapi : (kataAktivitas.find((k) => kataTarget.includes(k)) ?? ""));
+  const untukKata = untuk ?? (kataTarget.includes(namaRapi) ? namaRapi : "");
 
-  // Sebelum data anak termuat, kartu yang punya untuk_kata dianggap terhubung agar label tidak berkedip.
-  const terhubung = (k: KartuBenda) => (saya ? kataTarget.includes(kataKartu(k)) : Boolean(k.untuk_kata));
-  /** Aktivitas hari ini yang sedang menampilkan kartu ini (pilihan per aktivitas, atau cocok dengan kata targetnya). */
-  const tampilDi = (k: KartuBenda) => aktivitasHariIni.filter((a) => kartuUntukAktivitas(daftar, a.item_id, a.kata_target)?.id === k.id);
+  // Sebelum data anak termuat, slot diambil dari untuk_kata yang tersimpan agar label tidak berkedip.
+  const slot = (k: KartuBenda) => (saya ? slotKartu(k, kataTarget) : (k.untuk_kata ?? LAINNYA));
+  const sedangDipakai = (k: KartuBenda) => kartuUntukKata(daftar, slot(k), dipakai)?.id === k.id;
 
-  function aturAktivitas(k: KartuBenda, itemId: string, tampil: boolean) {
-    pakaiDiAktivitas(itemId, tampil ? k.id : "");
-    setDiAktivitas(kartuAktivitas());
+  function pakai(k: Tampil) {
+    pakaiKartuBenda(slot(k), k.id);
+    setDipakai(kartuDipakai());
   }
 
-  /** Kartu yang sekarang tampil di aktivitas yang sedang dipilihkan fotonya. */
-  const fotoAktivitas = aktivitas ? kartuUntukAktivitas(daftar, aktivitas, kataAktivitas) : undefined;
-  void diAktivitas;
-
-  function pakaiAktivitas(id: string) {
-    if (!aktivitas) return;
-    pakaiDiAktivitas(aktivitas, id);
-    setDiAktivitas(kartuAktivitas());
-    if (id) router.push(`/aktivitas/${encodeURIComponent(aktivitas)}`);
+  function lepas(k: Tampil) {
+    lepasKartuBenda(slot(k));
+    setDipakai(kartuDipakai());
   }
 
   async function hubungkan(k: Tampil, kata: string) {
-    const baru: Tampil = { ...k, untuk_kata: kata || undefined };
+    const baru: Tampil = { ...k, untuk_kata: kata || LAINNYA };
     const { url: _url, ...simpanan } = baru;
     void _url;
     await simpanKartuBenda(simpanan);
-    if (kata) pakaiKartuBenda(baru);
+    pakaiKartuBenda(kata || LAINNYA, baru.id);
     setDipakai(kartuDipakai());
     setBuka(baru);
     await muat();
@@ -147,7 +121,6 @@ function KartuFotoBenda() {
       if (batal) return;
       setDaftar(d.map((k) => ({ ...k, url: URL.createObjectURL(k.foto) })));
       setDipakai(kartuDipakai());
-      setDiAktivitas(kartuAktivitas());
     });
     return () => {
       batal = true;
@@ -181,14 +154,12 @@ function KartuFotoBenda() {
         contoh_kalimat: r.contoh_kalimat,
         foto: foto.blob,
         dibuat: Date.now(),
-        untuk_kata: untukKata || undefined,
+        untuk_kata: untukKata || LAINNYA,
       };
       await simpanKartuBenda(kartu);
-      // Kartu baru yang terhubung ke kata target langsung dipakai; kartu lama tetap tersimpan dan bisa dipilih lagi.
-      if (untukKata) pakaiKartuBenda(kartu);
-      if (aktivitas) pakaiDiAktivitas(aktivitas, kartu.id);
+      // Kartu baru langsung dipilih untuk slotnya; kartu lama tetap tersimpan dan bisa dipilih lagi.
+      pakaiKartuBenda(untukKata || LAINNYA, kartu.id);
       setDipakai(kartuDipakai());
-      setDiAktivitas(kartuAktivitas());
       setBuka({ ...kartu, url: foto.url });
       setFoto(null);
       setNama("");
@@ -205,13 +176,12 @@ function KartuFotoBenda() {
     await hapusKartuBenda(id);
     lupakanPilihanKartu(id);
     setDipakai(kartuDipakai());
-    setDiAktivitas(kartuAktivitas());
     if (buka?.id === id) setBuka(null);
     await muat();
   }
 
   if (buka) {
-    const kata = kataKartu(buka);
+    const lainnya = slot(buka) === LAINNYA;
     return (
       <div className="pb-4">
         <KepalaHalaman kembali="/kartu-benda" />
@@ -231,47 +201,26 @@ function KartuFotoBenda() {
           </p>
 
           <section className="space-y-2">
-            <h2 className={g.labelSeksi}>Otomatis tampil di aktivitas dengan kata</h2>
-            <PilihKata kata={kataTarget} nilai={terhubung(buka) ? kata : ""} ubah={(k) => hubungkan(buka, k)} />
+            <h2 className={g.labelSeksi}>Tampil di aktivitas dengan kata</h2>
+            <PilihKata kata={kataTarget} nilai={lainnya ? "" : slot(buka)} ubah={(k) => hubungkan(buka, k)} />
           </section>
 
           {galat ? <p className={g.kotakGalat}>{galat}</p> : null}
-          {aktivitasHariIni.length > 0 ? (
-            <section className="space-y-2">
-              <h2 className={g.labelSeksi}>Tampilkan di aktivitas</h2>
-              <ul className={g.daftar}>
-                {aktivitasHariIni.map((a) => {
-                  const tampil = tampilDi(buka).some((x) => x.item_id === a.item_id);
-                  return (
-                    <li key={a.item_id}>
-                      <button
-                        type="button"
-                        role="checkbox"
-                        aria-checked={tampil}
-                        onClick={() => aturAktivitas(buka, a.item_id, !tampil)}
-                        className={`${g.barisDaftar} tekan w-full text-left`}
-                      >
-                        <span
-                          className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
-                            tampil ? "bg-hijau text-white" : "bg-permukaan ring-1 ring-garis"
-                          }`}
-                        >
-                          {tampil ? <Ikon nama="centang" ukuran={16} /> : null}
-                        </span>
-                        <span className="min-w-0">
-                          <span className="block text-[16px] font-semibold">{a.judul}</span>
-                          <span className="block text-[13px] text-abu">
-                            {a.rutinitas} · {a.kata_target.join(", ")}
-                          </span>
-                        </span>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-              <p className="px-1 text-[13px] text-abu">Setiap aktivitas menampilkan satu foto. Mencentang di sini mengganti foto aktivitas itu.</p>
-            </section>
-          ) : null}
+          {sedangDipakai(buka) ? (
+            <div className="space-y-2">
+              <p className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-hijau-muda px-4 text-center text-[16px] font-semibold text-hijau-tua">
+                <Ikon nama="centang" ukuran={20} />
+                {lainnya ? <>Tampil di kartu aktivitas sebagai &ldquo;{buka.kata}&rdquo;</> : <>Tampil di kartu aktivitas &ldquo;{slot(buka)}&rdquo;</>}
+              </p>
+              <button type="button" onClick={() => lepas(buka)} className={`${g.tombolTeks} w-full justify-center text-abu`}>
+                Batal pilih
+              </button>
+            </div>
+          ) : (
+            <button type="button" onClick={() => pakai(buka)} className={g.tombolUtama}>
+              Pilih kartu ini
+            </button>
+          )}
           <label className={`${g.tombolKedua} cursor-pointer`}>
             <Ikon nama="kamera" ukuran={20} /> Ganti foto
             <input type="file" accept="image/*" capture="environment" onChange={gantiFoto} className="sr-only" />
@@ -287,27 +236,9 @@ function KartuFotoBenda() {
   return (
     <div className="pb-4">
       <div className="muncul space-y-6">
-        <KepalaHijau
-          kembali={aktivitas ? `/aktivitas/${encodeURIComponent(aktivitas)}` : "/hari-ini"}
-          atas={aktivitas ? "Foto untuk aktivitas" : "Kartu foto benda"}
-          judul={aktivitas ? judulAktivitas : "Benda kesukaan anak"}
-          rapat
-        >
-          <p className="text-[16px] text-teks-di-hijau">
-            {aktivitas ? "Pilih foto yang tampil di aktivitas ini, atau ambil foto baru." : "Foto ini hanya tersimpan di HP ini."}
-          </p>
+        <KepalaHijau kembali="/hari-ini" atas="Kartu foto benda" judul="Benda kesukaan anak" rapat>
+          <p className="text-[16px] text-teks-di-hijau">Foto ini hanya tersimpan di HP ini.</p>
         </KepalaHijau>
-
-        {aktivitas && fotoAktivitas ? (
-          <div className="flex items-center justify-between gap-3 rounded-2xl bg-oranye-muda px-4 py-3">
-            <span className="text-[15px] text-oranye-tua">
-              Sekarang tampil: <b>{fotoAktivitas.kata}</b>
-            </span>
-            <button type="button" onClick={() => pakaiAktivitas("")} className={`${g.tombolTeks} px-2 text-[14px] text-oranye-tua`}>
-              Lepas dari aktivitas
-            </button>
-          </div>
-        ) : null}
 
         <form onSubmit={buat} className="space-y-4">
           <label className="tekan flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl border-2 border-dashed border-hijau/40 bg-permukaan text-hijau-tua">
@@ -331,7 +262,7 @@ function KartuFotoBenda() {
               <span className="block text-[15px] font-semibold">Untuk kata</span>
               <PilihKata kata={kataTarget} nilai={untukKata} ubah={setUntuk} />
               <p className="text-[14px] text-abu">
-                {untukKata ? `Foto akan muncul di kartu aktivitas "${untukKata}".` : "Pilih kata target agar fotonya muncul di kartu aktivitas."}
+                {untukKata ? `Foto akan muncul di kartu aktivitas "${untukKata}".` : "Lainnya: foto tampil dengan nama yang kamu isi."}
               </p>
             </div>
           ) : null}
@@ -346,8 +277,7 @@ function KartuFotoBenda() {
             <h2 className={g.labelSeksi}>Kartu tersimpan</h2>
             <ul className="grid grid-cols-2 gap-3">
               {daftar.map((k) => {
-                const di = tampilDi(k);
-                const aktif = aktivitas ? fotoAktivitas?.id === k.id : di.length > 0;
+                const aktif = sedangDipakai(k);
                 return (
                   <li
                     key={k.id}
@@ -363,23 +293,17 @@ function KartuFotoBenda() {
                       <img src={k.url} alt={k.nama_benda} className="aspect-square w-full object-cover" />
                       <span className="block px-3 pt-2 text-[17px] font-bold">{k.kata}</span>
                       <span className="block px-3 text-[13px] text-abu">
-                        {di.length ? `Tampil di: ${di.map((a) => a.rutinitas).join(", ")}` : "Belum tampil di aktivitas"}
+                        {slot(k) === LAINNYA ? "Lainnya" : `Untuk kata "${slot(k)}"`}
                       </span>
                     </button>
                     <div className="flex items-center justify-between px-1">
-                      {aktivitas ? (
-                        aktif ? (
-                          <button type="button" onClick={() => pakaiAktivitas("")} className={`${g.tombolTeks} px-2 text-[14px] text-abu`}>
-                            Lepas
-                          </button>
-                        ) : (
-                          <button type="button" onClick={() => pakaiAktivitas(k.id)} className={`${g.tombolTeks} px-2 text-[14px]`}>
-                            Pakai di sini
-                          </button>
-                        )
+                      {aktif ? (
+                        <button type="button" onClick={() => lepas(k)} className={`${g.tombolTeks} px-2 text-[14px] text-abu`}>
+                          Batal pilih
+                        </button>
                       ) : (
-                        <button type="button" onClick={() => setBuka(k)} className={`${g.tombolTeks} px-2 text-[14px]`}>
-                          Pilih aktivitas
+                        <button type="button" onClick={() => pakai(k)} className={`${g.tombolTeks} px-2 text-[14px]`}>
+                          Pilih
                         </button>
                       )}
                       <button type="button" onClick={() => hapus(k.id)} className={`${g.tombolTeks} px-2 text-[14px] text-abu`}>

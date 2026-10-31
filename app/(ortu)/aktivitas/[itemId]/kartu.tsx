@@ -7,7 +7,7 @@ import * as g from "@/lib/gaya";
 import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
-import { daftarKartuBenda, kartuUntukAktivitas, kataKartu, type KartuBenda } from "@/lib/perangkat/klip";
+import { daftarKartuBenda, kataKartu, pilihKartuUntuk, type KartuBenda } from "@/lib/perangkat/klip";
 import { useSaya } from "@/lib/perangkat/saya";
 import { Memuat } from "@/components/memuat";
 import { KepalaHalaman } from "@/components/kepala-halaman";
@@ -24,14 +24,14 @@ export function KartuAktivitas() {
   const [galatTulis, setGalatTulis] = useState<string | null>(null);
   const [fotoBenda, setFotoBenda] = useState<{ kartu: KartuBenda; url: string } | null>(null);
 
-  // Foto benda untuk aktivitas ini: pilihan khusus aktivitas, atau kartu yang cocok dengan kata targetnya.
+  // Foto benda milik keluarga untuk kata target, bila ada di ponsel ini.
   const kata = data?.kata_target.join("|") ?? "";
   useEffect(() => {
     if (!kata) return;
     let url: string | null = null;
     let batal = false;
     daftarKartuBenda().then((d) => {
-      const k = kartuUntukAktivitas(d, itemId, kata.split("|"));
+      const k = pilihKartuUntuk(d, kata.split("|"));
       if (!k || batal) return;
       url = URL.createObjectURL(k.foto);
       setFotoBenda({ kartu: k, url });
@@ -40,7 +40,7 @@ export function KartuAktivitas() {
       batal = true;
       if (url) URL.revokeObjectURL(url);
     };
-  }, [kata, itemId]);
+  }, [kata]);
 
   async function sudah() {
     setKirim(true);
@@ -65,7 +65,12 @@ export function KartuAktivitas() {
   }
   if (!data) return <Memuat />;
   const selesai = tercatat || data.selesai_hari_ini;
-  const keKartuBenda = `/kartu-benda?${new URLSearchParams({ aktivitas: itemId, judul: data.judul, kata: data.kata_target.join(",") })}`;
+  // Kata yang disebut saat menunjukkan foto: kata target bila kartu terhubung ke kata aktivitas ini, selain itu nama benda.
+  const kataFoto = fotoBenda
+    ? data.kata_target.includes(kataKartu(fotoBenda.kartu))
+      ? kataKartu(fotoBenda.kartu)
+      : fotoBenda.kartu.kata
+    : "";
 
   return (
     <div className="pb-4">
@@ -78,7 +83,7 @@ export function KartuAktivitas() {
         </section>
 
         {fotoBenda ? (
-          <Link href={keKartuBenda} className="tekan flex items-center gap-4 rounded-3xl bg-oranye-muda p-3 pr-4 ring-2 ring-oranye/40">
+          <Link href="/kartu-benda" className="tekan flex items-center gap-4 rounded-3xl bg-oranye-muda p-3 pr-4 ring-2 ring-oranye/40">
             {/* eslint-disable-next-line @next/next/no-img-element -- blob lokal dari IndexedDB */}
             <img
               src={fotoBenda.url}
@@ -89,23 +94,22 @@ export function KartuAktivitas() {
               <span className="flex items-center gap-1 text-[13px] font-bold text-oranye-tua">
                 <Ikon nama="kamera" ukuran={14} /> Kartu foto benda
               </span>
-              <span className="font-judul block text-[28px] font-extrabold leading-tight text-foreground">{kataKartu(fotoBenda.kartu)}</span>
+              <span className="font-judul block text-[28px] font-extrabold leading-tight text-foreground">{kataFoto}</span>
               <span className="block text-[14px] leading-snug text-oranye-tua">
-                Tunjukkan sambil menyebut &ldquo;{kataKartu(fotoBenda.kartu)}&rdquo;, lalu kembali ke benda aslinya.
+                Tunjukkan sambil menyebut &ldquo;{kataFoto}&rdquo;, lalu kembali ke benda aslinya.
               </span>
-              <span className="mt-1 block text-[13px] font-semibold text-oranye-tua underline underline-offset-2">Ganti foto untuk aktivitas ini</span>
             </span>
           </Link>
         ) : (
           <Link
-            href={keKartuBenda}
+            href="/kartu-benda"
             className="tekan flex items-center gap-3 rounded-3xl border-2 border-dashed border-oranye/40 bg-permukaan p-4 text-oranye-tua"
           >
             <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-oranye-muda">
               <Ikon nama="kamera" ukuran={24} />
             </span>
             <span className="text-[15px] font-semibold leading-snug">
-              Tambah foto benda kesukaan anak untuk aktivitas ini
+              Foto benda kesukaan anak untuk &ldquo;{data.kata_target[0]}&rdquo; agar muncul di sini
             </span>
           </Link>
         )}
