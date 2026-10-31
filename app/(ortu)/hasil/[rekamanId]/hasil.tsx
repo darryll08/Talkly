@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useParamRute } from "@/lib/perangkat/param";
 import * as g from "@/lib/gaya";
 import { API, type ResponseDari } from "@/lib/kontrak/api";
 
@@ -17,12 +18,13 @@ const JEDA_TANYA_MS = 2000;
 
 // O5b (sedang dinilai) → O6 (umpan balik) atau O7 (rekaman ditolak).
 export function Hasil() {
-  const rekamanId = decodeURIComponent(useParams<{ rekamanId: string }>().rekamanId);
+  const rekamanId = useParamRute("rekamanId");
   const router = useRouter();
   const [data, setData] = useState<StatusRekaman | null>(null);
   const [galat, setGalat] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!rekamanId) return;
     let batal = false;
     let t: ReturnType<typeof setTimeout>;
     const tanya = async () => {
@@ -34,7 +36,7 @@ export function Hasil() {
         else setData(d);
       } catch (e) {
         if (batal) return;
-        if (e instanceof GalatApi && e.status === 401) return router.replace("/gabung");
+        if (e instanceof GalatApi && e.status === 401) return router.replace("/keluar");
         setGalat(pesanDari(e));
         // Jaringan putus: terus mencoba, penilaian tetap berjalan di server.
         if (e instanceof GalatApi && e.status === 0) t = setTimeout(tanya, JEDA_TANYA_MS * 2);
@@ -47,7 +49,7 @@ export function Hasil() {
     };
   }, [rekamanId, router]);
 
-  if (!data) {
+  if (!data || !rekamanId) {
     return (
       <div className="muncul space-y-5 pt-8">
         <header className="space-y-1">

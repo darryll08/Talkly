@@ -42,6 +42,9 @@ export function useRekam() {
   const [hasil, setHasil] = useState<HasilRekam | null>(null);
   const [wakeLockGagal, setWakeLockGagal] = useState(false);
   const [sempatDitinggal, setSempatDitinggal] = useState(false);
+  /** Detik saat "Saya mulai menunggu" terakhir ditekan, untuk hitung mundur 5 detik di layar. */
+  const [tandaTerakhir, setTandaTerakhir] = useState<number | null>(null);
+  const [jumlahTanda, setJumlahTanda] = useState(0);
 
   const rec = useRef<MediaRecorder | null>(null);
   const stream = useRef<MediaStream | null>(null);
@@ -55,6 +58,8 @@ export function useRekam() {
   const sembunyiSejak = useRef<number | null>(null);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
   const urlLama = useRef<string | null>(null);
+  /** Diisi oleh batal(): rekaman yang sedang berjalan dibuang, bukan dijadikan hasil. */
+  const buang = useRef<(() => void) | null>(null);
 
   const mintaWakeLock = useCallback(async () => {
     try {
@@ -85,6 +90,8 @@ export function useRekam() {
     setGalat(null);
     setHasil(null);
     setSempatDitinggal(false);
+    setTandaTerakhir(null);
+    setJumlahTanda(0);
     setTahap("meminta-izin");
     try {
       if (typeof MediaRecorder === "undefined" || !MediaRecorder.isTypeSupported(MIME)) {
@@ -118,6 +125,15 @@ export function useRekam() {
         if (e.data.size > 0) potongan.current.push(e.data);
       };
       r.onstop = () => {
+        if (buang.current) {
+          const selesai = buang.current;
+          buang.current = null;
+          bersihkan();
+          setDetik(0);
+          setTahap("siap");
+          selesai();
+          return;
+        }
         const durasi = Math.min(MAKS_DETIK, Math.round(((performance.now() - mulaiMs.current) / 1000) * 10) / 10);
         const blob = new Blob(potongan.current, { type: "audio/webm" });
         if (urlLama.current) URL.revokeObjectURL(urlLama.current);
@@ -156,8 +172,22 @@ export function useRekam() {
 
   const tandaiMenunggu = useCallback(() => {
     if (!rec.current || rec.current.state !== "recording") return;
-    menunggu.current.push(Math.round(((performance.now() - mulaiMs.current) / 1000) * 10) / 10);
+    const t = Math.round(((performance.now() - mulaiMs.current) / 1000) * 10) / 10;
+    menunggu.current.push(t);
+    setTandaTerakhir(t);
+    setJumlahTanda((n) => n + 1);
   }, []);
+
+  /** Hentikan rekaman yang sedang berjalan tanpa menyimpannya. Selesai saat perekam benar-benar berhenti. */
+  const batal = useCallback(
+    () =>
+      new Promise<void>((selesai) => {
+        if (!rec.current || rec.current.state === "inactive") return selesai();
+        buang.current = selesai;
+        rec.current.stop();
+      }),
+    [],
+  );
 
   const ulang = useCallback(() => {
     setHasil(null);
@@ -206,9 +236,12 @@ export function useRekam() {
     hasil,
     wakeLockGagal,
     sempatDitinggal,
-    bolehBerhenti: detik >= MIN_DETIK,
+    cukupPanjang: detik >= MIN_DETIK,
+    tandaTerakhir,
+    jumlahTanda,
     mulai,
     berhenti,
+    batal,
     tandaiMenunggu,
     ulang,
   };

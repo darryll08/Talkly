@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParamRute } from "@/lib/perangkat/param";
 import * as g from "@/lib/gaya";
 import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
@@ -15,8 +15,8 @@ import { Ikon } from "@/components/ikon";
 
 // O4 Kartu aktivitas: terbaca dalam sekitar 15 detik.
 export function KartuAktivitas() {
-  const itemId = decodeURIComponent(useParams<{ itemId: string }>().itemId);
-  const { data, galat } = useData(API.aktivitasLihat, { itemId });
+  const itemId = useParamRute("itemId") ?? "";
+  const { data, galat } = useData(API.aktivitasLihat, { itemId }, { aktif: Boolean(itemId) });
   const { data: saya } = useSaya();
   const [tercatat, setTercatat] = useState(false);
   const [kirim, setKirim] = useState(false);

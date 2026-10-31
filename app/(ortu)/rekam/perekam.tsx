@@ -16,6 +16,8 @@ import { Memuat } from "@/components/memuat";
 import { Ikon } from "@/components/ikon";
 
 const CADANGAN = "/demo/rekaman-cadangan.webm";
+/** Hitung mundur setelah "Saya mulai menunggu": hitung sampai lima dalam hati. */
+const LAMA_TUNGGU_S = 5;
 
 type Kiriman =
   | { keadaan: "diam" }
@@ -88,14 +90,21 @@ export function Perekam() {
     r.ulang();
   }
 
+  async function ulangiDariAwal() {
+    await r.batal();
+    r.mulai();
+  }
+
   // ---------- Merekam ----------
   if (r.tahap === "merekam") {
+    const sisaTunggu = r.tandaTerakhir === null ? 0 : Math.ceil(LAMA_TUNGGU_S - (r.detik - r.tandaTerakhir));
+    const sedangMenunggu = sisaTunggu > 0;
     return (
       <div className="flex min-h-dvh flex-col items-center gap-6 py-8 text-center">
         <p className="inline-flex items-center gap-2 text-[15px] font-semibold text-oranye-tua" role="status">
           <span className="titik-rekam h-2.5 w-2.5 rounded-full bg-oranye" /> Merekam
         </p>
-        <CincinWaktu detik={r.detik} />
+        <CincinWaktu detik={r.detik} tunggu={sedangMenunggu ? sisaTunggu : null} />
         <div className="flex flex-wrap justify-center gap-2">
           {kata.map((k: string) => (
             <span key={k} className={g.labelKata}>
@@ -103,7 +112,13 @@ export function Perekam() {
             </span>
           ))}
         </div>
-        <p className="max-w-xs text-[16px] text-abu">Setelah bertanya, hitung sampai lima dalam hati.</p>
+        <p className="max-w-xs text-[16px] text-abu" aria-live="polite">
+          {sedangMenunggu
+            ? `Tunggu ${namaAnak} menjawab… jangan mengulang pertanyaan dulu.`
+            : r.jumlahTanda > 0
+              ? `Bagus, ${r.jumlahTanda} kali menunggu. Tekan lagi setiap selesai bertanya.`
+              : "Setelah bertanya ke anak, tekan “Saya mulai menunggu” lalu diam sejenak."}
+        </p>
         {r.wakeLockGagal ? (
           <p className={g.kotakGalat}>Layar mungkin mati sendiri. Sentuh layar sesekali agar tetap menyala.</p>
         ) : null}
@@ -111,12 +126,28 @@ export function Perekam() {
           <p className={g.kotakGalat}>Aplikasi sempat ditinggal, jadi rekaman ini mungkin ditolak. Sebaiknya rekam ulang.</p>
         ) : null}
         <div className="mt-auto w-full space-y-3">
-          <button type="button" onClick={r.tandaiMenunggu} className={g.tombolKedua}>
-            Saya mulai menunggu
+          <button
+            type="button"
+            onClick={r.tandaiMenunggu}
+            disabled={sedangMenunggu}
+            className={`${g.tombolKedua} ${sedangMenunggu ? "disabled:bg-hijau-muda disabled:text-hijau-tua disabled:ring-hijau/30" : ""}`}
+          >
+            {sedangMenunggu ? `Menunggu… ${sisaTunggu}` : "Saya mulai menunggu"}
           </button>
-          <button type="button" onClick={r.berhenti} disabled={!r.bolehBerhenti} className={g.tombolUtama}>
-            {r.bolehBerhenti ? "Berhenti" : `Berhenti setelah ${MIN_DETIK} detik`}
+          <button type="button" onClick={r.berhenti} className={g.tombolUtama}>
+            {r.cukupPanjang ? "Selesai merekam" : "Berhenti"}
           </button>
+          <div className="grid grid-cols-2 gap-3">
+            <button type="button" onClick={ulangiDariAwal} className={`${g.tombolTeks} justify-center`}>
+              <Ikon nama="putar" ukuran={18} /> Ulang dari awal
+            </button>
+            <button type="button" onClick={() => r.batal()} className={`${g.tombolTeks} justify-center text-oranye-tua`}>
+              <Ikon nama="silang" ukuran={18} /> Batal
+            </button>
+          </div>
+          {!r.cukupPanjang ? (
+            <p className="text-[13px] text-abu">Rekaman baru bisa dinilai setelah {MIN_DETIK} detik.</p>
+          ) : null}
         </div>
       </div>
     );
@@ -124,6 +155,8 @@ export function Perekam() {
 
   // ---------- Selesai ----------
   const putar = cadangan?.url ?? (r.tahap === "selesai" ? r.hasil?.url : null);
+  // Server menolak rekaman di bawah 40 detik, jadi rekaman pendek tidak ditawarkan untuk dikirim.
+  const terlaluPendek = !cadangan && (r.hasil?.durasi_s ?? 0) < MIN_DETIK;
   if (putar) {
     return (
       <div className="space-y-5 pb-4">
@@ -131,7 +164,7 @@ export function Perekam() {
         <div className="muncul space-y-5">
           <header className="space-y-1">
             <p className={g.labelAtas}>{cadangan ? "Rekaman cadangan · rekaman contoh" : `${Math.round(r.hasil?.durasi_s ?? 0)} detik`}</p>
-            <h1 className={g.judulHalaman}>Rekaman siap dikirim</h1>
+            <h1 className={g.judulHalaman}>{terlaluPendek ? "Rekaman terlalu pendek" : "Rekaman siap dikirim"}</h1>
           </header>
           <div className={g.kartu}>
             <audio src={putar} controls className="w-full" />
@@ -142,8 +175,17 @@ export function Perekam() {
             </p>
           ) : null}
           {kiriman.keadaan === "ditolak" ? <p className={g.kotakGalat}>{kiriman.pesan}</p> : null}
+          {terlaluPendek ? (
+            <p className={g.kotakGalat}>
+              Rekaman baru {Math.round(r.hasil?.durasi_s ?? 0)} detik. Supaya bisa dinilai, rekam paling tidak {MIN_DETIK} detik.
+            </p>
+          ) : null}
           <div className="space-y-3">
-            {kiriman.keadaan === "antre" ? (
+            {terlaluPendek ? (
+              <button type="button" onClick={ulang} className={g.tombolUtama}>
+                <Ikon nama="mikrofon" /> Rekam ulang
+              </button>
+            ) : kiriman.keadaan === "antre" ? (
               <Link href="/hari-ini" className={g.tombolUtama}>
                 Kembali ke Hari ini
               </Link>
@@ -152,9 +194,15 @@ export function Perekam() {
                 {kiriman.keadaan === "mengirim" ? "Mengirim…" : "Kirim untuk dinilai"}
               </button>
             )}
-            <button type="button" onClick={ulang} disabled={kiriman.keadaan === "mengirim"} className={g.tombolKedua}>
-              Rekam ulang
-            </button>
+            {terlaluPendek ? (
+              <Link href="/hari-ini" className={g.tombolKedua}>
+                Kembali ke Hari ini
+              </Link>
+            ) : (
+              <button type="button" onClick={ulang} disabled={kiriman.keadaan === "mengirim"} className={g.tombolKedua}>
+                Rekam ulang
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -248,8 +296,8 @@ export function Perekam() {
   );
 }
 
-/** Cincin 60 detik yang terisi, dengan titik penanda 40 detik yang menyala saat Berhenti aktif. */
-function CincinWaktu({ detik }: { detik: number }) {
+/** Cincin 60 detik yang terisi, dengan titik penanda 40 detik. Saat menunggu, tengahnya jadi hitung mundur 5 detik. */
+function CincinWaktu({ detik, tunggu }: { detik: number; tunggu: number | null }) {
   const R = 92;
   const K = 2 * Math.PI * R;
   const sisa = Math.max(0, Math.ceil(MAKS_DETIK - detik));
@@ -281,12 +329,22 @@ function CincinWaktu({ detik }: { detik: number }) {
           strokeWidth="2.5"
         />
       </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-[44px] font-bold tabular-nums" aria-live="off">
-          0:{String(sisa).padStart(2, "0")}
-        </span>
-        <span className="text-[13px] text-abu">{aktif40 ? "Boleh berhenti" : "tersisa"}</span>
-      </div>
+      {tunggu !== null ? (
+        <div className="absolute inset-[26px] flex flex-col items-center justify-center rounded-full bg-hijau-muda">
+          <span className="text-[13px] font-semibold text-hijau-tua">Tunggu</span>
+          <span className="text-[56px] font-bold leading-none tabular-nums text-hijau-tua" aria-live="off">
+            {tunggu}
+          </span>
+          <span className="text-[13px] text-hijau-tua">0:{String(sisa).padStart(2, "0")} tersisa</span>
+        </div>
+      ) : (
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-[44px] font-bold tabular-nums" aria-live="off">
+            0:{String(sisa).padStart(2, "0")}
+          </span>
+          <span className="text-[13px] text-abu">{aktif40 ? "Sudah cukup untuk dinilai" : "tersisa"}</span>
+        </div>
+      )}
     </div>
   );
 }
