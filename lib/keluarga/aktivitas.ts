@@ -6,12 +6,12 @@ import { awalHariWib, seninWib, tanggalWib } from "@/lib/server/waktu";
 
 /** Kata target yang paling cocok untuk satu aktivitas: yang sudah disebut di teksnya, atau yang lazim di rutinitasnya. */
 const KATA_RUTINITAS: Record<string, string[]> = {
-  mandi: ["bebek", "air", "mandi", "lagi", "gosok"],
-  makan: ["mamam", "makan", "mau", "lagi", "minum", "susu"],
-  bermain: ["lagi", "mau", "jalan", "bola", "mobil", "buka", "tiup"],
-  berpakaian: ["pakai", "baju", "kaki", "buka"],
-  berbelanja: ["masuk", "mau", "beli"],
-  tidur: ["bobok", "tidur", "lampu"],
+  mandi: ["bebek", "air", "mandi", "lagi", "gosok", "buka", "busa", "handuk"],
+  makan: ["mamam", "makan", "mau", "lagi", "minum", "susu", "habis", "buka", "tiup", "sendok"],
+  bermain: ["lagi", "mau", "jalan", "bola", "mobil", "buka", "tiup", "ayun", "masuk", "kereta"],
+  berpakaian: ["pakai", "baju", "kaki", "buka", "sepatu", "tangan", "jaket"],
+  berbelanja: ["masuk", "mau", "beli", "jalan"],
+  tidur: ["bobok", "tidur", "lampu", "mati", "selimut", "kaki"],
 };
 
 export function kataUntuk(teksAktivitas: string, rutinitas: string, kataTarget: string[]): string[] {
