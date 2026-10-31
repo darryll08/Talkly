@@ -7,6 +7,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import aktivitas from "../data/aktivitas.json";
 import { BankAktivitas } from "../lib/kontrak/konten";
 import { EMAIL_TERAPIS_CONTOH, ID_CONTOH } from "../lib/server/data-contoh";
+import { anakLain, hariSesiBesok, riwayatRaka } from "./seed-riwayat";
 
 const DEV = process.argv.includes("--dev");
 
@@ -86,7 +87,7 @@ async function utama() {
       kata_target: ["bebek", "mamam", "lagi", "mau", "buka"],
       minat: "Bebek karet, mobil-mobilan, lagu anak",
       rutinitas: "Mandi sore, makan bersama, main di teras dengan Mbak Sri",
-      hari_sesi: 2,
+      hari_sesi: hariSesiBesok(),
       jam_sesi: "10:00",
       status: "lanjut",
       data_contoh: true,
@@ -135,15 +136,19 @@ async function utama() {
       .single(),
   );
   if (!rencana) throw new Error("rencana tidak terbuat");
-  await cek(
+  const item = await cek(
     "item rencana",
     db.from("rencana_item").insert([
       { rencana_id: rencana.id, anggota_id: null, aktivitas_id: "MANDI-01", urutan: 1 },
       { rencana_id: rencana.id, anggota_id: ID_CONTOH.ibuSari, aktivitas_id: "MAKAN-01", urutan: 2 },
       { rencana_id: rencana.id, anggota_id: ID_CONTOH.mbakSri, aktivitas_id: "MAIN-04", urutan: 3 },
-    ]),
+    ]).select("id, urutan").order("urutan"),
   );
-  await cek("riwayat status", db.from("riwayat_status").insert({ anak_id: ID_CONTOH.raka, status: "lanjut", pemicu: "Program baru" }));
+  await cek("riwayat status", db.from("riwayat_status").insert({ anak_id: ID_CONTOH.raka, status: "lanjut", pemicu: "Program baru", waktu: new Date(Date.now() - 21 * 86_400_000).toISOString() }));
+
+  // 5b. Riwayat tiga minggu Raka dan 24 anak lain (total 25 anak di D3).
+  await riwayatRaka(db, nadiaId, (item ?? []).map((i) => i.id));
+  await anakLain(db, nadiaId);
 
   // 6. Data uji akses (hanya dev): terapis kedua dan Keluarga Uji B dengan anak Nara.
   if (DEV) {
@@ -179,7 +184,7 @@ async function utama() {
   }
 
   const jumlah = await Promise.all(
-    ["anak", "anggota", "terapis", "aktivitas", "rencana", "rencana_item"].map(async (t) => {
+    ["anak", "anggota", "terapis", "aktivitas", "rencana", "rekaman", "laporan_keluarga"].map(async (t) => {
       const { count } = await db.from(t).select("*", { count: "exact", head: true });
       return `${t} ${count}`;
     }),
