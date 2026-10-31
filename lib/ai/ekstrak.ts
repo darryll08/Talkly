@@ -54,10 +54,13 @@ export async function ekstrakUcapanAnak(catatan: string, namaAnak: string, pangg
 
 const SkemaBenda = z.object({ kata: z.string(), contoh_kalimat: z.array(z.string()) });
 
-export function bendaAturan(namaBenda: string, tahap: number, kataTarget: string[]) {
-  // Nama kartu paling banyak dua kata, misalnya "mobil merah" atau "bola besar".
-  const nama = normal(namaBenda).split(" ").filter(Boolean).slice(0, 2).join(" ") || normal(namaBenda);
-  const kata = kataTarget.find((k) => normal(namaBenda).includes(k.toLowerCase())) ?? nama;
+/** Nama kartu = yang diketik orang tua, paling banyak dua kata ("botol biru" tetap "botol biru", "bola" tetap "bola"). */
+export function namaKartu(namaBenda: string) {
+  return normal(namaBenda).split(" ").filter(Boolean).slice(0, 2).join(" ") || normal(namaBenda);
+}
+
+export function bendaAturan(namaBenda: string, tahap: number) {
+  const kata = namaKartu(namaBenda);
   const K = kata.charAt(0).toUpperCase() + kata.slice(1);
   const contoh =
     tahap <= 1 ? [`${K}!`, `${K}… lagi!`, `Mau ${kata}`] : tahap === 2 ? [`${K} lagi!`, `Mau ${kata}`, `${K} mana?`] : [`Ini ${kata} kamu`, `${K} ada di sini`, `Ayo main ${kata}`];
@@ -65,12 +68,14 @@ export function bendaAturan(namaBenda: string, tahap: number, kataTarget: string
 }
 
 export async function kartuBenda(namaBenda: string, anak: { nama: string; tahap: number; kata_target: string[] }, panggil?: Panggil) {
-  const cadangan = bendaAturan(namaBenda, anak.tahap, anak.kata_target);
-  const maks = MAKS_KATA_VERSI_ANAK[anak.tahap] ?? 8;
+  const cadangan = bendaAturan(namaBenda, anak.tahap);
+  // Nama kartu tidak pernah diubah AI; AI hanya menulis kalimat contoh untuk nama itu.
+  const kata = cadangan.kata;
+  const maks = Math.max(MAKS_KATA_VERSI_ANAK[anak.tahap] ?? 8, kata.split(" ").length + 1);
   const instruksi = [
     `Orang tua memotret benda kesukaan anak dan mengetik namanya. Anak berada di tahap bahasa ${anak.tahap}.`,
-    `kata: nama benda itu dalam dua kata (benda + ciri), misalnya "mobil merah" atau "bola besar"; satu kata saja bila nama yang diketik memang satu kata dan tidak ada ciri yang jelas. Pakai salah satu kata target (${anak.kata_target.join(", ")}) sebagai kata pertama bila cocok.`,
-    `contoh_kalimat: 2–3 kalimat untuk diucapkan orang tua sambil menunjuk benda, masing-masing paling banyak ${maks} kata, memuat kata itu, tanpa "ayo" atau "bilang"${anak.tahap === 1 ? ", tanpa tanda tanya" : ""}.`,
+    `kata: tulis persis "${kata}", jangan diubah atau dipendekkan.`,
+    `contoh_kalimat: 2–3 kalimat untuk diucapkan orang tua sambil menunjuk benda, masing-masing paling banyak ${maks} kata, memuat "${kata}" utuh, tanpa "ayo" atau "bilang"${anak.tahap === 1 ? ", tanpa tanda tanya" : ""}.`,
   ].join("\n");
   let mentah: unknown;
   try {
@@ -80,7 +85,6 @@ export async function kartuBenda(namaBenda: string, anak: { nama: string; tahap:
   }
   const p = SkemaBenda.safeParse(mentah);
   if (!p.success) return cadangan;
-  const kata = normal(p.data.kata);
   const contoh = p.data.contoh_kalimat
     .map((c) => kembalikanAnak(c.trim(), anak.nama))
     .filter((c) => {

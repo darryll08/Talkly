@@ -37,17 +37,22 @@ test("nama anak disamarkan sebelum ekstraksi dikirim", async () => {
   assert.doesNotMatch(terkirim, /Raka/);
 });
 
-test("kartu benda: keluaran AI sah dipakai, kalimat tahap 1 tanpa tanda tanya", async () => {
+test("kartu benda: nama tetap seperti yang diketik (maks 2 kata), kalimat AI sah dipakai, tahap 1 tanpa tanda tanya", async () => {
   const anak = { nama: "Raka", tahap: 1, kata_target: ["bebek", "mamam", "lagi", "mau", "buka"] };
-  const ok = await kartuBenda("bebek karet kuning", anak, async () => ({ kata: "bebek", contoh_kalimat: ["Bebek!", "Bebek… mandi!", "Bebek mana?"] }));
-  assert.equal(ok.kata, "bebek");
-  assert.deepEqual(ok.contoh_kalimat, ["Bebek!", "Bebek… mandi!"]);
+  const ok = await kartuBenda("bebek karet kuning", anak, async () => ({
+    kata: "bebek",
+    contoh_kalimat: ["Bebek karet!", "Bebek karet… mandi!", "Bebek karet mana?"],
+  }));
+  assert.equal(ok.kata, "bebek karet");
+  assert.deepEqual(ok.contoh_kalimat, ["Bebek karet!", "Bebek karet… mandi!"]);
+  const satu = await kartuBenda("bola", anak, async () => ({ kata: "bola", contoh_kalimat: ["Bola!", "Mau bola"] }));
+  assert.equal(satu.kata, "bola");
 });
 
-test("kartu benda: keluaran AI buruk → cadangan aturan memakai kata target", async () => {
+test("kartu benda: AI memendekkan nama atau keluarannya buruk → cadangan aturan dengan nama utuh", async () => {
   const anak = { nama: "Raka", tahap: 1, kata_target: ["bebek", "mamam", "lagi", "mau", "buka"] };
-  const h = await kartuBenda("bebek karet", anak, async () => ({ kata: "bebek", contoh_kalimat: ["Ayo bilang bebek sekarang juga ya nak"] }));
-  assert.deepEqual(h, bendaAturan("bebek karet", 1, anak.kata_target));
-  assert.equal(h.kata, "bebek");
+  const h = await kartuBenda("botol biru", anak, async () => ({ kata: "botol", contoh_kalimat: ["Botol!", "Mau botol"] }));
+  assert.deepEqual(h, bendaAturan("botol biru", 1));
+  assert.equal(h.kata, "botol biru");
   assert.ok(h.contoh_kalimat.length >= 2 && h.contoh_kalimat.every((c) => !c.includes("?")));
 });
