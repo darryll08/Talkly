@@ -78,14 +78,14 @@ Semua layar B dicek di browser 390 px dengan `NEXT_PUBLIC_PAKAI_CONTOH=1` (31 Ok
 
 ### 4.3–4.5 Layar orang tua
 - [ ] B2.0 Layout dan nav. Build lolos; belum dicek di HP dengan notch.
-- [ ] B2.1 O3 Hari ini · tampil dari contoh; menunggu endpoint A.
+- [x] B2.1 O3 Hari ini · di produksi `/api/hari-ini` membalas data anak masing-masing akun (Raka, Alya, Bima, Citra) dari database asli (31 Okt, f273fc2; tampilan opsi C c92115f).
 - [ ] B2.2 O4 Kartu aktivitas · tampil dari contoh; menunggu endpoint A.
 - [ ] B2.3 O5 Rekam 1 Menit · menunggu HP + endpoint A.
 - [ ] B2.4 O5b, O6, O7 · tampil dari contoh; menunggu rekaman asli.
 - [ ] B2.5 O9 Catatan malam · menunggu endpoint A.
 - [ ] B2.6 O10 Kemajuan · menunggu endpoint A.
 - [ ] B3.1 O1 Gabung · B3.2 O2 Mulai · B3.3 O1c Masuk · B3.4 O4b Kartu benda · B3.5 O8 Ceritakan · B3.6 O11 Keluarga · B3.7 O12 Profil · B3.8 Pesan: semua tampil dari contoh; menunggu endpoint A.
-- [ ] B4.1 Beranda dan mode demo · tampil; menunggu `POST /api/demo`.
+- [x] B4.1 Beranda dan mode demo · beranda produk, `/masuk` tunggal dengan 7 akun demo, penjaga rute `proxy.ts`, `/keluar`; `POST /api/demo` diuji di produksi untuk semua persona (31 Okt, 1797b43, f273fc2, 85962cf).
 - [ ] B5.1 Kontribusi Wayan di README.
 
 ## C (Aditya)
