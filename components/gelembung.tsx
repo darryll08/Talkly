@@ -29,7 +29,7 @@ export function Gelembung({
         }`}
       >
         {konteks ? (
-          <span className={`mb-1 block text-xs font-semibold ${milikSendiri ? "text-white/80" : "text-oranye-tua"}`}>
+          <span className={`mb-1 block text-xs font-semibold ${milikSendiri ? "text-white" : "text-oranye-tua"}`}>
             {konteks}
           </span>
         ) : null}

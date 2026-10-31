@@ -163,7 +163,7 @@ function Momen({ rekamanId, namaAnak, momen }: { rekamanId: string; namaAnak: st
         type="button"
         onClick={putar}
         aria-label={main ? `Hentikan Momen ${namaAnak}` : `Putar Momen ${namaAnak}`}
-        className="tekan inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-oranye text-white shadow-kartu"
+        className="tekan inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-oranye-tua text-white shadow-kartu"
       >
         <Ikon nama={main ? "jeda" : "putar"} isi />
       </button>

@@ -44,7 +44,7 @@ export default function HariIni() {
         </p>
         <h1 className={g.judulHalaman}>Latihan {data.anak.nama}</h1>
         {data.aktivitas.length > 0 ? (
-          <div className="flex items-center gap-3 pt-2" aria-label={`${jumlahSelesai} dari ${data.aktivitas.length} aktivitas hari ini`}>
+          <div className="flex items-center gap-3 pt-2" role="group" aria-label={`${jumlahSelesai} dari ${data.aktivitas.length} aktivitas hari ini`}>
             <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-abu-muda">
               <div
                 className="h-full rounded-full bg-hijau transition-[width] duration-500 ease-pegas"
@@ -83,11 +83,11 @@ export default function HariIni() {
           href={`/aktivitas/${berikutnya.item_id}`}
           className="tekan block rounded-3xl bg-gradient-to-br from-hijau to-hijau-tua p-5 text-white shadow-angkat"
         >
-          <p className="text-[13px] font-semibold text-white/80">Berikutnya · {berikutnya.rutinitas}</p>
+          <p className="text-[13px] font-semibold text-white">Berikutnya · {berikutnya.rutinitas}</p>
           <p className="mt-1 text-[22px] font-bold leading-tight">{berikutnya.judul}</p>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {berikutnya.kata_target.map((k) => (
-              <span key={k} className="rounded-full bg-white/20 px-3 py-1 text-sm font-semibold">
+              <span key={k} className="rounded-full bg-hijau-tua px-3 py-1 text-sm font-semibold">
                 {k}
               </span>
             ))}
@@ -99,7 +99,7 @@ export default function HariIni() {
       ) : semuaSelesai ? (
         <section className="rounded-3xl bg-hijau-muda p-5">
           <p className="text-[20px] font-bold text-hijau-tua">Semua aktivitas hari ini selesai</p>
-          <p className="mt-1 text-[16px] text-hijau-tua/90">
+          <p className="mt-1 text-[16px] text-hijau-tua">
             Terima kasih sudah meluangkan waktu untuk {data.anak.nama} hari ini.
           </p>
         </section>

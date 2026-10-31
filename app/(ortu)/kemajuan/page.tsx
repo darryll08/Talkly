@@ -54,7 +54,7 @@ export default function Kemajuan() {
                           {t.jeda_rata_s !== null ? angka(t.jeda_rata_s) : "–"}
                         </span>
                         <div
-                          className={`w-full max-w-14 rounded-t-lg ${terakhir ? "bg-hijau" : "bg-hijau/30"}`}
+                          className={`w-full max-w-14 rounded-t-lg ${terakhir ? "bg-hijau" : "bg-hijau-lembut"}`}
                           style={{ height: `${Math.max(tinggi, 2)}%` }}
                         />
                         <span className="text-[12px] text-abu">{tanggal(t.minggu_mulai)}</span>
@@ -95,10 +95,10 @@ export default function Kemajuan() {
                 key={k.kata}
                 title={`Sejak ${tanggal(k.sejak)}`}
                 className={`inline-flex items-center gap-1 rounded-full bg-permukaan px-3 py-1 text-[15px] font-semibold ${
-                  k.sumber === "dikonfirmasi_terapis" ? "text-foreground" : "text-oranye-tua ring-1 ring-inset ring-oranye"
+                  k.sumber === "dikonfirmasi_terapis" ? "text-foreground" : "text-foreground ring-2 ring-inset ring-oranye"
                 }`}
               >
-                {k.sumber === "dikonfirmasi_terapis" ? <span aria-label="dikonfirmasi terapis">✓</span> : null}
+                {k.sumber === "dikonfirmasi_terapis" ? <span role="img" aria-label="dikonfirmasi terapis">✓</span> : null}
                 {k.kata}
               </li>
             ))}
@@ -106,7 +106,7 @@ export default function Kemajuan() {
         ) : (
           <p className="mt-2 text-[15px]">Belum ada kata yang dicatat. Isi Catatan malam saat {data.anak.nama} mengucapkan sesuatu.</p>
         )}
-        <p className="mt-3 text-[13px] leading-snug text-oranye-tua/90">
+        <p className="mt-3 text-[13px] leading-snug text-oranye-tua">
           Bergaris oranye = dilaporkan keluarga. ✓ = sudah dikonfirmasi terapis saat sesi.
         </p>
       </section>

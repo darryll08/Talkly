@@ -52,7 +52,7 @@ export default function Keluarga() {
                 </div>
                 <span className="text-[15px] font-semibold tabular-nums text-hijau-tua">{aktif}/7</span>
               </div>
-              <div className="flex gap-2" aria-label={`Aktif ${aktif} dari 7 hari`}>
+              <div className="flex gap-2" role="img" aria-label={`Aktif ${aktif} dari 7 hari`}>
                 {Array.from({ length: 7 }, (_, i) => (
                   <span key={i} className={`h-3 w-3 rounded-full ${i < aktif ? "bg-hijau" : "bg-abu-muda"}`} />
                 ))}

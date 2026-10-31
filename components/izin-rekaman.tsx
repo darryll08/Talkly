@@ -46,7 +46,7 @@ export function IzinRekaman() {
             label={p.judul}
             keterangan={
               <>
-                <span className="block font-medium text-foreground/80">{p.wajib_untuk}</span>
+                <span className="block font-medium text-foreground">{p.wajib_untuk}</span>
                 <span className="mt-1 block">{p.isi}</span>
                 <span className="mt-1 block text-[13px]">
                   Diproses oleh {p.penyedia} · {p.negara}

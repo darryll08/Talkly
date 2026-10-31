@@ -36,7 +36,7 @@ export default function Mulai() {
 
   return (
     <div className="space-y-6 pb-4 pt-8">
-      <div className="flex gap-2" aria-label={`Langkah ${langkah + 1} dari 3`}>
+      <div className="flex gap-2" role="img" aria-label={`Langkah ${langkah + 1} dari 3`}>
         {JUDUL.map((j, i) => (
           <div key={j} className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${i <= langkah ? "bg-hijau" : "bg-abu-muda"}`} />
         ))}

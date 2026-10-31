@@ -3,18 +3,19 @@
 /* Token warna Talkly (Lampiran 1 proposal v19). Tidak ada merah di mana pun:
    hijau = tombol utama dan angka terukur, oranye = pujian dan laporan keluarga. */
 :root {
-  --background: #f3f6f5;
+  --background: #f8f6f2;
   --permukaan: #ffffff;
-  --garis: rgb(31 42 40 / 0.08);
-  --foreground: #1f2a28;
-  --hijau: #3a9d8f;
-  --hijau-tua: #2c7a6f;
-  --hijau-muda: #e6f4f1;
+  --garis: rgb(43 40 35 / 0.1);
+  --foreground: #24221e;
+  --hijau: #177a65;
+  --hijau-tua: #0e5a4b;
+  --hijau-muda: #e3f3ee;
+  --hijau-lembut: #3a9d8f;
   --oranye: #e8833a;
-  --oranye-tua: #b85f1e;
-  --oranye-muda: #fdf0e6;
-  --abu: #66726f;
-  --abu-muda: #e9eeec;
+  --oranye-tua: #a14d14;
+  --oranye-muda: #fcefe3;
+  --abu: #6b665e;
+  --abu-muda: #efece6;
   --ease-pegas: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -26,6 +27,7 @@
   --color-hijau: var(--hijau);
   --color-hijau-tua: var(--hijau-tua);
   --color-hijau-muda: var(--hijau-muda);
+  --color-hijau-lembut: var(--hijau-lembut);
   --color-oranye: var(--oranye);
   --color-oranye-tua: var(--oranye-tua);
   --color-oranye-muda: var(--oranye-muda);
@@ -79,7 +81,7 @@ summary {
 
 @keyframes muncul {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: translateY(6px);
   }
   to {

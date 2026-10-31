@@ -10,7 +10,7 @@ export const tombolTeks =
   "tekan inline-flex min-h-11 items-center gap-1 px-1 text-[15px] font-semibold text-hijau-tua disabled:text-abu";
 
 export const isian =
-  "w-full rounded-xl border border-garis bg-permukaan px-4 py-3 text-base text-foreground placeholder:text-abu/70 outline-none transition-shadow focus:border-hijau focus:ring-4 focus:ring-hijau/15";
+  "w-full rounded-xl border border-garis bg-permukaan px-4 py-3 text-base text-foreground placeholder:text-abu outline-none transition-shadow focus:border-hijau focus:ring-4 focus:ring-hijau/15";
 
 export const kartu = "rounded-2xl bg-permukaan p-4 shadow-kartu";
 
