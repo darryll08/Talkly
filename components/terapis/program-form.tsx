@@ -183,7 +183,9 @@ export function ProgramForm({ anak, bank }: Props) {
           ))}
       </div>
       <fieldset className={`${g.kartu} space-y-3`}>
-        <legend className="font-semibold">Aktivitas tahap {nilai.tahap}</legend>
+        {/* float + w-full: legend tetap di dalam kartu, tidak menimpa tepi atas fieldset. */}
+        <legend className="float-left mb-1 w-full font-semibold">Aktivitas tahap {nilai.tahap}</legend>
+        <div className="clear-left" />
         {bank.aktivitas
           .filter((a) => a.tahap === nilai.tahap)
           .map((a) => (
