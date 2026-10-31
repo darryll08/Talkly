@@ -7,6 +7,7 @@ import * as g from "@/lib/gaya";
 import { API } from "@/lib/kontrak/api";
 import { panggil, GalatApi, pesanDari } from "@/lib/perangkat/panggil";
 import { lupakanSaya } from "@/lib/perangkat/saya";
+import { KepalaHalaman } from "@/components/kepala-halaman";
 
 // O1c Masuk di HP baru dengan kode masuk pribadi.
 export default function Masuk() {
@@ -32,7 +33,8 @@ export default function Masuk() {
   }
 
   return (
-    <form onSubmit={masuk} className="muncul space-y-6 pt-10">
+    <form onSubmit={masuk} className="muncul space-y-6">
+      <KepalaHalaman kembali="/" />
       <header className="space-y-1">
         <p className={g.labelAtas}>Talkly</p>
         <h1 className={g.judulHalaman}>Masuk dengan kode masuk</h1>

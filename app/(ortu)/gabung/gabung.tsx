@@ -9,6 +9,7 @@ import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { lupakanSaya } from "@/lib/perangkat/saya";
 import { Inisial } from "@/components/inisial";
+import { KepalaHalaman } from "@/components/kepala-halaman";
 
 type Undangan = z.output<NonNullable<(typeof API)["undanganLihat"]["response"]>>;
 
@@ -85,7 +86,13 @@ export function Gabung() {
 
   if (undangan) {
     return (
-      <form onSubmit={gabung} className="muncul space-y-6 pt-10">
+      <form onSubmit={gabung} className="muncul space-y-6">
+        <KepalaHalaman
+          saatKembali={() => {
+            setUndangan(null);
+            setGalat(null);
+          }}
+        />
         <header className="space-y-1">
           <p className={g.labelAtas}>Undangan Talkly</p>
           <h1 className={g.judulHalaman}>Gabung ke program {undangan.anak.nama}</h1>
@@ -147,8 +154,9 @@ export function Gabung() {
         e.preventDefault();
         cek(kode);
       }}
-      className="muncul space-y-6 pt-10"
+      className="muncul space-y-6"
     >
+      <KepalaHalaman kembali="/" />
       <header className="space-y-1">
         <p className={g.labelAtas}>Talkly</p>
         <h1 className={g.judulHalaman}>Gabung dengan kode undangan</h1>
