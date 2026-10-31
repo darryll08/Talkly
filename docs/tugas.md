@@ -20,24 +20,24 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 - [ ] A1.3 Gabung dan undangan · I2
 - [ ] A1.4 Masuk di HP baru dan kelola akun · I3
 - [ ] A1.5 Izin rekaman · I3
-- [ ] A1.6 Login terapis · I1
+- [x] A1.6 Login terapis: Kak Nadia 204, kata sandi salah 401 (31 Okt, lokal ke TALKLY-DEV).
 
 ### 4.2 Data contoh
-- [ ] A2.1 Bank aktivitas dan templat · I1
-- [ ] A2.2 Seed demo · I2
-- [ ] A2.3 Mode demo · I1
+- [x] A2.1 17 aktivitas, 18 templat (9 pujian/9 saran, semua pemicu), `uji/konten.test.ts` lolos tanpa kata terlarang. Disusun dari proposal karena berkas konten klinis tidak ditemukan; perlu tinjauan terapis.
+- [ ] A2.2 Seed demo · I2. Sudah: klinik, Kak Nadia, Raka, Ibu Sari, Mbak Sri, rencana minggu ini, Keluarga Uji B (dev), idempoten. Belum: riwayat 3 minggu dan 24 anak lain.
+- [x] A2.3 Mode demo, K9 lolos (demo Ibu Sari → Kak Nadia → GET /api/saya 401).
 
 ### 4.3 Pipeline satu rekaman
-- [ ] A3.1 Terima unggahan · I1
-- [ ] A3.2 STT · I1
-- [ ] A3.3 Mutu · I1
-- [ ] A3.4 Perekam dan suara anak · I1
-- [ ] A3.5 Ajakan, jeda, giliran · I1
-- [ ] A3.6 Cadangan STT gagal · I2
+- [x] A3.1 Unggah: 202, id_lokal ganda → satu baris, 422 tanpa izin, 404 keluarga lain (`uji/alur-rekaman.ts`).
+- [ ] A3.2 STT Scribe → Deepgram, transkrip disimpan di `rekaman.meta.transkrip` dan diputar ulang. Belum dicoba dengan rekaman suara asli dari HP.
+- [x] A3.3 Mutu: 4 tes tolak (pendek, sepi, terputus, TV) + 1 lolos.
+- [x] A3.4 Perekam = ucapan terbanyak; dewasa lain bicara panjang bukan anak; jejak hening dipakai bila label tidak ada.
+- [x] A3.5 Jeda 4,8 → anak bersuara → ibu menanggapi = 1 giliran; tiga "ayo bilang" = 1 suruhan beruntun (16 tes).
+- [x] A3.6 STT gagal → dinilai dari jejak ponsel, penyedia `tidak_ada`, status naik (dicoba lewat berkas palsu).
 - [ ] A3.7 Hapus audio · I3
 
 ### 4.4 AI
-- [ ] A4.1 Penilaian satu rekaman · I1
+- [x] A4.1 GPT-6 Luna dengan validasi dan cadangan: 8 tes (kutipan palsu, batas waktu, ragu, versi anak, ID, diagnosis, penyamaran) + 1 panggilan asli 4,5 detik. Tes 10 transkrip asli menunggu rekaman N01–N15.
 - [ ] A4.2 Draf rencana minggu depan · I3
 - [ ] A4.3 Kartu benda dan ekstraksi catatan malam · I3
 
@@ -46,7 +46,7 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 - [ ] A5.2 Aturan status · I2
 - [ ] A5.3 Kurang tepat · I2
 - [ ] A5.4 Agregat dan kemajuan · I2
-- [ ] A5.5 Dasbor terapis · I1/I2
+- [ ] A5.5 Dasbor terapis · `GET /api/anak/:id/kartu` lolos kontrak, terapis lain 403 (31 Okt). Belum: minggu-ini, anak, aktivitas-bank, pesan.
 - [ ] A5.6 Pengingat dan push · I3
 
 ### 4.6–4.8
