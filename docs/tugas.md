@@ -89,3 +89,18 @@ Semua layar B dicek di browser 390 px dengan `NEXT_PUBLIC_PAKAI_CONTOH=1` (31 Ok
 - [ ] B5.1 Kontribusi Wayan di README.
 
 ## C (Aditya)
+
+- [ ] C0.1: clone, branch, identitas Git lokal, npm ci dan periksa tersedia; push/deploy commit C belum berhasil.
+- [ ] C0.2: contoh D terdaftar sesuai izin pengguna dan lolos skema, ID selaras dengan B; varian sulit lengkap, contoh audio sah serta review A/B belum selesai.
+- [ ] C1.1: login/layout/menu terapis dibangun; autentikasi nyata, demo dan uji browser belum selesai.
+- [ ] C2.1 D4: kartu/rentang/tren/pita/per pengasuh/laporan terpisah dibangun; integrasi rekaman asli, kelengkapan field dan screenshot belum selesai.
+- [ ] C2.2 D3: daftar tiga hari/25 anak/status dibangun; endpoint nyata dan screenshot belum selesai.
+- [ ] C2.3 D1: form baru/ubah, validasi, tahap, kata, aktivitas dan jadwal dibangun; aksi talkly-dev belum dicoba.
+- [ ] C2.4 D2: QR, peran, salin, daftar dan polling saat tab terlihat dibangun; uji 409/pindai/status dipakai belum selesai.
+- [ ] C2.5 D5: catatan dan konfirmasi kata dibangun; penyimpanan nyata dan tampilan kata pada D4/O10 belum selesai.
+- [ ] C3.1 audio: permintaan URL saat tombol pita ditekan dan kontrol audio dibangun; audio sah/izin/log belum diuji, tombol di daftar rekaman terbaru belum ditambahkan.
+- [ ] C3.2 D5 draf: dasar/sunting/setujui dan pembersihan draf lokal dibangun; reload dan kiriman O3 keluarga belum diuji.
+- [ ] C3.3 D6: daftar pesan/konteks/balasan dibangun; pesan nyata lintas peran belum diuji.
+- [ ] C5.1: kontribusi aktual dan bantuan Codex tertulis di README; belum dipush.
+
+Pemeriksaan 31 Okt: npm run periksa exit 0 (48 pass, 35 skipped karena UJI_URL kosong, 40 TODO endpoint tahap berikutnya); build semua rute D lolos. Bukti ini belum menutup kartu karena uji visual/integrasi masih menunggu. Commit source C: b2b7fd0, e4315d2, ce2c8a0; main terakhir d882fb9. Lihat TEAM_PROGRESS.md.
