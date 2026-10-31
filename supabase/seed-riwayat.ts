@@ -1,4 +1,4 @@
-// Riwayat data contoh untuk seed (A2.2): tiga minggu rekaman dan laporan keluarga Raka, serta 24 anak lain.
+// Riwayat data contoh untuk seed (A2.2): tiga minggu rekaman dan laporan keluarga Raka, serta 8 anak lain.
 // Semua angka di sini adalah data contoh berlabel, bukan data pengguna.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -171,10 +171,12 @@ export async function riwayatRaka(db: SupabaseClient, nadiaId: string, itemRenca
   await sisip(db, "riwayat_status", { anak_id: ID_CONTOH.raka, status: "terapis_meninjau", pemicu, waktu: waktu(1, 21) });
 }
 
-const NAMA = ["Alya", "Bima", "Citra", "Dafa", "Elsa", "Fajar", "Gita", "Hana", "Ilham", "Jihan", "Kevin", "Laras", "Mika", "Nabil", "Olivia", "Putra", "Qira", "Rizky", "Salsa", "Tegar", "Umar", "Vina", "Wulan", "Yusuf"];
+/** Anak contoh selain Raka. Delapan cukup untuk demo: empat kasus status khusus dan empat yang lanjut. */
+export const ANAK_LAIN = ["Alya", "Bima", "Citra", "Dafa", "Elsa", "Gita", "Mika", "Salsa"];
+const NAMA = ANAK_LAIN;
 const KATA = [["bola", "mau", "lagi", "buka", "susu"], ["mobil", "jalan", "mau", "lagi", "tutup"], ["kucing", "mamam", "minum", "mau", "lagi"]];
 
-/** 24 anak lain milik Kak Nadia dengan status bervariasi, total 25 anak di D3. */
+/** 8 anak lain milik Kak Nadia dengan status bervariasi, total 9 anak contoh di D3. */
 export async function anakLain(db: SupabaseClient, nadiaId: string) {
   const anak: object[] = [];
   const anggota: object[] = [];

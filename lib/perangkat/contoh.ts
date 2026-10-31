@@ -113,7 +113,7 @@ const PENANGAN: { [N in NamaEndpoint]?: (d: Data) => unknown } = {
   },
   kartuBenda: (d) => {
     const nama = String(d?.nama_benda ?? "").trim().toLowerCase();
-    const kata = nama.split(/\s+/)[0];
+    const kata = nama.split(/\s+/).slice(0, 2).join(" ");
     return { kata, contoh_kalimat: [`${kata}… mana?`, `${kata}… lagi!`] };
   },
   demo: (d) => {

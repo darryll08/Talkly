@@ -55,7 +55,8 @@ export async function ekstrakUcapanAnak(catatan: string, namaAnak: string, pangg
 const SkemaBenda = z.object({ kata: z.string(), contoh_kalimat: z.array(z.string()) });
 
 export function bendaAturan(namaBenda: string, tahap: number, kataTarget: string[]) {
-  const nama = normal(namaBenda).split(" ")[0] || normal(namaBenda);
+  // Nama kartu paling banyak dua kata, misalnya "mobil merah" atau "bola besar".
+  const nama = normal(namaBenda).split(" ").filter(Boolean).slice(0, 2).join(" ") || normal(namaBenda);
   const kata = kataTarget.find((k) => normal(namaBenda).includes(k.toLowerCase())) ?? nama;
   const K = kata.charAt(0).toUpperCase() + kata.slice(1);
   const contoh =
@@ -68,7 +69,7 @@ export async function kartuBenda(namaBenda: string, anak: { nama: string; tahap:
   const maks = MAKS_KATA_VERSI_ANAK[anak.tahap] ?? 8;
   const instruksi = [
     `Orang tua memotret benda kesukaan anak dan mengetik namanya. Anak berada di tahap bahasa ${anak.tahap}.`,
-    `kata: satu kata pendek untuk benda itu; pakai salah satu kata target (${anak.kata_target.join(", ")}) bila cocok.`,
+    `kata: nama benda itu dalam dua kata (benda + ciri), misalnya "mobil merah" atau "bola besar"; satu kata saja bila nama yang diketik memang satu kata dan tidak ada ciri yang jelas. Pakai salah satu kata target (${anak.kata_target.join(", ")}) sebagai kata pertama bila cocok.`,
     `contoh_kalimat: 2–3 kalimat untuk diucapkan orang tua sambil menunjuk benda, masing-masing paling banyak ${maks} kata, memuat kata itu, tanpa "ayo" atau "bilang"${anak.tahap === 1 ? ", tanpa tanda tanya" : ""}.`,
   ].join("\n");
   let mentah: unknown;

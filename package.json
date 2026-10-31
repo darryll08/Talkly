@@ -12,7 +12,8 @@
     "uji:akurasi": "tsx uji/akurasi.ts",
     "seed": "node --env-file=.env.local node_modules/tsx/dist/cli.mjs supabase/seed.ts --dev",
     "periksa": "next typegen && tsc --noEmit && npm run lint && npm run uji && npm run build",
-    "seed:produksi": "node --env-file=.env.vercel-produksi node_modules/tsx/dist/cli.mjs supabase/seed.ts"
+    "seed:produksi": "node --env-file=.env.vercel-produksi node_modules/tsx/dist/cli.mjs supabase/seed.ts",
+    "kurangi-contoh:produksi": "node --env-file=.env.vercel-produksi node_modules/tsx/dist/cli.mjs supabase/kurangi-contoh.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
