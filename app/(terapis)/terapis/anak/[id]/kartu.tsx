@@ -155,7 +155,9 @@ export function KartuAnak() {
                 </p>
               </div>
               <p className="text-sm text-hijau-tua">
-                {p.jeda_rata_s === null || p.giliran_per_menit === null
+                {p.rekaman < 3 ||
+                p.jeda_rata_s === null ||
+                p.giliran_per_menit === null
                   ? "Data belum cukup"
                   : `Jeda ${nombre(p.jeda_rata_s)} dtk · ${nombre(p.giliran_per_menit)} giliran/menit`}
               </p>

@@ -165,12 +165,12 @@ export function SetelahSesi() {
           key={sesi.data.draf.id}
           draf={sesi.data.draf}
           bank={bank.data}
-          disetujui={() => {
+          disetujui={(hasil) => {
             sesi.setData({ ...sesi.data!, draf: null });
             setPesan(
               PAKAI_CONTOH
                 ? "Persetujuan data contoh berhasil; tidak ada rencana dikirim ke keluarga nyata."
-                : "Rencana disetujui dan dikirim ke keluarga.",
+                : `Rencana disetujui untuk minggu mulai ${new Date(`${hasil.minggu_mulai}T12:00:00+07:00`).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" })}.`,
             );
           }}
         />

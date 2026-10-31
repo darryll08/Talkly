@@ -18,7 +18,7 @@ export function DrafRencana({
 }: {
   draf: Draf;
   bank: ResponseDari<"aktivitasBank">;
-  disetujui: () => void;
+  disetujui: (hasil: ResponseDari<"rencanaSetujui">) => void;
 }) {
   const router = useRouter();
   const [isi, setIsi] = useState<RequestDari<"rencanaSetujui">["isi"]>(
@@ -31,7 +31,7 @@ export function DrafRencana({
     setSibuk(true);
     setGalat("");
     try {
-      await panggil(API.rencanaSetujui, {
+      const hasil = await panggil(API.rencanaSetujui, {
         drafId: draf.id,
         isi: {
           ...isi,
@@ -46,7 +46,7 @@ export function DrafRencana({
         },
         mulai_sekarang: false,
       });
-      disetujui();
+      disetujui(hasil);
     } catch (error) {
       if (error instanceof GalatApi && error.status === 401)
         router.replace("/terapis/masuk");
