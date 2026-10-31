@@ -6,17 +6,17 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 
 ### 4.0 Fondasi (I0)
 - [x] A0.1 Kerangka proyek. Dikerjakan B (commit b281a99) atas kesepakatan tim; repo publik dan collaborator diatur A.
-- [ ] A0.2 Supabase, kunci, Vercel. `vercel.json` dan `/api/tes-sambungan` ada; menunggu migrasi untuk cek Supabase ok, dan secret Vercel untuk deploy otomatis.
+- [x] A0.2 Supabase (TALKLY-DEV lokal, TALKLY produksi, Singapura), env Vercel Production, `/api/tes-sambungan` di produksi 4/4 ok (31 Okt).
 - [x] A0.3 Akses dan sesi (`lib/server/`), tes tanda tangan `uji/tanda.test.ts` lolos.
 - [ ] A0.4 Kontrak bertiga. Skema dan matriks ditulis A; menunggu contoh B dan C serta persetujuan sebelum commit penguncian.
 - [x] A0.5 Tes penjaga `uji/kontrak.test.ts`, `uji/akses.test.ts` (endpoint I1–I3 masih todo).
 - [ ] A0.6 README dan deklarasi. Kerangka, arsitektur, teknologi, bahan persiapan, AI Use dan Third-Party sudah diisi.
 - [ ] A0.7 `scripts/asap.sh` ada; belum dijalankan ke produksi (endpoint belum ada).
-- [ ] A0.8 Workflow deploy ada; menunggu secret `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+- [x] A0.8 Deploy otomatis lewat GitHub Actions dengan secret Vercel: run untuk 9f549aa dan d882fb9 sukses (31 Okt). Commit B tayang.
 
 ### 4.1 Basis data dan login
-- [ ] A1.1 Migrasi skema · I1
-- [ ] A1.2 RLS dan storage · I1
+- [x] A1.1 Migrasi skema (8bd3b49): `scripts/cek-skema.ts` lolos di TALKLY-DEV dan TALKLY (31 Okt). `supabase db diff` tidak dipakai; kedua proyek menjalankan file yang sama.
+- [ ] A1.2 RLS dan bucket audio privat terpasang di kedua proyek; anon 0 baris baru terbukti di tabel kosong. Uji ulang setelah seed + uji terapis A vs B.
 - [ ] A1.3 Gabung dan undangan · I2
 - [ ] A1.4 Masuk di HP baru dan kelola akun · I3
 - [ ] A1.5 Izin rekaman · I3
