@@ -53,7 +53,7 @@ export function ModeDemo() {
         <h2 id="judul-demo" className="text-[15px] font-semibold">
           Akun demo
         </h2>
-        <span className="rounded-full bg-hijau-muda px-2.5 py-0.5 text-[12px] font-semibold text-hijau-tua">tanpa kata sandi</span>
+        <span className="text-[13px] text-abu">tanpa kata sandi</span>
       </div>
       <div className={g.daftar}>
         {PERSONA.map((p) => (

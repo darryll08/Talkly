@@ -72,7 +72,7 @@ export default function Mulai() {
                 `Kalau sempat, rekam 1 menit 2–3 kali seminggu. ${terapis} membaca hasilnya sebelum sesi.`,
               ].map((t, i) => (
                 <li key={i} className="flex gap-3 px-4 py-3.5">
-                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-hijau-muda text-sm font-bold text-hijau-tua">
+                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-oranye text-sm font-bold text-white">
                     {i + 1}
                   </span>
                   <span className="text-[16px] leading-snug">{t}</span>

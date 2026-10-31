@@ -120,7 +120,7 @@ export function Gabung() {
             </span>
           </li>
         </ul>
-        <p className="rounded-2xl bg-hijau-muda px-4 py-3 text-[16px] text-hijau-tua">
+        <p className="rounded-2xl bg-permukaan px-4 py-3 text-foreground ring-1 ring-garis text-[16px]">
           Anda bergabung sebagai <span className="font-semibold">{NAMA_PERAN[undangan.peran]}</span>
           .
         </p>

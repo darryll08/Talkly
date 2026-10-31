@@ -55,9 +55,7 @@ export default function Beranda() {
             <li key={l.judul} className="space-y-2">
               <span className="flex items-center gap-3">
                 <span className="font-judul text-[44px] font-extrabold leading-none text-oranye-tua">{i + 1}</span>
-                <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-hijau-muda text-hijau-tua">
-                  <Ikon nama={l.ikon} ukuran={22} />
-                </span>
+                <Ikon nama={l.ikon} ukuran={26} className="text-foreground" />
               </span>
               <h2 className="judul pt-1 text-[22px] font-extrabold">{l.judul}</h2>
               <p className="text-[15px] leading-relaxed text-abu">{l.isi}</p>
@@ -67,7 +65,7 @@ export default function Beranda() {
       </section>
 
       <footer className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-[14px] text-abu sm:px-8">
-        <span>Talkly · INCEPTION 2026</span>
+        <span>Talkly</span>
         <Link href="/cek-perangkat" className="inline-flex items-center gap-1 font-semibold text-hijau-tua">
           <Ikon nama="info" ukuran={16} /> Cek perangkat
         </Link>

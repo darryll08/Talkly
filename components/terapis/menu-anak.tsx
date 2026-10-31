@@ -32,7 +32,7 @@ export function MenuAnak({ anakId }: { anakId: string }) {
                 aria-current={aktif ? "page" : undefined}
                 className={`tekan flex min-h-11 items-center justify-center rounded-xl px-3 py-2 text-center text-sm font-semibold ${
                   aktif
-                    ? "bg-hijau-muda text-hijau-tua"
+                    ? "bg-abu-muda text-foreground"
                     : "text-abu hover:bg-background hover:text-foreground"
                 }`}
               >

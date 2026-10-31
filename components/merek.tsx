@@ -17,7 +17,7 @@ export function PratinjauHasil() {
     <div className="w-full max-w-[340px] space-y-3 rounded-3xl bg-permukaan p-5 text-foreground shadow-angkat">
       <div className="flex items-center justify-between">
         <span className="text-[13px] font-medium text-abu">Rekaman sore · 1 menit</span>
-        <span className="rounded-full bg-hijau-muda px-2.5 py-0.5 text-[12px] font-semibold text-hijau-tua">Selesai</span>
+        <span className="text-[12px] font-semibold text-abu">Selesai</span>
       </div>
       <p className="text-[19px] font-bold leading-snug">Raka bilang &ldquo;mam&rdquo; 3 kali sendiri</p>
       <div className="flex h-10 items-end gap-[3px]" aria-hidden="true">

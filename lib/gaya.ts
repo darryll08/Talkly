@@ -30,7 +30,7 @@ export const labelAtas = "text-[13px] font-medium text-abu";
 export const labelSeksi = "px-1 text-xs font-semibold uppercase tracking-[0.08em] text-abu";
 
 /** Label kata target berbentuk bulat. */
-export const labelKata = "inline-flex items-center rounded-full bg-hijau-muda px-3 py-1 text-sm font-semibold text-hijau-tua";
+export const labelKata = "inline-flex items-center rounded-full bg-permukaan px-3 py-1 text-sm font-semibold text-foreground ring-1 ring-garis";
 
 /** Galat: teks dari server, berwarna oranye (tidak ada merah). */
 export const kotakGalat = "rounded-2xl bg-oranye-muda px-4 py-3 text-[15px] text-oranye-tua";

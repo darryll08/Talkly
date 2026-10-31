@@ -51,7 +51,10 @@ export const CONTOH_MINGGU_INI = {
     { tanggal: "2026-11-01", nama_hari: "Minggu", anak: [] },
     { tanggal: "2026-11-02", nama_hari: "Senin", anak: [] },
   ],
+  semua: [] as ResponseDari<"mingguIni">["semua"],
 } satisfies ResponseDari<"mingguIni">;
+// Semua anak = 25 anak hari Sabtu; anak terakhir belum punya jadwal sesi.
+CONTOH_MINGGU_INI.semua = CONTOH_MINGGU_INI.hari[0].anak.map((a, i) => ({ ...a, hari_sesi: i === 24 ? null : 6 }));
 
 export const CONTOH_ANAK = {
   id: ID_RAKA,
@@ -248,6 +251,7 @@ export const VARIAN_TERAPIS = {
     terapis,
     ringkasan: { total: 0, bahas: 0, meninjau: 0, lanjut: 0 },
     hari: CONTOH_MINGGU_INI.hari.map((h) => ({ ...h, anak: [] })),
+    semua: [],
   } satisfies ResponseDari<"mingguIni">,
   kartuNamaPanjang: {
     ...CONTOH_TERAPIS.anakKartu,

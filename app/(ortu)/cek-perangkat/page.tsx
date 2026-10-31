@@ -114,7 +114,7 @@ export default function CekPerangkat() {
             Kirim antrean sekarang
           </button>
           {pesan ? (
-            <p className="rounded-2xl bg-hijau-muda px-4 py-3 text-[15px] text-hijau-tua" role="status">
+            <p className="rounded-2xl bg-permukaan px-4 py-3 text-foreground ring-1 ring-garis text-[15px]" role="status">
               {pesan}
             </p>
           ) : null}

@@ -41,6 +41,33 @@ export async function daftarKartuBenda(): Promise<KartuBenda[]> {
 
 export const hapusKartuBenda = (id: string) => hapus("kartu_benda", id);
 
+// Kartu yang dipakai di kartu aktivitas, per kata. Tanpa pilihan, kartu terbaru untuk kata itu yang dipakai.
+const KUNCI_DIPAKAI = "talkly:kartu-benda-dipakai";
+
+export function kartuDipakai(): Record<string, string> {
+  try {
+    return JSON.parse(localStorage.getItem(KUNCI_DIPAKAI) ?? "{}") as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
+export function pakaiKartuBenda(k: Pick<KartuBenda, "id" | "kata">) {
+  try {
+    localStorage.setItem(KUNCI_DIPAKAI, JSON.stringify({ ...kartuDipakai(), [k.kata]: k.id }));
+  } catch {}
+}
+
+/** Kartu untuk salah satu kata: yang dipilih keluarga dulu, lalu yang terbaru. */
+export function pilihKartuUntuk(daftar: KartuBenda[], kata: string[]): KartuBenda | undefined {
+  const pilihan = kartuDipakai();
+  for (const k of kata) {
+    const dipilih = daftar.find((x) => x.id === pilihan[k]);
+    if (dipilih) return dipilih;
+  }
+  return daftar.find((x) => kata.includes(x.kata));
+}
+
 /** Perkecil foto ke sisi terpanjang 900 px, JPEG kualitas 0,85. */
 export async function perkecilFoto(berkas: Blob, sisi = 900): Promise<Blob> {
   const bmp = await createImageBitmap(berkas);

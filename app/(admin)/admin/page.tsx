@@ -86,9 +86,7 @@ export default function Admin() {
               <ul className="grid gap-3 sm:grid-cols-2">
                 {data.klinik.map((k) => (
                   <li key={k.id} className={`${g.kartu} flex items-center gap-3`}>
-                    <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-hijau-muda text-hijau-tua">
-                      <Ikon nama="rumah" ukuran={20} />
-                    </span>
+                    <Ikon nama="rumah" ukuran={22} className="shrink-0 text-foreground" />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-semibold">{k.nama}</span>
                       <span className="block text-[14px] text-abu">
@@ -267,7 +265,7 @@ function AkunJadi({ akun, tutup }: { akun: { nama: string; email: string; kata_s
   const teks = `Akun Talkly untuk ${akun.nama}\nMasuk: ${typeof window === "undefined" ? "" : window.location.origin}/masuk (tab Terapis)\nEmail: ${akun.email}\nKata sandi: ${akun.kata_sandi}`;
   const [tersalin, setTersalin] = useState(false);
   return (
-    <section role="status" className="space-y-3 rounded-2xl bg-hijau-muda p-5 text-hijau-tua">
+    <section role="status" className="space-y-3 rounded-2xl bg-permukaan p-5 ring-1 ring-garis">
       <p className="text-[17px] font-bold">Akun {akun.nama} sudah jadi.</p>
       <pre className="whitespace-pre-wrap rounded-xl bg-permukaan p-4 font-mono text-[14px] text-foreground">{teks}</pre>
       <p className="text-[14px]">Kata sandi ini hanya tampil sekali. Salin lalu kirim ke terapis.</p>

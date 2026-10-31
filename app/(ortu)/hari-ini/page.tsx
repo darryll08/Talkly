@@ -18,10 +18,10 @@ function salam(jam: number) {
 }
 
 const PINTASAN: { href: string; label: string; ikon: NamaIkon; nada: string }[] = [
-  { href: "/catatan-malam", label: "Catatan malam", ikon: "bulan", nada: "bg-hijau-muda text-hijau-tua" },
-  { href: "/ceritakan", label: "Ceritakan sendiri", ikon: "pena", nada: "bg-oranye-muda text-oranye-tua" },
-  { href: "/kartu-benda", label: "Kartu foto benda", ikon: "kamera", nada: "bg-oranye-muda text-oranye-tua" },
-  { href: "/pesan", label: "Pesan terapis", ikon: "pesan", nada: "bg-hijau-muda text-hijau-tua" },
+  { href: "/catatan-malam", label: "Catatan malam", ikon: "bulan", nada: "text-foreground" },
+  { href: "/ceritakan", label: "Ceritakan sendiri", ikon: "pena", nada: "text-foreground" },
+  { href: "/kartu-benda", label: "Kartu foto benda", ikon: "kamera", nada: "text-foreground" },
+  { href: "/pesan", label: "Pesan terapis", ikon: "pesan", nada: "text-foreground" },
 ];
 
 // O3 Hari ini: cukup menjawab apa yang perlu dikerjakan hari ini. Tanpa skor.
@@ -76,9 +76,9 @@ export default function HariIni() {
           </p>
         </Link>
       ) : semuaSelesai ? (
-        <section className={`${g.tumpuk} bg-hijau-muda`}>
-          <p className="font-judul text-[22px] font-extrabold leading-tight text-hijau-tua">Semua aktivitas hari ini selesai</p>
-          <p className="mt-1 text-[16px] text-hijau-tua">Terima kasih sudah meluangkan waktu untuk {data.anak.nama} hari ini.</p>
+        <section className={g.tumpuk}>
+          <p className="font-judul text-[22px] font-extrabold leading-tight">Semua aktivitas hari ini selesai</p>
+          <p className="mt-1 text-[16px] text-abu">Terima kasih sudah meluangkan waktu untuk {data.anak.nama} hari ini.</p>
         </section>
       ) : (
         <section className={`${g.tumpuk} text-[16px] text-abu`}>{data.terapis.nama} belum mengirim rencana minggu ini.</section>
@@ -142,7 +142,7 @@ export default function HariIni() {
       <section className="grid grid-cols-2 gap-3">
         {PINTASAN.map((p) => (
           <Link key={p.href} href={p.href} className={`${g.kartu} tekan flex min-h-[104px] flex-col justify-between`}>
-            <span className={`inline-flex size-10 items-center justify-center rounded-xl ${p.nada}`}>
+            <span className={p.nada}>
               <Ikon nama={p.ikon} ukuran={22} />
             </span>
             <span className="text-[15px] font-semibold leading-tight">{p.label}</span>

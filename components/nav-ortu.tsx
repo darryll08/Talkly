@@ -40,7 +40,7 @@ export function NavOrtu({ pengelola }: { pengelola: boolean }) {
               >
                 <span
                   className={`inline-flex h-8 w-14 items-center justify-center rounded-full transition-[background-color,transform] duration-300 ease-pantul ${
-                    aktif ? "scale-100 bg-hijau-muda" : "scale-90"
+                    aktif ? "scale-100 bg-abu-muda" : "scale-90"
                   }`}
                 >
                   <Ikon nama={m.ikon} isi={aktif} ukuran={22} />

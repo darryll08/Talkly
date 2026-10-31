@@ -7,7 +7,7 @@ import * as g from "@/lib/gaya";
 import { API } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
-import { daftarKartuBenda, type KartuBenda } from "@/lib/perangkat/klip";
+import { daftarKartuBenda, pilihKartuUntuk, type KartuBenda } from "@/lib/perangkat/klip";
 import { useSaya } from "@/lib/perangkat/saya";
 import { Memuat } from "@/components/memuat";
 import { KepalaHalaman } from "@/components/kepala-halaman";
@@ -31,7 +31,7 @@ export function KartuAktivitas() {
     let url: string | null = null;
     let batal = false;
     daftarKartuBenda().then((d) => {
-      const k = d.find((x) => kata.split("|").includes(x.kata));
+      const k = pilihKartuUntuk(d, kata.split("|"));
       if (!k || batal) return;
       url = URL.createObjectURL(k.foto);
       setFotoBenda({ kartu: k, url });
@@ -123,7 +123,7 @@ export function KartuAktivitas() {
             </Link>
           ) : null}
           {selesai ? (
-            <p className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-hijau-muda text-[16px] font-semibold text-hijau-tua" role="status">
+            <p className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-permukaan text-[16px] font-semibold text-foreground ring-1 ring-garis" role="status">
               <Ikon nama="centang" ukuran={20} /> Tercatat untuk hari ini
             </p>
           ) : (

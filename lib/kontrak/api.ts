@@ -463,6 +463,24 @@ export const API = {
           ),
         }),
       ),
+      /** Semua anak yang ditangani, termasuk yang sesinya di luar tiga hari ke depan atau belum dijadwalkan. */
+      semua: z
+        .array(
+          z.object({
+            id: Id,
+            nama: z.string(),
+            usia_bulan: z.number().int(),
+            tahap: Tahap,
+            status: StatusAnak,
+            pemicu: z.string().nullable(),
+            /** 1 = Senin … 7 = Minggu; null = belum dijadwalkan. */
+            hari_sesi: z.number().int().min(1).max(7).nullable(),
+            jam_sesi: z.string(),
+            hari_aktif_7: z.number().int().min(0).max(7),
+            data_contoh: z.boolean(),
+          }),
+        )
+        .default([]),
     }),
     layar: ["D3"],
     titik: "I2",

@@ -17,6 +17,20 @@ export const GET = denganAkses(["terapis"], async (_req, { saya }) => {
   const daftar = anak ?? [];
   const aktif = await hariAktifPerAnak(daftar.map((a) => a.id));
 
+  const ringkas = (a: (typeof daftar)[number]) => ({
+    id: a.id,
+    nama: a.nama,
+    usia_bulan: usiaBulan(a.tanggal_lahir),
+    tahap: a.tahap,
+    status: a.status,
+    pemicu: a.status_pemicu,
+    jam_sesi: String(a.jam_sesi ?? "").slice(0, 5),
+    hari_aktif_7: aktif.get(a.id) ?? 0,
+    data_contoh: a.data_contoh,
+  });
+  const urutStatus = (x: (typeof daftar)[number], y: (typeof daftar)[number]) =>
+    URUTAN_STATUS.indexOf(y.status) - URUTAN_STATUS.indexOf(x.status);
+
   const hari = [0, 1, 2].map((maju) => {
     const tanggal = tanggalWib(-maju);
     const hariKe = new Date(`${tanggal}T00:00:00Z`).getUTCDay(); // 0 = Minggu
@@ -53,5 +67,9 @@ export const GET = denganAkses(["terapis"], async (_req, { saya }) => {
       lanjut: daftar.filter((a) => a.status === "lanjut").length,
     },
     hari,
+    // Anak baru atau yang sesinya di luar tiga hari ke depan tetap terlihat di sini.
+    semua: [...daftar]
+      .sort((x, y) => urutStatus(x, y) || String(x.nama).localeCompare(String(y.nama), "id"))
+      .map((a) => ({ ...ringkas(a), hari_sesi: a.hari_sesi ?? null })),
   });
 });

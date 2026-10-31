@@ -4,7 +4,15 @@ import { useEffect, useState } from "react";
 import * as g from "@/lib/gaya";
 import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
-import { daftarKartuBenda, hapusKartuBenda, perkecilFoto, simpanKartuBenda, type KartuBenda } from "@/lib/perangkat/klip";
+import {
+  daftarKartuBenda,
+  hapusKartuBenda,
+  kartuDipakai,
+  pakaiKartuBenda,
+  perkecilFoto,
+  simpanKartuBenda,
+  type KartuBenda,
+} from "@/lib/perangkat/klip";
 import { KepalaHalaman } from "@/components/kepala-halaman";
 import { Ikon } from "@/components/ikon";
 import { KepalaHijau } from "@/components/kepala-hijau";
@@ -19,6 +27,34 @@ export default function KartuFotoBenda() {
   const [galat, setGalat] = useState<string | null>(null);
   const [daftar, setDaftar] = useState<Tampil[]>([]);
   const [buka, setBuka] = useState<Tampil | null>(null);
+  const [dipakai, setDipakai] = useState<Record<string, string>>({});
+
+  /** Kartu yang tampil di kartu aktivitas untuk kata ini: pilihan keluarga, atau yang terbaru. */
+  function sedangDipakai(k: Tampil) {
+    const id = dipakai[k.kata];
+    return id ? id === k.id : daftar.find((x) => x.kata === k.kata)?.id === k.id;
+  }
+
+  function pakai(k: Tampil) {
+    pakaiKartuBenda(k);
+    setDipakai(kartuDipakai());
+  }
+
+  async function gantiFoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (!f || !buka) return;
+    setGalat(null);
+    try {
+      const blob = await perkecilFoto(f);
+      const { url: _url, ...kartu } = buka;
+      void _url;
+      await simpanKartuBenda({ ...kartu, foto: blob });
+      setBuka({ ...buka, foto: blob, url: URL.createObjectURL(blob) });
+      await muat();
+    } catch (err) {
+      setGalat(err instanceof Error ? err.message : "Foto tidak bisa dibuka.");
+    }
+  }
 
   async function muat() {
     const d = await daftarKartuBenda();
@@ -31,7 +67,9 @@ export default function KartuFotoBenda() {
   useEffect(() => {
     let batal = false;
     daftarKartuBenda().then((d) => {
-      if (!batal) setDaftar(d.map((k) => ({ ...k, url: URL.createObjectURL(k.foto) })));
+      if (batal) return;
+      setDaftar(d.map((k) => ({ ...k, url: URL.createObjectURL(k.foto) })));
+      setDipakai(kartuDipakai());
     });
     return () => {
       batal = true;
@@ -67,6 +105,9 @@ export default function KartuFotoBenda() {
         dibuat: Date.now(),
       };
       await simpanKartuBenda(kartu);
+      // Kartu baru langsung dipakai untuk katanya; kartu lama tetap tersimpan dan bisa dipilih lagi.
+      pakaiKartuBenda(kartu);
+      setDipakai(kartuDipakai());
       setBuka({ ...kartu, url: foto.url });
       setFoto(null);
       setNama("");
@@ -102,7 +143,21 @@ export default function KartuFotoBenda() {
           <p className="rounded-2xl bg-permukaan p-4 text-[15px] leading-snug text-abu shadow-kartu">
             Tunjukkan beberapa detik sambil menyebut katanya, lalu kembalikan perhatian ke benda aslinya.
           </p>
-          <button type="button" onClick={() => setBuka(null)} className={g.tombolKedua}>
+          {galat ? <p className={g.kotakGalat}>{galat}</p> : null}
+          {sedangDipakai(buka) ? (
+            <p className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-permukaan text-[16px] font-semibold ring-1 ring-garis">
+              <Ikon nama="centang" ukuran={20} /> Dipakai di kartu aktivitas &ldquo;{buka.kata}&rdquo;
+            </p>
+          ) : (
+            <button type="button" onClick={() => pakai(buka)} className={g.tombolUtama}>
+              Pakai kartu ini untuk &ldquo;{buka.kata}&rdquo;
+            </button>
+          )}
+          <label className={`${g.tombolKedua} cursor-pointer`}>
+            <Ikon nama="kamera" ukuran={20} /> Ganti foto
+            <input type="file" accept="image/*" capture="environment" onChange={gantiFoto} className="sr-only" />
+          </label>
+          <button type="button" onClick={() => setBuka(null)} className={`${g.tombolTeks} w-full justify-center`}>
             Selesai
           </button>
         </div>
@@ -114,7 +169,7 @@ export default function KartuFotoBenda() {
     <div className="pb-4">
       <div className="muncul space-y-6">
         <KepalaHijau kembali="/hari-ini" atas="Kartu foto benda" judul="Benda kesukaan anak" rapat>
-          <p className="text-[16px] text-teks-di-hijau">Foto disimpan di ponsel ini saja dan tidak dikirim ke mana pun.</p>
+          <p className="text-[16px] text-teks-di-hijau">Foto ini hanya tersimpan di HP ini.</p>
         </KepalaHijau>
 
         <form onSubmit={buat} className="space-y-4">
@@ -151,9 +206,20 @@ export default function KartuFotoBenda() {
                     <img src={k.url} alt={k.nama_benda} className="aspect-square w-full object-cover" />
                     <span className="block px-3 pt-2 text-[17px] font-bold">{k.kata}</span>
                   </button>
-                  <button type="button" onClick={() => hapus(k.id)} className={`${g.tombolTeks} px-3 text-[14px] text-abu`}>
-                    Hapus
-                  </button>
+                  <div className="flex items-center justify-between px-1">
+                    {sedangDipakai(k) ? (
+                      <span className="inline-flex min-h-11 items-center gap-1 px-2 text-[14px] font-semibold">
+                        <Ikon nama="centang" ukuran={16} /> Dipakai
+                      </span>
+                    ) : (
+                      <button type="button" onClick={() => pakai(k)} className={`${g.tombolTeks} px-2 text-[14px]`}>
+                        Pakai
+                      </button>
+                    )}
+                    <button type="button" onClick={() => hapus(k.id)} className={`${g.tombolTeks} px-2 text-[14px] text-abu`}>
+                      Hapus
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>

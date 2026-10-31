@@ -94,8 +94,8 @@ function UmpanBalik({ rekamanId, data }: { rekamanId: string; data: StatusRekama
         <p className="mt-1.5 text-[17px] leading-snug">{ub.teks_pujian}</p>
       </section>
 
-      <section className="rounded-2xl bg-hijau-muda p-4">
-        <p className="flex items-center gap-1.5 text-[14px] font-semibold text-hijau-tua">
+      <section className={`${g.kartu} p-4`}>
+        <p className="flex items-center gap-1.5 text-[14px] font-semibold text-foreground">
           <Ikon nama="panah-kanan" ukuran={18} /> Coba besok
         </p>
         <p className="mt-1.5 text-[17px] leading-snug">{ub.teks_saran}</p>
@@ -256,7 +256,7 @@ function Ditolak({ alasan }: { alasan: string | null }) {
         <ol className={g.daftar}>
           {TIPS.map((t, i) => (
             <li key={t} className="flex gap-3 px-4 py-3">
-              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-hijau-muda text-sm font-bold text-hijau-tua">
+              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-oranye text-sm font-bold text-white">
                 {i + 1}
               </span>
               <span className="text-[16px] leading-snug">{t}</span>

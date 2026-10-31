@@ -50,7 +50,7 @@ export function PasangAplikasi() {
 
   if (terpasang) {
     return (
-      <p className="flex items-center gap-2 rounded-2xl bg-hijau-muda px-4 py-3 text-[16px] font-semibold text-hijau-tua">
+      <p className="flex items-center gap-2 rounded-2xl bg-permukaan px-4 py-3 text-foreground ring-1 ring-garis text-[16px] font-semibold">
         <Ikon nama="centang" ukuran={20} /> Talkly sudah ada di layar utama
       </p>
     );

@@ -11,7 +11,7 @@ export function TopbarPanel({ panel, nama, sebagai }: { panel: string; nama?: st
     <header className="sticky top-0 z-30 border-b border-garis bg-background/90 backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-5xl items-center gap-3 px-4 sm:px-6">
         <Merek />
-        <span className="hidden rounded-full bg-hijau-muda px-2.5 py-0.5 text-[12px] font-semibold text-hijau-tua sm:inline">{panel}</span>
+        <span className="hidden border-l border-garis pl-3 text-[14px] font-medium text-abu sm:inline">{panel}</span>
         <div className="ml-auto flex items-center gap-2">
           {nama ? (
             <span className="hidden items-center gap-2 text-[14px] font-medium sm:flex">

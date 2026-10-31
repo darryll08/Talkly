@@ -15,7 +15,7 @@ export function StatusAnak({
   return (
     <div className="space-y-1">
       <span
-        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${status === "bahas_minggu_ini" ? "bg-oranye-muda text-oranye-tua" : status === "lanjut" ? "bg-hijau-muda text-hijau-tua" : "bg-abu-muda text-foreground"}`}
+        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${status === "bahas_minggu_ini" ? "bg-oranye-muda text-oranye-tua" : status === "lanjut" ? "text-foreground ring-1 ring-garis" : "bg-abu-muda text-foreground"}`}
       >
         {label[status]}
       </span>

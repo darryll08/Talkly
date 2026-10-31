@@ -8,7 +8,7 @@ export function inisialDari(nama: string) {
 }
 
 const warna = {
-  hijau: "bg-hijau-muda text-hijau-tua",
+  hijau: "bg-hijau text-white",
   oranye: "bg-oranye-muda text-oranye-tua",
   abu: "bg-abu-muda text-abu",
 };

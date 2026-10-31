@@ -77,7 +77,7 @@ function Formulir() {
       </header>
 
       {sudahKeluar ? (
-        <p role="status" className="rounded-2xl bg-hijau-muda px-4 py-3 text-[15px] text-hijau-tua">
+        <p role="status" className="rounded-2xl bg-permukaan px-4 py-3 text-foreground ring-1 ring-garis text-[15px]">
           Anda sudah keluar. Sampai jumpa lagi.
         </p>
       ) : null}

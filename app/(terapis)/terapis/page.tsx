@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense } from "react";
-import { API } from "@/lib/kontrak/api";
+import { Suspense, useState } from "react";
+import { API, type ResponseDari } from "@/lib/kontrak/api";
 import { useData } from "@/lib/perangkat/use-data";
 import { Memuat } from "@/components/memuat";
 import { Inisial } from "@/components/inisial";
@@ -109,9 +109,56 @@ function MingguIni() {
           )}
         </section>
       ))}
+      {data.semua.length > 0 && <SemuaAnak anak={data.semua} />}
     </div>
   );
 }
+
+const HARI_PENDEK = ["", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
+
+/** Semua anak yang ditangani, supaya anak baru atau yang sesinya di luar tiga hari ke depan tetap bisa dibuka. */
+function SemuaAnak({ anak }: { anak: ResponseDari<"mingguIni">["semua"] }) {
+  const [cari, setCari] = useState("");
+  const tampil = anak.filter((a) => a.nama.toLowerCase().includes(cari.trim().toLowerCase()));
+  return (
+    <section className="space-y-3">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <h2 className={g.labelSeksi}>Semua anak · {anak.length}</h2>
+        <input
+          className={`${g.isian} w-full py-2 sm:w-64`}
+          value={cari}
+          onChange={(e) => setCari(e.target.value)}
+          placeholder="Cari nama anak"
+          aria-label="Cari nama anak"
+        />
+      </div>
+      <ul className={g.daftar}>
+        {tampil.map((a) => (
+          <li key={a.id}>
+            <Link href={`/terapis/anak/${a.id}`} className={`${g.barisDaftar} tekan flex-wrap hover:bg-background`}>
+              <span className="w-16 text-sm font-semibold tabular-nums">
+                {a.hari_sesi ? `${HARI_PENDEK[a.hari_sesi]} ${a.jam_sesi}` : "–"}
+              </span>
+              <Inisial nama={a.nama} />
+              <div className="min-w-0 flex-1 basis-40">
+                <p className="break-words font-semibold">{a.nama}</p>
+                <p className="text-sm text-abu">
+                  {a.usia_bulan} bln · tahap {a.tahap} · aktif {a.hari_aktif_7}/7
+                  {a.hari_sesi ? "" : " · sesi belum dijadwalkan"}
+                </p>
+              </div>
+              <div className="w-full sm:w-64">
+                <StatusAnak status={a.status} pemicu={a.pemicu} />
+              </div>
+            </Link>
+          </li>
+        ))}
+        {!tampil.length && <li className={`${g.barisDaftar} text-abu`}>Tidak ada anak dengan nama itu.</li>}
+      </ul>
+    </section>
+  );
+}
+
 export default function HalamanMingguIni() {
   return (
     <Suspense fallback={<Memuat />}>
