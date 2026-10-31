@@ -1,6 +1,6 @@
 // Penyedia data contoh untuk NEXT_PUBLIC_PAKAI_CONTOH=1, dari lib/kontrak/contoh/.
-// Sedikit keadaan disimpan selama sesi peramban (aktivitas selesai, pesan, izin, persona demo) agar alur bisa dicoba
-// tanpa server. Rekaman ID.rekamanDitolak = ditolak; ID lain = lolos. Kode undangan berawalan LAMA = kedaluwarsa,
+// Sedikit keadaan disimpan agar alur bisa dicoba tanpa server: aktivitas selesai dan persona demo di localStorage,
+// pesan dan izin selama sesi peramban. Rekaman ID.rekamanDitolak = ditolak; ID lain = lolos. Kode undangan berawalan LAMA = kedaluwarsa,
 // DIPAKAI = sudah dipakai, SRI = untuk pengasuh. Kode masuk berisi SALAH = 401.
 
 import { API, type NamaEndpoint, type ResponseDari } from "@/lib/kontrak/api";
@@ -26,13 +26,32 @@ function untukKeluargaLain(nama: NamaEndpoint, hasil: unknown): unknown {
   const anak = KELUARGA_LAIN[persona()];
   if (!anak || hasil === null || hasil === undefined) return hasil;
   if (nama === "kemajuan" && anak !== "Alya") hasil = VARIAN_ORTU.kemajuanBelumCukup;
-  let teks = JSON.stringify(hasil).replaceAll("Ibu Sari", `Ibu ${anak}`).replaceAll("Raka", anak);
-  if (nama === "hariIni" && anak === "Bima") teks = teks.replaceAll('"selesai_hari_ini":true', '"selesai_hari_ini":false');
+  const teks = JSON.stringify(hasil).replaceAll("Ibu Sari", `Ibu ${anak}`).replaceAll("Raka", anak);
   return JSON.parse(teks);
 }
 
 const salin = <T>(x: T): T => structuredClone(x);
-const selesai = new Set<string>();
+// Aktivitas selesai disimpan di ponsel per persona dan tanggal: Android sering memuat ulang tab saat kamera dibuka
+// (kartu foto benda), dan keadaan di memori saja akan hilang.
+function kunciSelesai() {
+  const t = new Date();
+  return `talkly:contoh-selesai:${persona()}:${t.getFullYear()}-${t.getMonth() + 1}-${t.getDate()}`;
+}
+const selesai = {
+  has(id: string) {
+    try {
+      return (JSON.parse(localStorage.getItem(kunciSelesai()) ?? "[]") as string[]).includes(id);
+    } catch {
+      return false;
+    }
+  },
+  add(id: string) {
+    try {
+      const ada = JSON.parse(localStorage.getItem(kunciSelesai()) ?? "[]") as string[];
+      if (!ada.includes(id)) localStorage.setItem(kunciSelesai(), JSON.stringify([...ada, id]));
+    } catch {}
+  },
+};
 const pesanTambahan: ResponseDari<"pesanLihat">["pesan"] = [];
 let izin = salin(CONTOH.izinLihat!.izin);
 const tanyaRekaman = new Map<string, number>();
@@ -63,7 +82,9 @@ const PENANGAN: { [N in NamaEndpoint]?: (d: Data) => unknown } = {
   hariIni: () => {
     const dasar = salin(persona() === "mbak_sri" ? VARIAN_ORTU.hariIniSri : CONTOH.hariIni!);
     dasar.anggota = { ...dasar.anggota, ...(persona() === "ibu_sari" ? izin : {}) };
-    dasar.aktivitas = dasar.aktivitas.map((a) => ({ ...a, selesai_hari_ini: a.selesai_hari_ini || selesai.has(a.item_id) }));
+    // Ibu Bima mulai dari nol: centang bawaan contoh tidak dipakai, hanya yang dicatat di ponsel.
+    const bawaan = persona() !== "ibu_bima";
+    dasar.aktivitas = dasar.aktivitas.map((a) => ({ ...a, selesai_hari_ini: (bawaan && a.selesai_hari_ini) || selesai.has(a.item_id) }));
     return dasar;
   },
   aktivitasLihat: (d) => {
