@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import * as g from "@/lib/gaya";
 import { Inisial } from "./inisial";
 import { Ikon } from "./ikon";
+import { panggil, pesanDari } from "@/lib/perangkat/panggil";
+import { api } from "@/lib/perangkat/sementara/api";
+import { lupakanSaya } from "@/lib/perangkat/saya";
 
 const DEMO = process.env.NEXT_PUBLIC_DEMO === "1";
 
@@ -17,7 +20,7 @@ const PERSONA: { sebagai: Persona; nama: string; peran: string; tujuan: string }
 ];
 
 /** Kotak "Mode demo · data contoh" di beranda. Hanya tampil bila NEXT_PUBLIC_DEMO=1. */
-export function ModeDemo({ masuk }: { masuk?: (p: Persona) => Promise<void> }) {
+export function ModeDemo() {
   const router = useRouter();
   const [proses, setProses] = useState<Persona | null>(null);
   const [galat, setGalat] = useState<string | null>(null);
@@ -27,10 +30,11 @@ export function ModeDemo({ masuk }: { masuk?: (p: Persona) => Promise<void> }) {
     setGalat(null);
     setProses(p.sebagai);
     try {
-      if (masuk) await masuk(p.sebagai);
+      await panggil(api.demo, { sebagai: p.sebagai });
+      lupakanSaya();
       router.push(p.tujuan);
     } catch (e) {
-      setGalat(e instanceof Error ? e.message : "Mode demo belum bisa dibuka.");
+      setGalat(pesanDari(e));
       setProses(null);
     }
   }

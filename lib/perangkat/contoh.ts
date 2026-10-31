@@ -1,15 +1,19 @@
-// Penyedia data contoh untuk NEXT_PUBLIC_PAKAI_CONTOH=1. Memetakan "METODE path" ke lib/kontrak/contoh/.
-// Diisi setelah kontrak dikunci (B0.4).
+// Penyedia data contoh untuk NEXT_PUBLIC_PAKAI_CONTOH=1. Memetakan "METODE path" ke data contoh.
+// Sementara memakai lib/perangkat/sementara/contoh.ts sampai lib/kontrak/contoh/ ada.
 
 import { pasangContoh, GalatApi, type Endpoint } from "./panggil";
-
-const PETA: Record<string, (data: Record<string, unknown> | undefined) => unknown> = {};
+import { PETA_CONTOH } from "./sementara/contoh";
 
 export function pasang() {
   pasangContoh(async (e: Endpoint, data) => {
-    const f = PETA[`${e.metode} ${e.path}`];
+    const f = PETA_CONTOH[`${e.metode} ${e.path}`];
     if (!f) throw new GalatApi(404, `Belum ada data contoh untuk ${e.metode} ${e.path}.`);
-    await new Promise((ok) => setTimeout(ok, 250));
-    return f(data);
+    await new Promise((ok) => setTimeout(ok, 300));
+    try {
+      return f(data);
+    } catch (err) {
+      const status = (err as { status?: number }).status ?? 500;
+      throw new GalatApi(status, err instanceof Error ? err.message : "Galat data contoh.");
+    }
   });
 }
