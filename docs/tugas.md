@@ -16,7 +16,7 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 
 ### 4.1 Basis data dan login
 - [x] A1.1 Migrasi skema (8bd3b49): `scripts/cek-skema.ts` lolos di TALKLY-DEV dan TALKLY (31 Okt). `supabase db diff` tidak dipakai; kedua proyek menjalankan file yang sama.
-- [x] A1.2 RLS dengan data terisi (`uji/rls.ts`): anon 0 baris di 18 tabel; Kak Nadia 10 anak tanpa Nara; Kak Uji hanya Nara, tidak bisa membaca rekaman/hasil/laporan Raka; terapis tidak bisa menulis langsung.
+- [x] A1.2 RLS dengan data terisi (`uji/rls.ts`): anon 0 baris di 18 tabel; Kak Nadia 9 anak contoh tanpa Nara; Kak Uji hanya Nara, tidak bisa membaca rekaman/hasil/laporan Raka; terapis tidak bisa menulis langsung.
 - [x] A1.3 Gabung dan undangan: `uji/alur-keluarga.ts` 20 cek lolos (409 dipakai, 410 kedaluwarsa, 409 anggota kelima, 409 pendengaran kosong).
 - [x] A1.4 Masuk (423/204), ganti kode masuk, push "dibuka di ponsel lain", hapus anggota beserta rekaman/audio (`uji/alur-tambahan.ts`).
 - [x] A1.5 Izin rekaman: tiga izin dengan penyedia/negara/Pasal 56; mematikan izin dengar menghapus audio (audio_dihapus ≥ 1).
@@ -24,7 +24,7 @@ Centang hanya bila "Selesai bila" terpenuhi dan buktinya ada di repo. Tulis tang
 
 ### 4.2 Data contoh
 - [x] A2.1 17 aktivitas, 18 templat (9 pujian/9 saran, semua pemicu), `uji/konten.test.ts` lolos tanpa kata terlarang. Disusun dari proposal karena berkas konten klinis tidak ditemukan; perlu tinjauan terapis.
-- [x] A2.2 Seed: 10 anak (1 Bahas, 4 Meninjau), riwayat Raka 3 minggu (O10 Ibu Sari 2,1 → 3,0 → 3,8 detik), idempoten, sudah di TALKLY dan TALKLY-DEV.
+- [x] A2.2 Seed: 9 anak contoh (1 Bahas, 4 Meninjau), riwayat Raka 3 minggu (O10 Ibu Sari 2,1 → 3,0 → 3,8 detik), idempoten, sudah di TALKLY dan TALKLY-DEV.
 - [x] A2.3 Mode demo, K9 lolos (demo Ibu Sari → Kak Nadia → GET /api/saya 401).
 
 ### 4.3 Pipeline satu rekaman
