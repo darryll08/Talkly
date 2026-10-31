@@ -166,6 +166,16 @@ export const CONTOH_TERAPIS = {
         status: "dinilai",
         jeda_rata_s: 3.8,
         bisa_didengar: true,
+        kurang_tepat: false,
+      },
+      {
+        id: "6f1d2a40-0000-4000-8000-0000000000c7",
+        dibuat: "2026-10-30T17:10:00+07:00",
+        perekam: "Mbak Sri",
+        status: "dinilai",
+        jeda_rata_s: 2.4,
+        bisa_didengar: false,
+        kurang_tepat: true,
       },
     ],
     laporan_keluarga: [

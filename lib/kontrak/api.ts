@@ -572,6 +572,8 @@ export const API = {
           status: z.enum(["antre", "dinilai", "ditolak"]),
           jeda_rata_s: z.number().nullable(),
           bisa_didengar: z.boolean(),
+          /** Keluarga menekan "Hasil ini kurang tepat?" di O6. */
+          kurang_tepat: z.boolean().default(false),
         }),
       ),
       laporan_keluarga: z.array(z.object({ id: Id, tanggal: Tanggal, nama: z.string(), laporan: Laporan })),

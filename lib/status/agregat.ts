@@ -19,6 +19,8 @@ export type RekamanDinilai = {
   durasi_s: number;
   path_audio: string | null;
   status: "antre" | "dinilai" | "ditolak";
+  /** Keluarga menandai hasil rekaman ini kurang tepat (O6). */
+  kurang_tepat: boolean;
   hasil: HasilRekaman | null;
 };
 
@@ -48,7 +50,7 @@ export function rentangPersen(berhasil: number, total: number) {
 export async function muatRekaman(anakId: string, sejakHari: number): Promise<RekamanDinilai[]> {
   const { data, error } = await db()
     .from("rekaman")
-    .select("id, anggota_id, dibuat, durasi_s, path_audio, status, hasil:hasil_rekaman (hasil)")
+    .select("id, anggota_id, dibuat, durasi_s, path_audio, status, kurang_tepat, hasil:hasil_rekaman (hasil)")
     .eq("anak_id", anakId)
     .gte("dibuat", awalHariWib(tanggalWib(sejakHari)))
     .order("dibuat", { ascending: false });

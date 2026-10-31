@@ -10,6 +10,7 @@ import { PitaPercakapan } from "@/components/terapis/pita-percakapan";
 import { AudioRekaman } from "@/components/terapis/audio-rekaman";
 import * as g from "@/lib/gaya";
 import { KepalaHijau } from "@/components/kepala-hijau";
+import { Ikon } from "@/components/ikon";
 
 type Rentang = ResponseDari<"anakKartu">["strategi"]["jeda_rata_s"];
 const nombre = (n: number | null) =>
@@ -235,7 +236,7 @@ export function KartuAnak() {
           {data.rekaman_terbaru.map((r) => (
             <li
               key={r.id}
-              className={`${g.barisDaftar} flex-wrap justify-between text-sm`}
+              className={`${g.barisDaftar} flex-wrap justify-between text-sm ${r.kurang_tepat ? "bg-oranye-muda" : ""}`}
             >
               <div>
                 <p className="font-semibold">{r.perekam}</p>
@@ -245,7 +246,14 @@ export function KartuAnak() {
                   })}
                 </time>
               </div>
-              <span>{r.status}</span>
+              <span className="flex flex-wrap items-center justify-end gap-2">
+                {r.kurang_tepat && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-oranye-tua px-3 py-1 text-xs font-semibold text-white">
+                    <Ikon nama="info" ukuran={14} /> Ditandai keluarga: kurang tepat
+                  </span>
+                )}
+                <span>{r.status}</span>
+              </span>
               {r.bisa_didengar && <AudioRekaman id={r.id} />}
             </li>
           ))}

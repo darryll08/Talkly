@@ -88,6 +88,7 @@ export const GET = denganAkses(["terapis"], async (_req, { saya, params }) => {
       status: r.status,
       jeda_rata_s: r.hasil?.ukuran?.jeda_rata_s ?? null,
       bisa_didengar: bisaDidengar(r),
+      kurang_tepat: !!r.kurang_tepat,
     })),
     laporan_keluarga: laporan.map((l) => ({ id: l.id, tanggal: l.tanggal, nama: l.nama, laporan: l.laporan })),
     kata_dilaporkan: kataDilaporkan(laporan),
