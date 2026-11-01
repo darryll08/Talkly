@@ -11,11 +11,63 @@ Tim Boomerang, Universitas Airlangga · INCEPTION 2026 · Subtema 2: Health, Wel
 
 ## Menjalankan
 
+Gunakan **Node.js 24** dan npm. Setelah mengunduh atau meng-clone repositori, masuk ke folder proyek lalu jalankan:
+
 ```bash
 npm ci
+```
+
+Salin `.env.example` menjadi `.env.local`:
+
+```bash
+# macOS / Linux / Git Bash
+cp .env.example .env.local
+```
+
+```powershell
+# PowerShell
+Copy-Item .env.example .env.local
+```
+
+### Pratinjau UI dengan data contoh
+
+Untuk mencoba tampilan tanpa backend, isi `.env.local` dengan:
+
+```dotenv
+NEXT_PUBLIC_PAKAI_CONTOH=1
+NEXT_PUBLIC_DEMO=1
+```
+
+Jalankan `npm run dev`, lalu buka http://localhost:3000/masuk#demo. Mode ini memakai data contoh di peramban; tidak menguji autentikasi nyata, penyimpanan database, pemrosesan audio/AI, atau sinkronisasi antarperan.
+
+### Terhubung ke backend
+
+- Gunakan proyek Supabase pengembangan. Terapkan migrasi di `supabase/migrations/` secara berurutan untuk menyiapkan database, RLS, dan bucket audio privat.
+- Isi `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, dan `SESI_RAHASIA` pada `.env.local`. `SESI_RAHASIA` minimal 16 karakter.
+- Isi kunci STT/AI, Web Push, dan cron sesuai `.env.example` untuk fitur yang akan dijalankan. Kunci server tidak boleh diberi awalan `NEXT_PUBLIC_`.
+- Biarkan `NEXT_PUBLIC_PAKAI_CONTOH` kosong atau `0` agar aplikasi memakai API nyata. Untuk persona demo backend, aktifkan `DEMO=1` dan `NEXT_PUBLIC_DEMO=1` hanya di lingkungan demo dengan data contoh yang sudah disiapkan.
+- Bila perlu mengisi ulang data contoh di proyek pengembangan, `npm run seed` memerlukan `DEMO_TERAPIS_KATA_SANDI` di `.env.local`. Seed menghapus lalu mengisi ulang data bertanda `data_contoh`; jangan jalankan untuk pengujian pada produksi.
+
+Anggota yang sudah memiliki akses proyek Vercel dapat mengambil konfigurasi melalui:
+
+```bash
+npx vercel login
+npx vercel link
 npx vercel env pull .env.local
+```
+
+Pilih proyek dan lingkungan pengembangan yang benar. Perintah tersebut memerlukan login Vercel serta akses proyek tim; tidak diperlukan untuk mode pratinjau UI. `env pull` menulis konfigurasi ke `.env.local`, jadi cadangkan konfigurasi lokal bila sudah ada.
+
+Setelah konfigurasi siap:
+
+```bash
 npm run dev
 ```
+
+Buka http://localhost:3000. Jangan commit `.env.local` atau kredensial ke GitHub.
+
+### Pemeriksaan
+
 
 - `npm run periksa`: cek tipe, lint, tes, dan build. Wajib hijau sebelum push.
 - `UJI_URL=http://localhost:3000 npm run uji`: menjalankan juga penjaga akses terhadap server lokal.
@@ -120,7 +172,7 @@ Tidak ada perubahan lingkup; Talkly diajukan di subtema 2.
 ## AI Use Declaration
 
 **AI di dalam produk**
-- **OpenAI GPT-6 Luna**: memilih dan mengisi templat umpan balik buatan terapis, menyusun kalimat versi anak (panjangnya dibatasi aturan), menilai perluasan, menulis laporan ringkas untuk terapis, menyusun draf rencana mingguan dari bank aktivitas, membuat kalimat kartu benda dari nama benda, dan mengekstrak ucapan anak dari catatan malam. Setiap keluaran divalidasi kode; bila gagal atau ragu, sistem memakai templat cadangan dan menaikkan status anak ke Terapis meninjau. AI tidak menentukan status anak dan tidak mendiagnosis.
+- **OpenAI GPT-6 Luna**: memilih dan mengisi templat umpan balik buatan terapis, menyusun kalimat versi anak (panjangnya dibatasi aturan), menghasilkan perkiraan perluasan sebagai keluaran tambahan (angka perluasan akhir dihitung oleh kode), menulis laporan ringkas untuk terapis, menyusun draf rencana mingguan dari bank aktivitas, membuat kalimat kartu benda dari nama benda, dan mengekstrak ucapan anak dari catatan malam. Setiap keluaran divalidasi kode; bila gagal atau ragu, sistem memakai templat cadangan dan menaikkan status anak ke Terapis meninjau. AI tidak menentukan status anak dan tidak mendiagnosis.
 - **ElevenLabs Scribe v2** (cadangan **Deepgram Nova-3**): transkrip, cap waktu per kata, dan label pembicara. Semua angka (jeda, ajakan, giliran) dihitung kode dari cap waktu ini.
 
 **AI sebagai alat bantu pengembangan**
@@ -149,6 +201,8 @@ Seluruh data di versi lomba adalah data contoh dan skenario percakapan bernaskah
 ## Hasil uji akurasi
 
 Mesin ukur diuji pada 15 skenario percakapan bernaskah: jeda pendek dan panjang, suruhan beruntun, pertanyaan beruntun, campuran bahasa Jawa, ayah menyela, pengasuh sebagai perekam, anak menjawab cepat, suara anak yang bukan kata, TV keras, dan rekaman terlalu pendek. Hasil per skenario ada di [`docs/hasil-uji.md`](docs/hasil-uji.md).
+
+Hasil ini merupakan evaluasi internal pada skenario bernaskah, bukan bukti manfaat klinis atau pengujian pada keluarga nyata.
 
 | Ukuran | Target | Hasil |
 |---|---|---|
