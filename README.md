@@ -4,8 +4,6 @@ PWA dari klinik untuk orang tua anak terlambat bicara (18–48 bulan). Orang tua
 
 Tim Boomerang, Universitas Airlangga · INCEPTION 2026 · Subtema 2: Health, Well-being, and Accessibility.
 
-> README diisi bertahap di setiap titik integrasi (pemegang: Darryl).
-
 - Aplikasi daring: https://talkly-orcin.vercel.app (mode demo di beranda)
 - Repositori: https://github.com/darryll08/Talkly
 - Video demo: menyusul
@@ -58,6 +56,25 @@ Kode layar mengikuti proposal v19: **D5 = Setelah sesi, D6 = Pesan keluarga**. D
 
 ## Fitur
 
+**Keluarga (ponsel, tanpa kata sandi)**
+- Gabung lewat kode undangan atau QR dari terapis, lalu masuk dengan kode masuk pribadi.
+- Tiga izin terpisah yang mati sampai keluarga menyalakannya: rekaman boleh dinilai, terapis boleh mendengar (7 hari), pengelola boleh memutar Momen anak.
+- Hari Ini: daftar 2–3 aktivitas lima menit dari terapis, tanpa skor. Kartu aktivitas berisi tiga langkah dan apa yang dilakukan bila anak belum mau.
+- Kartu foto benda: foto benda kesukaan anak menjadi kartu latihan. Foto tetap di ponsel.
+- Rekam 1 menit dengan hitung mundur menunggu, lalu umpan balik singkat (satu pujian, satu saran) dari templat terapis.
+- Bila rekaman belum bisa dinilai (terlalu pendek, TV keras), keluarga mendapat alasan dan tips, atau bisa menceritakan sendiri dan mengisi catatan malam.
+- Kemajuan, ringkasan keluarga minggu ini, pesan dengan terapis, dan profil untuk mengubah izin.
+
+**Terapis (web)**
+- Minggu ini: sesi tiga hari ke depan dan anak yang perlu dibahas.
+- Program anak: tahap bahasa, kata target, dan aktivitas minggu ini.
+- Kartu anak sebelum sesi: jeda, ajakan yang berhasil, giliran percakapan selama 14 hari, pita percakapan, hasil per pengasuh, dan laporan keluarga yang dipisah dari angka terukur.
+- Setelah sesi: catatan dan draf rencana minggu depan dari AI. Rencana baru terkirim ke keluarga setelah terapis menyunting dan menyetujuinya.
+- Undangan keluarga dengan kode dan QR, serta pesan keluarga.
+
+**Pengelola klinik**
+- Membuat klinik dan akun terapis.
+
 ## Teknologi
 
 | Bagian | Pilihan |
@@ -74,7 +91,11 @@ Kode layar mengikuti proposal v19: **D5 = Setelah sesi, D6 = Pesan keluarga**. D
 
 ### Darryl Sitia
 
+Membangun fondasi server: kontrak data antarbagian, sesi HMAC dan penjaga akses, tes penjaga, serta deploy otomatis lewat GitHub Actions. Menyusun migrasi 18 tabel dengan RLS dan bucket audio privat, bank aktivitas, 18 templat terapis, data contoh persona, dan mode demo. Membangun pipeline rekaman: unggah, STT Scribe v2 dengan cadangan Deepgram, cek mutu, pengenalan perekam dan suara anak, penghitungan ajakan, jeda, dan giliran, serta umpan balik GPT-6 Luna yang divalidasi kode. Menulis aturan status Tabel 2 dan seluruh endpoint keluarga dan terapis: Hari Ini, aktivitas, laporan malam, kemajuan, undangan dan kode masuk, kartu anak, program, setelah sesi dengan draf rencana AI dan persetujuan terapis, pesan dua arah, izin rekaman, notifikasi, serta cron pengingat dan penghapusan audio. Menjalankan uji akurasi 15 skenario dan 50 draf rencana acak, lalu memperbaiki mesin ukur dari temuannya. Menghubungkan kartu foto benda ke kata target per aktivitas dan menyusun README. Implementasi dibantu Claude Code.
+
 ### I Wayan Satya Dharma Sadhana
+
+Menyiapkan kerangka proyek Next.js dan fondasi aplikasi orang tua: sistem tampilan, perangkat ponsel, dan PWA. Membangun layar orang tua O1–O12, Pesan, dan Cek perangkat di atas kontrak resmi, termasuk layar Rekam dengan hitung mundur menunggu serta berhenti dan ulang kapan saja. Melakukan audit tampilan dan menyusun design brief, lalu menerapkan perbaikan prioritas (token warna, font, kontras, waktu muat) dan tampilan akhir. Menyatukan login semua peran di satu halaman Masuk dengan penjaga rute, keluar, dan panel admin, serta menambah akun demo. Membuat kartu foto benda yang bisa dipilih dan diganti fotonya, menambah bank aktivitas menjadi 50 (33 aktivitas baru masih draf untuk ditinjau terapis), merapikan beberapa tampilan dasbor terapis, dan mengatasi batas kuota unggah Vercel saat deploy.
 
 ### Aditya Saputra
 
@@ -82,7 +103,7 @@ Menyiapkan layout dasbor terapis dan navigasi anak, form masuk terapis, daftar M
 
 Menambahkan form program D1 (baru/ubah), undangan keluarga D2 dengan QR dan polling saat tab terlihat, catatan setelah sesi D5 dengan penyuntingan/persetujuan draf, pesan keluarga D6, serta permintaan audio berizin saat ditekan. Form dan aksi menggunakan kontrak/pemanggil API bersama; mode contoh menjelaskan bahwa data tidak tersimpan/dikirim ke keluarga nyata.
 
-Status: uji browser 390/1280 px, autentikasi nyata, penyimpanan/pengiriman lintas peran, pemutaran audio/log dengar, serta integrasi endpoint/data rekaman masih belum selesai. Data contoh bukan hasil uji klinis atau data pengguna nyata. Tidak ada screenshot atau hasil integrasi yang dinyatakan lolos sebelum diperiksa.
+Setelah endpoint server selesai, dasbor terapis dihubungkan ke kontrak server terbaru dan disesuaikan dengan API sungguhan, termasuk penanda kecukupan data dan umpan balik saat rencana disetujui. Data contoh bukan hasil uji klinis atau data pengguna nyata.
 
 ## Bahan persiapan
 
@@ -103,7 +124,12 @@ Tidak ada perubahan lingkup; Talkly diajukan di subtema 2.
 - **ElevenLabs Scribe v2** (cadangan **Deepgram Nova-3**): transkrip, cap waktu per kata, dan label pembicara. Semua angka (jeda, ajakan, giliran) dihitung kode dari cap waktu ini.
 
 **AI sebagai alat bantu pengembangan**
-- Claude Code (Anthropic) dipakai oleh anggota tim sebagai asisten menulis dan meninjau kode. Setiap anggota meninjau, menjalankan, dan bertanggung jawab atas kode yang di-commit atas namanya.
+- Claude Code (Anthropic) dan OpenAI Codex dipakai oleh anggota tim sebagai asisten menulis dan meninjau kode. Setiap anggota meninjau, menjalankan, dan bertanggung jawab atas kode yang di-commit atas namanya.
+
+**AI dalam pembuatan video demo**
+- **HyperFrames**: menyusun video demo dari komposisi HTML (judul, transisi, potongan rekaman layar aplikasi).
+- **ElevenLabs** (text-to-speech): suara narasi video. Suara yang dipakai adalah klon suara anggota tim sendiri, dibuat atas persetujuannya.
+- Rekaman layar di video diambil dari aplikasi yang berjalan sungguhan; tidak ada layar yang dibuat ulang dengan AI.
 
 ## Third-Party Declaration
 
@@ -115,6 +141,7 @@ Tidak ada perubahan lingkup; Talkly diajukan di subtema 2.
 | Supabase | Basis data, penyimpanan audio privat, autentikasi terapis (Singapura) |
 | Vercel | Hosting dan cron |
 | Web Push (VAPID), pustaka `web-push` | Notifikasi |
+| HyperFrames, ElevenLabs text-to-speech | Pembuatan video demo (bukan bagian aplikasi) |
 | npm: `next`, `react`, `tailwindcss`, `zod`, `@supabase/supabase-js`, `bcryptjs`, `openai`, `qrcode`, `tsx` | Kerangka aplikasi, validasi, klien layanan, kode QR, alat uji |
 
 Seluruh data di versi lomba adalah data contoh dan skenario percakapan bernaskah, bukan data anak sungguhan.
