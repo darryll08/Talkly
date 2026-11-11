@@ -82,6 +82,12 @@ export function ukur(m: Masukan): HasilUkur {
   const ajakan: Ajakan[] = [];
   let giliran = 0;
   let momen: Momen | null = null;
+  // Suara anak dari ajakan anak_merespons pertama, disimpan langsung (bukan dicari ulang dari angka yang sudah dibulatkan).
+  let anakPertama: Rentang | null = null;
+  const momenDari = (anak: Rentang): Momen => {
+    const mulai = Math.max(0, anak.t_mulai - 3);
+    return { t_mulai: bulat(mulai), t_selesai: bulat(Math.min(m.durasi_s, mulai + MOMEN_S)) };
+  };
 
   for (let i = 0; i < milikPerekam.length; i++) {
     const u = milikPerekam[i];
@@ -113,27 +119,20 @@ export function ukur(m: Masukan): HasilUkur {
     ajakan.push({ t_mulai: bulat(u.t_mulai), t_selesai: bulat(u.t_selesai), teks: u.teks, kategori, jeda_s: bulat(jeda) });
 
     if (kategori === "anak_merespons") {
-      const anak = suaraAnak.find((s) => s.t_mulai >= u.t_selesai - 0.05)!;
+      // Predikat sama dengan suaraBerikut(), jadi pasti ketemu; tetap dijaga agar rekaman tidak macet bila berubah.
+      const anak = suaraAnak.find((s) => s.t_mulai >= u.t_selesai - 0.05);
+      if (!anak) continue;
+      anakPertama ??= anak;
       const tanggapan = milikPerekam.find((x) => x.t_mulai >= anak.t_selesai - 0.05);
       if (tanggapan && tanggapan.t_mulai - anak.t_selesai <= TANGGAPAN_MAKS_S) {
         giliran += 1;
-        if (!momen && jeda >= AMBANG_S) {
-          const mulai = Math.max(0, anak.t_mulai - 3);
-          momen = { t_mulai: bulat(mulai), t_selesai: bulat(Math.min(m.durasi_s, mulai + MOMEN_S)) };
-        }
+        if (!momen && jeda >= AMBANG_S) momen = momenDari(anak);
       }
     }
   }
 
   // Bila tidak ada giliran setelah jeda panjang, momen = giliran pertama mana pun.
-  if (!momen) {
-    const pertama = ajakan.find((a) => a.kategori === "anak_merespons");
-    if (pertama) {
-      const anak = suaraAnak.find((s) => s.t_mulai >= pertama.t_selesai - 0.05)!;
-      const mulai = Math.max(0, anak.t_mulai - 3);
-      momen = { t_mulai: bulat(mulai), t_selesai: bulat(Math.min(m.durasi_s, mulai + MOMEN_S)) };
-    }
-  }
+  if (!momen && anakPertama) momen = momenDari(anakPertama);
 
   const anakDiAntara = (a: number, b: number) => suaraAnak.some((s) => s.t_mulai >= a && s.t_mulai < b);
   const hitungBeruntun = (cocok: (u: Ucapan) => boolean, jedaMaks: number) => {

@@ -7,6 +7,7 @@ import { useParamRute } from "@/lib/perangkat/param";
 import { KepalaHijau } from "@/components/kepala-hijau";
 import * as g from "@/lib/gaya";
 import { API, type ResponseDari } from "@/lib/kontrak/api";
+import { ALASAN_GAGAL_SISTEM } from "@/lib/kontrak/rekaman";
 
 type StatusRekaman = ResponseDari<"rekamanLihat">;
 import { panggil, GalatApi, pesanDari } from "@/lib/perangkat/panggil";
@@ -16,6 +17,11 @@ import { SedangDinilai } from "@/components/sedang-dinilai";
 import { Ikon } from "@/components/ikon";
 
 const JEDA_TANYA_MS = 2000;
+/** Setelah menit pertama, bertanya lebih jarang. Server tetap mencoba ulang rekaman macet setiap 2 menit. */
+const JEDA_TANYA_LAMBAT_MS = 10_000;
+const CEPAT_MS = 60_000;
+/** Berhenti bertanya setelah 8 menit: cukup untuk tiga percobaan server (MAKS_PERCOBAAN_PROSES) berjarak 2 menit. */
+const BERHENTI_MS = 8 * 60_000;
 
 // O5b (sedang dinilai) → O6 (umpan balik) atau O7 (rekaman ditolak).
 export function Hasil() {
@@ -23,24 +29,33 @@ export function Hasil() {
   const router = useRouter();
   const [data, setData] = useState<StatusRekaman | null>(null);
   const [galat, setGalat] = useState<string | null>(null);
+  const [terlaluLama, setTerlaluLama] = useState(false);
+  /** Dinaikkan oleh tombol "Cek lagi" untuk memulai pertanyaan dari awal. */
+  const [putaran, setPutaran] = useState(0);
 
   useEffect(() => {
     if (!rekamanId) return;
     let batal = false;
     let t: ReturnType<typeof setTimeout>;
+    const mulai = Date.now();
+    const lanjut = (jeda: number) => {
+      const lewat = Date.now() - mulai;
+      if (lewat >= BERHENTI_MS) return setTerlaluLama(true);
+      t = setTimeout(tanya, Math.max(jeda, lewat >= CEPAT_MS ? JEDA_TANYA_LAMBAT_MS : 0));
+    };
     const tanya = async () => {
       try {
         const d = await panggil(API.rekamanLihat, { id: rekamanId });
         if (batal) return;
         setGalat(null);
-        if (d.status === "antre") t = setTimeout(tanya, JEDA_TANYA_MS);
+        if (d.status === "antre") lanjut(JEDA_TANYA_MS);
         else setData(d);
       } catch (e) {
         if (batal) return;
         if (e instanceof GalatApi && e.status === 401) return router.replace("/keluar");
         setGalat(pesanDari(e));
         // Jaringan putus: terus mencoba, penilaian tetap berjalan di server.
-        if (e instanceof GalatApi && e.status === 0) t = setTimeout(tanya, JEDA_TANYA_MS * 2);
+        if (e instanceof GalatApi && e.status === 0) lanjut(JEDA_TANYA_MS * 2);
       }
     };
     tanya();
@@ -48,7 +63,31 @@ export function Hasil() {
       batal = true;
       clearTimeout(t);
     };
-  }, [rekamanId, router]);
+  }, [rekamanId, router, putaran]);
+
+  if (terlaluLama && !data) {
+    return (
+      <div className="muncul space-y-4 pb-4">
+        <KepalaHijau kembali="/hari-ini" atas="Rekam 1 Menit" judul="Penilaian belum selesai" />
+        <section className={`${g.tumpuk} bg-oranye-muda text-[17px] leading-snug`} role="status">
+          Rekaman Anda sudah terkirim, tetapi penilaiannya lebih lama dari biasanya. Anda tidak perlu merekam ulang sekarang.
+        </section>
+        <button
+          type="button"
+          onClick={() => {
+            setTerlaluLama(false);
+            setPutaran((p) => p + 1);
+          }}
+          className={g.tombolUtama}
+        >
+          Cek lagi
+        </button>
+        <Link href="/hari-ini" className={`${g.tombolKedua} w-full`}>
+          Kembali ke Hari ini
+        </Link>
+      </div>
+    );
+  }
 
   if (!data || !rekamanId) {
     return (
@@ -242,6 +281,8 @@ const TIPS = [
 ];
 
 function Ditolak({ alasan }: { alasan: string | null }) {
+  // Gagal di sisi server: bukan salah cara merekam, jadi tips merekam tidak ditampilkan.
+  const gagalSistem = alasan === ALASAN_GAGAL_SISTEM;
   return (
     <div className="muncul space-y-4 pb-4">
       <KepalaHijau kembali="/hari-ini" atas="Rekam 1 Menit" judul="Rekaman belum bisa dinilai" />
@@ -249,21 +290,25 @@ function Ditolak({ alasan }: { alasan: string | null }) {
         {alasan ?? "Suara dalam rekaman ini kurang jelas untuk dinilai."}
       </section>
       <p className="px-1 text-[15px] leading-snug text-abu">
-        Talkly tidak menebak bila suaranya kurang jelas, jadi rekaman ini tidak dinilai. Audio rekaman ini sudah dihapus.
+        {gagalSistem
+          ? "Audio rekaman ini sudah dihapus."
+          : "Talkly tidak menebak bila suaranya kurang jelas, jadi rekaman ini tidak dinilai. Audio rekaman ini sudah dihapus."}
       </p>
-      <section className="space-y-2">
-        <h2 className={g.labelSeksi}>Agar rekaman berikutnya bisa dinilai</h2>
-        <ol className={g.daftar}>
-          {TIPS.map((t, i) => (
-            <li key={t} className="flex gap-3 px-4 py-3">
-              <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-oranye text-sm font-bold text-white">
-                {i + 1}
-              </span>
-              <span className="text-[16px] leading-snug">{t}</span>
-            </li>
-          ))}
-        </ol>
-      </section>
+      {gagalSistem ? null : (
+        <section className="space-y-2">
+          <h2 className={g.labelSeksi}>Agar rekaman berikutnya bisa dinilai</h2>
+          <ol className={g.daftar}>
+            {TIPS.map((t, i) => (
+              <li key={t} className="flex gap-3 px-4 py-3">
+                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-oranye text-sm font-bold text-white">
+                  {i + 1}
+                </span>
+                <span className="text-[16px] leading-snug">{t}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
       <div className="space-y-3">
         <Link href="/rekam" className={g.tombolUtama}>
           Rekam ulang

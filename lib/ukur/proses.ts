@@ -1,5 +1,5 @@
 import type { HasilRekaman } from "@/lib/kontrak/hasil";
-import { MetaRekaman } from "@/lib/kontrak/rekaman";
+import { ALASAN_GAGAL_SISTEM, MetaRekaman } from "@/lib/kontrak/rekaman";
 import { nilaiCadangan, nilaiRekaman, type MasukanNilai } from "@/lib/ai/nilai";
 import { sapaan } from "@/lib/keluarga/anggota";
 import { naikkanStatus } from "@/lib/status/naikkan";
@@ -11,7 +11,8 @@ import type { Transkrip } from "./tipe";
 import { ukur, type HasilUkur } from "./ukur";
 
 // Alur server satu rekaman: STT → mutu → perekam & suara anak → ukur → AI → simpan → hapus audio.
-// Dipanggil lewat after() setelah unggah, dan diulang oleh GET /api/rekaman/:id bila macet > 2 menit.
+// Dipanggil lewat after() setelah unggah, dan diulang oleh GET /api/rekaman/:id bila macet > 2 menit,
+// paling banyak MAKS_PERCOBAAN_PROSES kali; sesudah itu rekaman ditandai ditolak oleh sistem.
 
 export const MACET_MS = 2 * 60_000;
 const SIMPAN_AUDIO_HARI = 7;
@@ -51,9 +52,32 @@ export async function prosesRekaman(id: string): Promise<void> {
   try {
     await proses(r);
   } catch (e) {
-    // Biarkan antre; GET berikutnya mencoba lagi setelah MACET_MS.
     console.error(`proses rekaman ${id}`, e);
+    await catatGagal(r).catch((g) => console.error(`catat gagal proses ${id}`, g));
   }
+}
+
+/** Setelah sekian kali gagal diproses, rekaman berhenti dicoba lagi supaya keluarga tidak menunggu tanpa akhir. */
+export const MAKS_PERCOBAAN_PROSES = 3;
+
+/** Gagal biasa: biarkan antre, GET berikutnya mencoba lagi setelah MACET_MS. Gagal ke-N: tandai ditolak oleh sistem. */
+async function catatGagal(r: BarisRekaman) {
+  // Meta dibaca ulang karena proses() mungkin sudah menyimpan transkrip sebelum gagal.
+  const { data } = await db().from("rekaman").select("meta").eq("id", r.id).single();
+  const meta = (data?.meta as Record<string, unknown> | undefined) ?? r.meta;
+  const percobaan = (typeof meta.percobaan_proses === "number" ? meta.percobaan_proses : 0) + 1;
+  if (percobaan < MAKS_PERCOBAAN_PROSES) {
+    await db().from("rekaman").update({ meta: { ...meta, percobaan_proses: percobaan } }).eq("id", r.id);
+    return;
+  }
+  // Transkrip tetap di meta untuk ditelusuri; audio dihapus seperti rekaman ditolak lainnya.
+  await db()
+    .from("rekaman")
+    .update({ status: "ditolak", alasan_tolak: ALASAN_GAGAL_SISTEM, meta: { ...meta, percobaan_proses: percobaan, gagal_sistem: true } })
+    .eq("id", r.id)
+    .eq("status", "antre");
+  await hapusAudio(r);
+  await naikkanStatus(r.anak_id, "terapis_meninjau", "Rekaman tidak dapat dinilai sistem");
 }
 
 async function proses(r: BarisRekaman) {

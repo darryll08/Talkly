@@ -233,3 +233,17 @@ test("pembicara: satu ucapan panjang yang salah label tidak membuat anak jadi de
   );
   assert.deepEqual(tentukanPeran(u).anak, ["anak"]);
 });
+
+test("momen: anak bersuara tepat di ujung ajakan tanpa ditanggapi tidak membuat mesin ukur crash", () => {
+  // Ajakan berakhir 3,06 (dibulatkan 3,1), anak mulai 3,02. Dulu pencarian ulang memakai angka bulat lalu `!` → TypeError.
+  const { hasil } = jalankan([
+    ["ibu", 1, 3.06, "bebek?"],
+    ["anak", 3.02, 3.4, "bek"],
+    ...pengisi(10, 58),
+  ]);
+  const a = hasil.ajakan.find((x) => x.teks === "bebek?")!;
+  assert.equal(a.kategori, "anak_merespons");
+  assert.equal(hasil.ukuran.giliran, 0);
+  assert.ok(hasil.momen, "momen memakai giliran pertama mana pun");
+  assert.ok(hasil.momen!.t_mulai <= 3.02 && hasil.momen!.t_selesai >= 3.4);
+});

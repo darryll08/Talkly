@@ -30,5 +30,12 @@ export type MetaRekaman = z.infer<typeof MetaRekaman>;
 export const BATAS_UKURAN_AUDIO = 5 * 1024 * 1024;
 export const MIME_AUDIO = ["audio/webm", "audio/ogg"] as const;
 
+/**
+ * alasan_tolak bila rekaman gagal diproses server berulang kali (bukan karena mutu rekaman).
+ * Layar O7 memakainya untuk tidak menampilkan tips merekam.
+ */
+export const ALASAN_GAGAL_SISTEM =
+  "Sistem Talkly belum berhasil menilai rekaman ini. Ini bukan karena cara Anda merekam. Terapis sudah diberi tahu; silakan rekam lagi lain waktu.";
+
 /** Kode balasan unggah yang berarti ponsel tidak perlu mengulang. */
 export const JANGAN_ULANGI = [400, 413, 415, 422] as const;
