@@ -14,6 +14,8 @@ Cara mengisi: setiap anggota menambah baris untuk perubahannya sendiri pada comm
 
 ## Stabilisasi
 
+- **Rekaman yang prosesnya terhenti di tengah jalan kini juga berhenti dicoba.** Batas tiga kali dari `4b9aab7` hanya menghitung proses yang gagal dengan galat. Proses yang dimatikan server karena melewati batas 60 detik (misalnya layanan transkripsi lambat) tidak sempat tercatat, sehingga rekaman bisa diproses ulang tanpa akhir dan terus memakai kredit transkripsi dan AI. Sekarang percobaan dihitung saat proses dimulai; klaim keempat langsung menandai rekaman "belum bisa dinilai". `lib/ukur/proses.ts`. Bukti: tes baru di `uji/stabil.test.ts` (proses yang terus dimatikan berhenti setelah tiga percobaan); tsc, lint, 156 tes, dan build lolos. Belum diuji ke database asli. (Wayan, `e6247f5`, 13 Nov 2026)
+
 ## Tampilan
 
 - **Layar "Sedang dinilai" punya batas waktu.** Menit pertama tetap memeriksa hasil setiap 2 detik, lalu setiap 10 detik. Setelah 8 menit layar berhenti menunggu dan menampilkan "Penilaian belum selesai" dengan tombol Cek lagi dan Kembali ke Hari ini. Bila rekaman gagal karena sistem, tips merekam tidak ditampilkan. `app/(ortu)/hasil/[rekamanId]/hasil.tsx`. Dicek di browser lebar 375 px dengan data contoh. (Wayan, `4b9aab7`, 11 Nov 2026)
@@ -32,6 +34,7 @@ Cara mengisi: setiap anggota menambah baris untuk perubahannya sendiri pada comm
 ## Keamanan
 
 - **Header keamanan dasar di semua halaman dan API.** Talkly tidak bisa lagi ditanam di bingkai situs lain (`X-Frame-Options: DENY`, CSP `frame-ancestors 'none'`), browser tidak menebak jenis berkas (`nosniff`), alamat halaman tidak ikut terkirim ke situs lain (`Referrer-Policy`), dan mikrofon serta kamera hanya boleh dipakai Talkly sendiri, fitur lain seperti lokasi dimatikan (`Permissions-Policy`). Tampilan dan fitur tidak berubah. `next.config.ts`. Bukti: header terbaca di `/`, `/api/saya`, dan `/sw.js` pada dev server; di Chromium dengan mikrofon palsu, mikrofon dan kamera tetap bisa dipakai, lokasi ditolak, dan Talkly yang ditanam di iframe tidak termuat; tsc, lint, 153 tes, dan build lolos. (Wayan, `297388d`, 13 Nov 2026)
+- **Langganan notifikasi hanya diterima dari layanan push resmi.** Sebelumnya server menerima alamat langganan apa saja, sehingga anggota yang masuk bisa membuat server mengirim permintaan ke alamat sembarang. Sekarang hanya alamat HTTPS milik Google (FCM), Mozilla, Apple, dan Microsoft (WNS) yang diterima; selain itu ditolak dengan pesan "Alamat notifikasi tidak dikenal". Pengingat di Chrome Android tetap berjalan seperti biasa. `app/api/push/route.ts`, `lib/keluarga/push-resmi.ts`. Bukti: tes baru di `uji/stabil.test.ts` (alamat resmi diterima; HTTP, port lain, domain tiruan, alamat internal ditolak); tsc, lint, 156 tes, dan build lolos. (Wayan, `e6247f5`, 13 Nov 2026)
 
 ## Dokumentasi
 
