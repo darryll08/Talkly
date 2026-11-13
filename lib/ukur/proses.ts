@@ -49,33 +49,49 @@ async function hapusAudio(rekaman: { id: string; path_audio: string | null }) {
 export async function prosesRekaman(id: string): Promise<void> {
   const r = await klaim(id);
   if (!r) return;
+
+  // Percobaan dihitung saat mulai, bukan saat gagal: proses yang dimatikan Vercel karena lewat maxDuration
+  // tidak sempat masuk catch, jadi tanpa ini rekaman bisa dicoba ulang tanpa akhir.
+  const langkah = langkahPercobaan(r.meta);
+  if (langkah.habis) {
+    await tandaiGagalSistem(r).catch((g) => console.error(`tandai gagal sistem ${id}`, g));
+    return;
+  }
+  r.meta = { ...r.meta, percobaan_proses: langkah.percobaan };
+  await db().from("rekaman").update({ meta: r.meta }).eq("id", r.id);
+
   try {
     await proses(r);
   } catch (e) {
-    console.error(`proses rekaman ${id}`, e);
-    await catatGagal(r).catch((g) => console.error(`catat gagal proses ${id}`, g));
+    console.error(`proses rekaman ${id} (percobaan ${langkah.percobaan})`, e);
+    // Percobaan terakhir gagal: langsung tandai, tidak perlu menunggu GET berikutnya.
+    if (langkah.percobaan >= MAKS_PERCOBAAN_PROSES) {
+      await tandaiGagalSistem(r).catch((g) => console.error(`tandai gagal sistem ${id}`, g));
+    }
   }
 }
 
 /** Setelah sekian kali gagal diproses, rekaman berhenti dicoba lagi supaya keluarga tidak menunggu tanpa akhir. */
 export const MAKS_PERCOBAAN_PROSES = 3;
 
-/** Gagal biasa: biarkan antre, GET berikutnya mencoba lagi setelah MACET_MS. Gagal ke-N: tandai ditolak oleh sistem. */
-async function catatGagal(r: BarisRekaman) {
+/** Percobaan ke berapa yang akan dimulai, dan apakah jatahnya sudah habis (lihat MAKS_PERCOBAAN_PROSES). */
+export function langkahPercobaan(meta: Record<string, unknown>): { percobaan: number; habis: boolean } {
+  const sebelumnya = typeof meta.percobaan_proses === "number" ? meta.percobaan_proses : 0;
+  return { percobaan: sebelumnya + 1, habis: sebelumnya >= MAKS_PERCOBAAN_PROSES };
+}
+
+/** Tandai rekaman ditolak oleh sistem: transkrip tetap di meta untuk ditelusuri, audio dihapus, status anak naik. */
+async function tandaiGagalSistem(r: BarisRekaman) {
   // Meta dibaca ulang karena proses() mungkin sudah menyimpan transkrip sebelum gagal.
   const { data } = await db().from("rekaman").select("meta").eq("id", r.id).single();
   const meta = (data?.meta as Record<string, unknown> | undefined) ?? r.meta;
-  const percobaan = (typeof meta.percobaan_proses === "number" ? meta.percobaan_proses : 0) + 1;
-  if (percobaan < MAKS_PERCOBAAN_PROSES) {
-    await db().from("rekaman").update({ meta: { ...meta, percobaan_proses: percobaan } }).eq("id", r.id);
-    return;
-  }
-  // Transkrip tetap di meta untuk ditelusuri; audio dihapus seperti rekaman ditolak lainnya.
-  await db()
+  const { data: diubah } = await db()
     .from("rekaman")
-    .update({ status: "ditolak", alasan_tolak: ALASAN_GAGAL_SISTEM, meta: { ...meta, percobaan_proses: percobaan, gagal_sistem: true } })
+    .update({ status: "ditolak", alasan_tolak: ALASAN_GAGAL_SISTEM, meta: { ...meta, gagal_sistem: true } })
     .eq("id", r.id)
-    .eq("status", "antre");
+    .eq("status", "antre")
+    .select("id");
+  if (!diubah?.length) return;
   await hapusAudio(r);
   await naikkanStatus(r.anak_id, "terapis_meninjau", "Rekaman tidak dapat dinilai sistem");
 }
