@@ -5,7 +5,7 @@ import type { UmpanBalik, Ukuran } from "@/lib/kontrak/hasil";
 import type { HasilUkur } from "@/lib/ukur/ukur";
 import { hitungPerluasan } from "@/lib/ukur/perluasan";
 import type { Ucapan } from "@/lib/ukur/tipe";
-import { buatPeta, kembalikanAnak, samarkan } from "./samaran";
+import { buatPeta, escapeRe, kembalikanAnak, samarkan } from "./samaran";
 import { isiTemplat, kandidat, pilihCadangan, TEMPLAT } from "./templat";
 import { MAKS_KATA_VERSI_ANAK, periksaKeluaran } from "./validasi";
 
@@ -50,7 +50,8 @@ function kataUtama(ucapan: Ucapan[], perekam: string | null, kataTarget: string[
     .filter((u) => u.pembicara === perekam)
     .map((u) => u.teks.toLowerCase())
     .join(" ");
-  const hitung = kataTarget.map((k) => [k, (teks.match(new RegExp(`\\b${k.toLowerCase()}\\b`, "g")) ?? []).length] as const);
+  // Kata target ditulis terapis bebas (misal "susu (botol)"), jadi tanda khusus RegExp dinetralkan dulu.
+  const hitung = kataTarget.map((k) => [k, (teks.match(new RegExp(`\\b${escapeRe(k.toLowerCase())}\\b`, "g")) ?? []).length] as const);
   return hitung.sort((a, b) => b[1] - a[1])[0]?.[0] ?? kataTarget[0] ?? "";
 }
 

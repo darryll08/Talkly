@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { nilaiRekaman, type MasukanNilai } from "../lib/ai/nilai";
+import { nilaiCadangan, nilaiRekaman, type MasukanNilai } from "../lib/ai/nilai";
 import { buatPeta, samarkan } from "../lib/ai/samaran";
 import { tentukanPeran } from "../lib/ukur/pembicara";
 import { keUcapan } from "../lib/ukur/stt";
@@ -99,4 +99,13 @@ test("nama anak dan anggota disamarkan sebelum dikirim ke AI", async () => {
   assert.doesNotMatch(terkirim, /Raka|Sari/);
   assert.match(terkirim, /adik/);
   assert.equal(samarkan("Ibu Sari bilang Sari capek, Raka main", buatPeta({ anak: "Raka", anggota: [{ nama: "Ibu Sari", peran: "ibu" }] })), "ibu bilang ibu capek, adik main");
+});
+
+test("kata target bertanda khusus (kurung, tanda tambah) tidak membuat penilaian gagal", () => {
+  // Sebelum perbaikan: "susu (botol", "bola)", "[mam", "c++" membuat new RegExp melempar SyntaxError,
+  // sehingga setiap rekaman anak itu gagal dinilai.
+  const m = masukan();
+  m.anak.kata_target = ["susu (botol", "bola)", "[mam", "c++", "bebek"];
+  const hasil = nilaiCadangan(m, ["uji"]);
+  assert.equal(hasil.umpan_balik.versi_anak, "Bebek!");
 });

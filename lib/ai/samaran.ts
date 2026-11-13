@@ -3,7 +3,8 @@
 
 export type PetaSamaran = { asli: string; samaran: string }[];
 
-function escapeRe(s: string) {
+/** Netralkan tanda khusus RegExp supaya teks dari pengguna dicari apa adanya. */
+export function escapeRe(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
