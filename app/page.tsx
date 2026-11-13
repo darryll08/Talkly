@@ -1,11 +1,31 @@
 import Link from "next/link";
 import { Ikon, type NamaIkon } from "@/components/ikon";
-import { Merek, PratinjauHariIni, PratinjauHasil, PratinjauJeda } from "@/components/merek";
+import { Merek, PratinjauHasil, PratinjauJeda } from "@/components/merek";
+import { PemicuGulir } from "@/components/pemicu-gulir";
 
-const LANGKAH: { ikon: NamaIkon; judul: string; isi: string }[] = [
-  { ikon: "mikrofon", judul: "Rekam satu menit", isi: "Saat makan atau bermain, ponsel merekam percakapan Anda dengan anak." },
-  { ikon: "bintang", judul: "Lihat yang berhasil", isi: "Kata yang diucapkan anak dan kapan Anda memberi jeda, tanpa skor." },
-  { ikon: "pesan", judul: "Terapis ikut memantau", isi: "Terapis melihat ringkasannya dan menyesuaikan latihan minggu depan." },
+/** Jeda bergiliran untuk animasi muncul saat digulir (kelas `gulir`), 120 ms per kartu. */
+const tunda = (i: number) => ({ "--tunda": `${i * 120}ms` }) as React.CSSProperties;
+
+// Satu putaran mingguan, dari rumah ke ruang terapi. Tiap langkah menyebut siapa yang melakukannya.
+const LANGKAH: { ikon: NamaIkon; pelaku: string; judul: string; isi: string }[] = [
+  {
+    ikon: "mikrofon",
+    pelaku: "Keluarga",
+    judul: "Rekam satu menit",
+    isi: "Saat makan atau bermain, ponsel merekam percakapan orang tua dengan anak. Anak tetap bermain seperti biasa.",
+  },
+  {
+    ikon: "bintang",
+    pelaku: "Talkly",
+    judul: "Ukur cara orang tua bicara",
+    isi: "Berapa kali mengajak, berapa lama menunggu jawaban, dan giliran percakapan. Hasilnya satu pujian dan satu saran, tanpa skor.",
+  },
+  {
+    ikon: "pesan",
+    pelaku: "Terapis",
+    judul: "Sesuaikan minggu depan",
+    isi: "Terapis membaca ringkasannya sebelum sesi, lalu menyetujui rencana latihan berikutnya untuk keluarga.",
+  },
 ];
 
 const FAKTA: { nilai: string; label: string }[] = [
@@ -25,6 +45,7 @@ const TERAPIS: { judul: string; isi: string }[] = [
 export default function Beranda() {
   return (
     <div className="flex min-h-dvh flex-col">
+      <PemicuGulir />
       <div className="kepala-hijau relative isolate overflow-hidden rounded-b-[40px] bg-hijau-tua text-white">
         <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 pt-[calc(env(safe-area-inset-top)+1rem)] sm:px-8">
           <Merek terang />
@@ -38,15 +59,22 @@ export default function Beranda() {
           </nav>
         </header>
 
-        <main className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-16 pt-12 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:pb-24 lg:pt-16">
+        <main className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-16 pt-12 sm:px-8 lg:grid-cols-[1.2fr_1fr] lg:pb-24 lg:pt-16">
           <section className="muncul space-y-6">
             <p className="inline-flex items-center gap-2 rounded-full bg-hijau px-3 py-1 text-[14px] font-semibold text-white">
               <Ikon nama="perisai" ukuran={16} /> Diberikan klinik, untuk anak 18–48 bulan
             </p>
-            <h1 className="text-[42px] font-extrabold leading-[1.05] sm:text-[60px]">Latihan bicara dari terapis, dilanjutkan di rumah.</h1>
+            {/* Dua baris di layar sm ke atas: baris pertama tidak boleh patah. */}
+            <h1 className="text-[40px] font-extrabold leading-[1.1] sm:text-[48px] lg:text-[44px] xl:text-[50px]">
+              <span className="sm:whitespace-nowrap">Ponsel melatih orang tua,</span>{" "}
+              <span className="underline decoration-oranye decoration-[5px] underline-offset-[10px] sm:block">bukan anak.</span>
+            </h1>
             <p className="max-w-lg text-[17px] leading-relaxed text-teks-di-hijau">
-              Terapi wicara hanya sejam seminggu. Talkly membantu keluarga berlatih setiap hari: rekam satu menit saat bermain, lihat
-              apa yang sudah berhasil, dan coba langkah berikutnya besok.
+              Terapi wicara hanya sejam seminggu; sisanya terjadi di rumah. Orang tua merekam satu menit saat bermain, Talkly mengukur
+              berapa lama mereka menunggu anak menjawab, dan terapis membacanya sebelum sesi berikutnya.
+            </p>
+            <p className="flex items-center gap-2 text-[15px] font-semibold text-white">
+              <Ikon nama="centang" ukuran={18} /> Anak tidak memakai layar sama sekali.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
@@ -65,25 +93,31 @@ export default function Beranda() {
             </div>
           </section>
 
-          {/* Komposisi kartu bertumpuk: tiga potongan layar sungguhan dari aplikasi keluarga. */}
-          <div className="muncul relative mx-auto h-[480px] w-full max-w-[460px] [animation-delay:80ms]" aria-label="Contoh tampilan aplikasi keluarga">
-            <div className="absolute left-0 top-0 rotate-[-4deg] transition-transform duration-500 ease-pantul hover:rotate-0">
-              <PratinjauHariIni />
+          {/* Satu momen bukti: rekaman 1 menit → jeda menunggu terukur → satu saran untuk besok. */}
+          <figure className="muncul relative mx-auto w-full max-w-[520px] [animation-delay:80ms]" aria-label="Contoh hasil satu rekaman">
+            <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[14px] font-semibold text-white">
+              <Ikon nama="mikrofon" ukuran={16} /> Dari satu rekaman sore, 1 menit
+            </p>
+            {/* Dua kartu terpisah, tidak bertumpuk: berdampingan di layar lebar, atas-bawah di ponsel. */}
+            <div className="grid gap-4 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] [&>div>div]:h-full [&>div>div]:max-w-none">
+              <div>
+                <PratinjauJeda />
+              </div>
+              <div>
+                <PratinjauHasil />
+              </div>
             </div>
-            <div className="absolute bottom-0 left-6 z-10 rotate-[2deg] transition-transform duration-500 ease-pantul hover:rotate-0 sm:left-10">
-              <PratinjauHasil />
-            </div>
-            <div className="absolute right-0 top-16 z-20 hidden rotate-[5deg] transition-transform duration-500 ease-pantul hover:rotate-0 sm:block">
-              <PratinjauJeda />
-            </div>
-          </div>
+            <figcaption className="mt-5 text-[14px] leading-relaxed text-teks-di-hijau">
+              Orang tua melihat apa yang sudah berhasil dan satu hal untuk dicoba besok. Data contoh.
+            </figcaption>
+          </figure>
         </main>
       </div>
 
       <section aria-label="Talkly dalam angka" className="relative z-10 mx-auto -mt-10 w-full max-w-6xl px-4 sm:px-8">
         <dl className="grid divide-y divide-garis rounded-3xl bg-permukaan shadow-tumpuk sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-          {FAKTA.map((f) => (
-            <div key={f.nilai} className="px-6 py-5">
+          {FAKTA.map((f, i) => (
+            <div key={f.nilai} className="gulir px-6 py-5" style={tunda(i)}>
               <dt className="font-judul text-[30px] font-extrabold leading-none text-hijau-tua">{f.nilai}</dt>
               <dd className="mt-1 text-[15px] text-abu">{f.label}</dd>
             </div>
@@ -92,18 +126,20 @@ export default function Beranda() {
       </section>
 
       <section className="mx-auto w-full max-w-6xl space-y-8 px-4 py-16 sm:px-8">
-        <div className="space-y-2">
-          <p className="text-[15px] font-semibold text-oranye-tua">Untuk keluarga</p>
-          <h2 className="judul max-w-xl text-[34px] font-extrabold leading-tight">Tiga langkah kecil setiap hari</h2>
+        <div className="gulir space-y-2">
+          <p className="text-[15px] font-semibold text-oranye-tua">Cara kerjanya</p>
+          <h2 className="judul max-w-xl text-[34px] font-extrabold leading-tight">Satu putaran, dari rumah ke ruang terapi</h2>
         </div>
         <ol className="grid gap-4 sm:grid-cols-3">
           {LANGKAH.map((l, i) => (
-            <li key={l.judul} className="space-y-4 rounded-3xl bg-permukaan p-6 shadow-kartu">
+            <li key={l.judul} className="gulir space-y-4 rounded-3xl bg-permukaan p-6 shadow-kartu" style={tunda(i)}>
               <div className="flex items-center justify-between">
                 <span className="inline-flex size-12 items-center justify-center rounded-full bg-hijau-muda text-hijau-tua">
                   <Ikon nama={l.ikon} ukuran={24} />
                 </span>
-                <span className="font-judul text-[40px] font-extrabold leading-none text-oranye/60">{i + 1}</span>
+                <span className="text-[14px] font-semibold text-abu">
+                  {i + 1} · {l.pelaku}
+                </span>
               </div>
               <h3 className="judul text-[22px] font-extrabold">{l.judul}</h3>
               <p className="text-[15px] leading-relaxed text-abu">{l.isi}</p>
@@ -115,13 +151,13 @@ export default function Beranda() {
       <section id="terapis" className="scroll-mt-6 bg-permukaan">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-4 py-16 sm:px-8 lg:grid-cols-2">
           <div className="space-y-6">
-            <div className="space-y-2">
+            <div className="gulir space-y-2">
               <p className="text-[15px] font-semibold text-oranye-tua">Untuk terapis</p>
               <h2 className="judul text-[34px] font-extrabold leading-tight">Tahu apa yang terjadi di rumah sebelum sesi dimulai</h2>
             </div>
             <ul className="space-y-4">
-              {TERAPIS.map((t) => (
-                <li key={t.judul} className="flex gap-4">
+              {TERAPIS.map((t, i) => (
+                <li key={t.judul} className="gulir flex gap-4" style={tunda(i + 1)}>
                   <span className="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-hijau text-white">
                     <Ikon nama="centang" ukuran={16} />
                   </span>
@@ -133,12 +169,14 @@ export default function Beranda() {
               ))}
             </ul>
           </div>
-          <PratinjauDasbor />
+          <div className="gulir" style={tunda(1)}>
+            <PratinjauDasbor />
+          </div>
         </div>
       </section>
 
       <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-8">
-        <div className="kepala-hijau relative isolate flex flex-col items-start gap-6 overflow-hidden rounded-[32px] bg-hijau-tua p-8 text-white sm:flex-row sm:items-center sm:justify-between sm:p-10">
+        <div className="gulir kepala-hijau relative isolate flex flex-col items-start gap-6 overflow-hidden rounded-[32px] bg-hijau-tua p-8 text-white sm:flex-row sm:items-center sm:justify-between sm:p-10">
           <div className="relative z-10 space-y-2">
             <h2 className="judul text-[30px] font-extrabold leading-tight">Sudah diundang terapis?</h2>
             <p className="text-[16px] text-teks-di-hijau">Masukkan kode undangan atau pindai QR dari klinik. Tanpa kata sandi.</p>
@@ -165,7 +203,7 @@ export default function Beranda() {
 /** Potongan dasbor terapis (data contoh) untuk bagian terapis di beranda. */
 function PratinjauDasbor() {
   const angka: [string, number, string][] = [
-    ["Anak", 25, "bg-hijau-tua text-white"],
+    ["Anak", 10, "bg-hijau-tua text-white"],
     ["Bahas", 1, "bg-permukaan shadow-kartu text-oranye-tua"],
     ["Ditinjau", 2, "bg-permukaan shadow-kartu text-foreground"],
   ];
@@ -173,7 +211,7 @@ function PratinjauDasbor() {
     <div className="space-y-4 rounded-[32px] bg-background p-5 ring-1 ring-garis sm:p-6" aria-label="Contoh dasbor terapis">
       <div className="flex items-center justify-between">
         <p className="judul text-[22px] font-extrabold">Minggu ini</p>
-        <span className="rounded-full bg-abu-muda px-2.5 py-0.5 text-[12px] font-semibold text-abu">Data contoh</span>
+        <span className="rounded-full bg-abu-muda px-2.5 py-0.5 text-[13px] font-semibold text-abu">Data contoh</span>
       </div>
       <div className="grid grid-cols-3 gap-3">
         {angka.map(([label, n, kelas]) => (
@@ -195,7 +233,7 @@ function PratinjauDasbor() {
               {nama.slice(0, 2).toUpperCase()}
             </span>
             <span className="flex-1 font-semibold">{nama}</span>
-            <span className={`rounded-full px-2.5 py-0.5 text-[12px] font-semibold ${kelas}`}>{status}</span>
+            <span className={`whitespace-nowrap rounded-full px-2.5 py-0.5 text-[13px] font-semibold ${kelas}`}>{status}</span>
           </li>
         ))}
       </ul>

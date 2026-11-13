@@ -23,15 +23,19 @@ export default function HalamanMasuk() {
         <div className="relative z-10 space-y-8">
           <div className="space-y-3">
             <p className="text-[15px] font-semibold text-teks-di-hijau">Latihan bicara di rumah</p>
-            <h2 className="judul max-w-md text-[48px] font-extrabold leading-[1.05]">
-              Satu menit bermain, satu langkah lebih dekat ke kata pertama.
+            <h2 className="judul max-w-xl text-[34px] font-extrabold leading-[1.1] xl:text-[44px]">
+              Satu menit, satu langkah ke kata pertama.
             </h2>
           </div>
-          <div className="flex max-w-[540px] items-start gap-4" aria-hidden="true">
-            <div className="rotate-[-3deg]">
+          {/* Dua kartu lurus dan terpisah, sama seperti beranda. Kartu jeda hanya di layar xl agar tidak sesak. */}
+          <div
+            className="grid max-w-[560px] gap-4 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] [&>div>div]:h-full [&>div>div]:max-w-none"
+            aria-hidden="true"
+          >
+            <div>
               <PratinjauHariIni />
             </div>
-            <div className="mt-10 hidden rotate-[4deg] xl:block">
+            <div className="hidden xl:block">
               <PratinjauJeda />
             </div>
           </div>
@@ -56,7 +60,7 @@ export default function HalamanMasuk() {
           <div className="relative z-10 space-y-5">
             <Merek terang />
             <p className="font-judul max-w-xs text-[28px] font-extrabold leading-[1.1]">
-              Satu menit bermain, satu langkah lebih dekat ke kata pertama.
+              Satu menit, satu langkah ke kata pertama.
             </p>
           </div>
         </div>

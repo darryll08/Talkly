@@ -210,7 +210,27 @@ summary {
   animation: titik-rekam 1.6s ease-in-out infinite;
 }
 
+/* Muncul saat digulir (beranda, components/pemicu-gulir.tsx). --tunda memberi jeda bergiliran antar kartu. */
+.gulir-siap .gulir {
+  opacity: 0;
+  translate: 0 28px;
+}
+/* Transisi hanya saat muncul, supaya menyembunyikan di awal tidak ikut beranimasi. */
+.gulir-siap .gulir.terlihat {
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 700ms var(--ease-pegas),
+    translate 700ms var(--ease-pegas);
+  transition-delay: var(--tunda, 0ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .gulir-siap .gulir {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
   .tekan:active:not(:disabled),
   .tekan:hover:not(:disabled) {
     transform: none;

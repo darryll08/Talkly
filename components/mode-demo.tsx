@@ -22,8 +22,13 @@ const PERSONA: { sebagai: Persona; nama: string; peran: string; tujuan: string; 
   { sebagai: "ibu_alya", nama: "Ibu Alya", peran: "Ibu Alya · kata lama hilang, dibahas minggu ini", tujuan: "/hari-ini", sesi: "anggota" },
   { sebagai: "ibu_bima", nama: "Ibu Bima", peran: "Ibu Bima · 5 hari belum latihan", tujuan: "/hari-ini", sesi: "anggota" },
   { sebagai: "ibu_citra", nama: "Ibu Citra", peran: "Ibu Citra · baru mulai program", tujuan: "/hari-ini", sesi: "anggota" },
-  { sebagai: "kak_nadia", nama: "Kak Nadia", peran: "Terapis wicara · 25 anak", tujuan: "/terapis", sesi: "terapis" },
+  { sebagai: "kak_nadia", nama: "Kak Nadia", peran: "Terapis wicara · 10 anak", tujuan: "/terapis", sesi: "terapis" },
   { sebagai: "admin", nama: "Admin Talkly", peran: "Kelola klinik dan akun terapis", tujuan: "/admin", sesi: "admin" },
+];
+
+const KELOMPOK: { judul: string; sesi: Sesi[] }[] = [
+  { judul: "Keluarga", sesi: ["anggota"] },
+  { judul: "Terapis dan admin", sesi: ["terapis", "admin"] },
 ];
 
 /** Kartu "Akun demo" di halaman masuk: satu klik masuk sebagai persona. Hanya tampil bila NEXT_PUBLIC_DEMO=1. */
@@ -55,28 +60,34 @@ export function ModeDemo() {
         </h2>
         <span className="text-[13px] text-abu">tanpa kata sandi</span>
       </div>
-      <div className={g.daftar}>
-        {PERSONA.map((p) => (
-          <button
-            key={p.sebagai}
-            type="button"
-            onClick={() => pilih(p)}
-            disabled={proses !== null}
-            className={`${g.barisDaftar} tekan w-full text-left hover:bg-background disabled:opacity-60`}
-          >
-            <Inisial nama={p.nama} nada={p.sesi === "anggota" ? "hijau" : p.sesi === "terapis" ? "abu" : "oranye"} />
-            <span className="min-w-0 flex-1">
-              <span className="block font-semibold">{p.nama}</span>
-              <span className="block text-[14px] text-abu">{p.peran}</span>
-            </span>
-            {proses === p.sebagai ? (
-              <span className="text-[13px] text-abu">Masuk…</span>
-            ) : (
-              <Ikon nama="panah-kanan" ukuran={18} className="text-abu" />
-            )}
-          </button>
-        ))}
-      </div>
+      {/* Dua kelompok supaya juri langsung menemukan sisi keluarga dan sisi terapis. */}
+      {KELOMPOK.map((k) => (
+        <div key={k.judul} className="space-y-1.5 pt-1">
+          <p className="px-1 text-[13px] font-semibold text-abu">{k.judul}</p>
+          <div className={g.daftar}>
+            {PERSONA.filter((p) => k.sesi.includes(p.sesi)).map((p) => (
+              <button
+                key={p.sebagai}
+                type="button"
+                onClick={() => pilih(p)}
+                disabled={proses !== null}
+                className={`${g.barisDaftar} tekan w-full text-left hover:bg-background disabled:opacity-60`}
+              >
+                <Inisial nama={p.nama} nada={p.sesi === "anggota" ? "hijau" : p.sesi === "terapis" ? "abu" : "oranye"} />
+                <span className="min-w-0 flex-1">
+                  <span className="block font-semibold">{p.nama}</span>
+                  <span className="block text-[14px] text-abu">{p.peran}</span>
+                </span>
+                {proses === p.sebagai ? (
+                  <span className="text-[13px] text-abu">Masuk…</span>
+                ) : (
+                  <Ikon nama="panah-kanan" ukuran={18} className="text-abu" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
       <p className="px-1 text-[13px] leading-snug text-abu">
         Klik satu akun untuk masuk. Semua nama dan angka di akun demo adalah data contoh.
       </p>
