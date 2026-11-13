@@ -22,9 +22,53 @@ type Nama =
   | "silang"
   | "salin"
   | "bagikan"
-  | "tambah";
+  | "tambah"
+  | "serong"
+  | "perisai"
+  | "kunci"
+  | "kalender"
+  | "keluar"
+  | "cari"
+  | "ponsel";
 
 const jalur: Record<Nama, React.ReactNode> = {
+  serong: (
+    <>
+      <path d="M7 17 17 7" />
+      <path d="M9 7h8v8" />
+    </>
+  ),
+  perisai: <path d="M12 3.5 19 6v5.5c0 4.3-3 7.7-7 9-4-1.3-7-4.7-7-9V6z" />,
+  kunci: (
+    <>
+      <rect x="5" y="10.5" width="14" height="10" rx="2" />
+      <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
+    </>
+  ),
+  kalender: (
+    <>
+      <rect x="4" y="5.5" width="16" height="15" rx="2" />
+      <path d="M8 3.5v4M16 3.5v4M4 10h16" />
+    </>
+  ),
+  keluar: (
+    <>
+      <path d="M14 4.5H6a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h8" />
+      <path d="m16 8 4 4-4 4M20 12H10" />
+    </>
+  ),
+  cari: (
+    <>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="m16 16 4 4" />
+    </>
+  ),
+  ponsel: (
+    <>
+      <rect x="7" y="3" width="10" height="18" rx="2.5" />
+      <path d="M11 17.5h2" />
+    </>
+  ),
   rumah: <path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1H15v-6h-6v6H4.5a1 1 0 0 1-1-1z" />,
   grafik: (
     <>

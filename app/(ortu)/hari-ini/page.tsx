@@ -71,9 +71,9 @@ export default function HariIni() {
               </span>
             ))}
           </div>
-          <p className="mt-4 inline-flex items-center gap-1 text-[15px] font-semibold text-hijau-tua">
-            Buka kartu <Ikon nama="panah-kanan" ukuran={18} />
-          </p>
+          <span className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-hijau px-5 text-[16px] font-semibold text-white shadow-angkat">
+            Mulai aktivitas <Ikon nama="panah-kanan" ukuran={18} />
+          </span>
         </Link>
       ) : semuaSelesai ? (
         <section className={g.tumpuk}>
@@ -107,7 +107,7 @@ export default function HariIni() {
                 <Link href={`/aktivitas/${a.item_id}`} className={`${g.barisDaftar} tekan`}>
                   <span
                     className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                      a.selesai_hari_ini ? "centang-masuk bg-oranye text-white" : "ring-2 ring-inset ring-oranye"
+                      a.selesai_hari_ini ? "centang-masuk bg-oranye text-foreground" : "ring-2 ring-inset ring-oranye-tua"
                     }`}
                   >
                     {a.selesai_hari_ini ? <Ikon nama="centang" ukuran={16} /> : null}
@@ -128,14 +128,16 @@ export default function HariIni() {
       ) : null}
 
       {data.anggota.izin_nilai ? (
-        <Link href={hrefRekam} className="tekan flex items-center gap-4 rounded-3xl bg-hijau-tua p-4 pr-5 text-white shadow-angkat">
+        // Kartu putih: rekaman cukup 2–3 kali seminggu, jadi bobotnya di bawah aktivitas harian di atas.
+        <Link href={hrefRekam} className={`${g.kartu} tekan flex items-center gap-4 rounded-3xl pr-5`}>
           <span className={g.tombolRekam.replace("tekan ", "")}>
             <Ikon nama="mikrofon" ukuran={28} />
           </span>
           <span className="min-w-0 flex-1">
             <span className="font-judul block text-[22px] font-extrabold leading-tight">Rekam 1 Menit</span>
-            <span className="block text-[14px] text-teks-di-hijau">Taruh ponsel di meja, lalu bermain seperti biasa.</span>
+            <span className="block text-[14px] text-abu">2–3 kali seminggu. Taruh ponsel di meja, lalu bermain seperti biasa.</span>
           </span>
+          <Ikon nama="panah-kanan" ukuran={18} className="text-abu" />
         </Link>
       ) : null}
 

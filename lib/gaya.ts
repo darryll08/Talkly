@@ -19,7 +19,7 @@ export const tumpuk = "relative z-10 -mt-9 rounded-3xl bg-permukaan p-5 shadow-t
 
 /** Tombol rekam bulat oranye dengan cincin: aksi utama merekam di Hari ini dan kartu aktivitas. */
 export const tombolRekam =
-  "tekan inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-oranye text-white shadow-angkat ring-[6px] ring-oranye-muda";
+  "tekan inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-oranye text-foreground shadow-angkat ring-[6px] ring-oranye-muda";
 
 /** Daftar bergaya Pengaturan iPhone: satu kartu dengan pemisah tipis. */
 export const daftar = "divide-y divide-garis overflow-hidden rounded-2xl bg-permukaan shadow-kartu";

@@ -6,9 +6,17 @@ import { API } from "@/lib/kontrak/api";
 import { panggil, pesanDari } from "@/lib/perangkat/panggil";
 import { useData } from "@/lib/perangkat/use-data";
 import { muatSaya } from "@/lib/perangkat/saya";
+import { Ikon, type NamaIkon } from "./ikon";
 import { Sakelar } from "./sakelar";
 
 type Kunci = "izin_nilai" | "izin_dengar" | "izin_klip";
+
+/** Penjelasan singkat untuk keluarga. Rincian penyedia dan dasar hukum tetap ada di respons /api/saya/izin. */
+const SINGKAT: Record<Kunci, { ikon: NamaIkon; isi: string }> = {
+  izin_nilai: { ikon: "mikrofon", isi: "Rekaman 1 menit dinilai otomatis supaya Anda mendapat umpan balik." },
+  izin_dengar: { ikon: "orang", isi: "Terapis bisa memutar rekaman Anda selama 7 hari, lalu audionya dihapus." },
+  izin_klip: { ikon: "bintang", isi: "Momen 5 detik saat anak bersuara disimpan di ponsel ini saja." },
+};
 
 // Tiga izin rekaman milik orang yang suaranya direkam (O2, O12). Semua mati sampai dinyalakan.
 export function IzinRekaman() {
@@ -37,29 +45,30 @@ export function IzinRekaman() {
   return (
     <div className="space-y-2">
       <div className={g.daftar}>
-        {data.penjelasan.map((p) => (
-          <Sakelar
-            key={p.kunci}
-            nyala={data.izin[p.kunci]}
-            ubah={(n) => ubah(p.kunci, n)}
-            nonaktif={simpan !== null}
-            label={p.judul}
-            keterangan={
-              <>
-                <span className="block font-medium text-foreground">{p.wajib_untuk}</span>
-                <span className="mt-1 block">{p.isi}</span>
-                <span className="mt-1 block text-[13px]">
-                  Diproses oleh {p.penyedia} · {p.negara}
-                </span>
-              </>
-            }
-          />
-        ))}
+        {data.penjelasan.map((p) => {
+          const s = SINGKAT[p.kunci];
+          return (
+            <div key={p.kunci} className="flex items-start gap-1 pl-4">
+              <span
+                className={`mt-3.5 inline-flex size-9 shrink-0 items-center justify-center rounded-full transition-colors ${
+                  data.izin[p.kunci] ? "bg-hijau-muda text-hijau-tua" : "bg-abu-muda text-abu"
+                }`}
+              >
+                <Ikon nama={s.ikon} ukuran={18} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <Sakelar
+                  nyala={data.izin[p.kunci]}
+                  ubah={(n) => ubah(p.kunci, n)}
+                  nonaktif={simpan !== null}
+                  label={p.judul}
+                  keterangan={s.isi}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
-      <p className="px-1 text-[13px] leading-snug text-abu">
-        Izin ini hanya untuk suara Anda sendiri. Anggota keluarga lain mengatur izinnya di ponsel masing-masing. Dasar:{" "}
-        {data.dasar_hukum}.
-      </p>
       {pesan ? (
         <p className={g.kotakGalat} role="status">
           {pesan}

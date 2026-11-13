@@ -118,13 +118,14 @@ function UmpanBalik({ rekamanId, data }: { rekamanId: string; data: StatusRekama
       <KepalaHijau
         kembali="/hari-ini"
         atas={data.rekaman_contoh ? "Rekaman contoh · Umpan balik" : "Umpan balik"}
-        judul={
-          <span className="flex items-baseline gap-3">
-            <span className="text-[72px] leading-none">{ukuran.giliran}</span>
-            <span className="text-[22px] leading-tight">giliran percakapan dalam {Math.round(h.mutu.durasi_s)} detik</span>
-          </span>
-        }
-      />
+        judul={`${panggilan === "Anda" ? "Bagus" : `Bagus, ${panggilan}`}!`}
+      >
+        {/* Angka giliran hanya pendukung: tanpa pembanding, angka besar terbaca seperti skor. */}
+        <p className="inline-flex items-center gap-2 rounded-full bg-hijau px-3 py-1 text-[14px] font-semibold text-white">
+          <Ikon nama="pesan" ukuran={16} />
+          {ukuran.giliran} kali bergantian bicara dalam {Math.round(h.mutu.durasi_s)} detik
+        </p>
+      </KepalaHijau>
 
       <section className={`${g.tumpuk} bg-oranye-muda`}>
         <p className="flex items-center gap-1.5 text-[14px] font-semibold text-oranye-tua">
@@ -143,13 +144,13 @@ function UmpanBalik({ rekamanId, data }: { rekamanId: string; data: StatusRekama
       <section className={`${g.kartu} space-y-3`}>
         <p className="text-[13px] font-semibold text-abu">Satu kalimat dari rekaman tadi</p>
         <div className="flex flex-col items-start">
-          <span className="mb-1 px-1 text-xs text-abu">{panggilan} bilang:</span>
+          <span className="mb-1 px-1 text-[13px] text-abu">{panggilan} bilang:</span>
           <p className="max-w-[90%] rounded-[20px] rounded-bl-md bg-abu-muda px-4 py-2.5 text-[16px] leading-snug">
             “{ub.kutipan}”
           </p>
         </div>
         <div className="flex flex-col items-end">
-          <span className="mb-1 px-1 text-xs text-abu">Untuk {namaAnak} sekarang, coba:</span>
+          <span className="mb-1 px-1 text-[13px] text-abu">Untuk {namaAnak} sekarang, coba:</span>
           <p className="font-judul max-w-[90%] rounded-[20px] rounded-br-md bg-hijau px-4 py-2.5 text-[24px] font-extrabold text-white">
             “{ub.versi_anak}”
           </p>
@@ -280,9 +281,21 @@ const TIPS = [
   "Terus ajak bicara seperti biasa ke balita, sampai sedikitnya 40 detik.",
 ];
 
+/** Tips yang paling sesuai dengan alasan tolak dari server (lib/ukur/mutu.ts), atau null bila tidak dikenali. */
+function tipUtama(alasan: string | null): number | null {
+  if (!alasan) return null;
+  if (/tv|televisi|musik/i.test(alasan)) return 0;
+  if (/kurang terdengar|kata tertangkap|dekat/i.test(alasan)) return 1;
+  if (/terhenti|ditinggal|layar mati/i.test(alasan)) return 2;
+  if (/detik/i.test(alasan)) return 3;
+  return null;
+}
+
 function Ditolak({ alasan }: { alasan: string | null }) {
   // Gagal di sisi server: bukan salah cara merekam, jadi tips merekam tidak ditampilkan.
   const gagalSistem = alasan === ALASAN_GAGAL_SISTEM;
+  const utama = tipUtama(alasan);
+  const sisa = TIPS.map((t, i) => ({ t, i })).filter(({ i }) => i !== utama);
   return (
     <div className="muncul space-y-4 pb-4">
       <KepalaHijau kembali="/hari-ini" atas="Rekam 1 Menit" judul="Rekaman belum bisa dinilai" />
@@ -297,13 +310,24 @@ function Ditolak({ alasan }: { alasan: string | null }) {
       {gagalSistem ? null : (
         <section className="space-y-2">
           <h2 className={g.labelSeksi}>Agar rekaman berikutnya bisa dinilai</h2>
-          <ol className={g.daftar}>
-            {TIPS.map((t, i) => (
+          {utama !== null ? (
+            <p className="flex items-start gap-3 rounded-2xl bg-permukaan p-4 text-[17px] font-semibold leading-snug shadow-kartu ring-2 ring-hijau">
+              <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-hijau text-white">
+                <Ikon nama="centang" ukuran={18} />
+              </span>
+              <span>
+                <span className="block text-[13px] font-semibold text-hijau-tua">Coba ini dulu</span>
+                {TIPS[utama]}
+              </span>
+            </p>
+          ) : null}
+          <ol className={g.daftar} aria-label={utama !== null ? "Tips lain" : undefined}>
+            {sisa.map(({ t }, n) => (
               <li key={t} className="flex gap-3 px-4 py-3">
-                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-oranye text-sm font-bold text-white">
-                  {i + 1}
+                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-oranye text-sm font-bold text-foreground">
+                  {n + 1}
                 </span>
-                <span className="text-[16px] leading-snug">{t}</span>
+                <span className={`leading-snug ${utama !== null ? "text-[15px] text-abu" : "text-[16px]"}`}>{t}</span>
               </li>
             ))}
           </ol>

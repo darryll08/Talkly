@@ -34,7 +34,7 @@ export function NavOrtu({ pengelola }: { pengelola: boolean }) {
               <Link
                 href={m.href}
                 aria-current={aktif ? "page" : undefined}
-                className={`tekan flex min-h-[56px] flex-col items-center justify-center gap-0.5 text-[11px] font-medium ${
+                className={`tekan flex min-h-[56px] flex-col items-center justify-center gap-0.5 text-[13px] font-medium ${
                   aktif ? "text-hijau-tua" : "text-abu"
                 }`}
               >

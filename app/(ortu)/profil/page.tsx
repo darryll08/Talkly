@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { z } from "zod";
 import * as g from "@/lib/gaya";
 import { API, type Peran } from "@/lib/kontrak/api";
@@ -15,10 +15,40 @@ import { SakelarNotifikasi } from "@/components/sakelar-notifikasi";
 import { PasangAplikasi } from "@/components/pasang-aplikasi";
 import { KodeQr } from "@/components/kode-qr";
 import { Pil } from "@/components/pil";
-import { Ikon } from "@/components/ikon";
+import { Ikon, type NamaIkon } from "@/components/ikon";
 import { KepalaHijau } from "@/components/kepala-hijau";
 
 const PERAN: Record<string, string> = { ibu: "Ibu", ayah: "Ayah", pengasuh: "Pengasuh", nenek: "Nenek", kakek: "Kakek", lainnya: "Anggota keluarga" };
+
+/** Judul seksi dengan ikon bulat, seperti kelompok pengaturan di aplikasi kesehatan. */
+function Seksi({
+  ikon,
+  judul,
+  keterangan,
+  children,
+  id,
+}: {
+  ikon: NamaIkon;
+  judul: string;
+  keterangan?: string;
+  children: ReactNode;
+  id?: string;
+}) {
+  return (
+    <section id={id} className="scroll-mt-6 space-y-3">
+      <header className="flex items-center gap-3 px-1">
+        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-permukaan text-hijau-tua shadow-kartu">
+          <Ikon nama={ikon} ukuran={20} />
+        </span>
+        <span className="min-w-0">
+          <h2 className="judul text-[20px] font-extrabold leading-tight">{judul}</h2>
+          {keterangan ? <span className="block text-[14px] leading-snug text-abu">{keterangan}</span> : null}
+        </span>
+      </header>
+      {children}
+    </section>
+  );
+}
 
 // O12 Profil dan privasi, termasuk O12a Undang pengasuh.
 export default function Profil() {
@@ -27,32 +57,48 @@ export default function Profil() {
   if (!saya) return <Memuat />;
   const { anggota, anak } = saya;
 
+  const ringkas = [
+    { label: "Anak", nilai: anak.nama },
+    { label: "Terapis", nilai: anak.terapis.nama },
+    { label: "Peran", nilai: PERAN[anggota.peran] ?? "Anggota" },
+  ];
+
   return (
-    <div className="muncul space-y-7 pb-4">
+    <div className="muncul space-y-8 pb-4">
       <KepalaHijau
+        atas="Profil"
         judul={
           <span className="flex items-center gap-4">
-            <Inisial nama={anggota.nama} ukuran={64} nada="oranye" />
-            <span className="min-w-0">
+            <Inisial nama={anggota.nama} ukuran={60} nada="oranye" />
+            <span className="min-w-0 break-words">
               {anggota.nama}
-              <span className="font-sans mt-1 block text-[14px] font-medium leading-snug text-teks-di-hijau">
-                {PERAN[anggota.peran]}
-                {anggota.pengelola ? " · pengelola keluarga" : ""} · Program {anak.nama} bersama {anak.terapis.nama}
-              </span>
+              {anggota.pengelola ? (
+                <span className="font-sans mt-1.5 flex w-fit items-center gap-1 rounded-full bg-hijau px-2.5 py-0.5 text-[13px] font-semibold text-white">
+                  <Ikon nama="perisai" ukuran={14} /> Pengelola keluarga
+                </span>
+              ) : null}
             </span>
           </span>
         }
       />
 
-      <section className="relative z-10 -mt-9 space-y-2">
-        <IzinRekaman />
-      </section>
+      <dl className="relative z-10 -mt-9 grid grid-cols-3 divide-x divide-garis rounded-3xl bg-permukaan py-4 shadow-tumpuk">
+        {ringkas.map((r) => (
+          <div key={r.label} className="min-w-0 px-3 text-center">
+            <dt className="text-[13px] text-abu">{r.label}</dt>
+            <dd className="mt-0.5 truncate text-[16px] font-bold">{r.nilai}</dd>
+          </div>
+        ))}
+      </dl>
 
-      <section className="space-y-2">
-        <h2 className={g.labelSeksi}>Pengingat</h2>
+      <Seksi ikon="kunci" judul="Izin rekaman" keterangan="Semua mati sampai Anda menyalakannya.">
+        <IzinRekaman />
+      </Seksi>
+
+      <Seksi ikon="lonceng" judul="Pengingat dan aplikasi">
         <SakelarNotifikasi />
         <PasangAplikasi />
-      </section>
+      </Seksi>
 
       <KodeMasuk />
 
@@ -85,8 +131,7 @@ function KodeMasuk() {
   }
 
   return (
-    <section className="space-y-2">
-      <h2 className={g.labelSeksi}>Kode masuk pribadi</h2>
+    <Seksi ikon="ponsel" judul="Kode masuk pribadi" keterangan="Dipakai saat ganti ponsel.">
       <div className={`${g.kartu} space-y-3`}>
         {kode ? (
           <div className="space-y-2 rounded-xl bg-oranye-muda p-3">
@@ -94,9 +139,7 @@ function KodeMasuk() {
             <p className="text-[14px] leading-snug">Kode ini hanya tampil sekali. Foto atau catat sekarang. Kode lama sudah tidak berlaku.</p>
           </div>
         ) : (
-          <p className="text-[15px] leading-snug text-abu">
-            Dipakai saat ganti ponsel. Bila kode lama mungkin dilihat orang lain, buat kode baru.
-          </p>
+          <p className="text-[15px] leading-snug text-abu">Bila kode lama mungkin dilihat orang lain, buat kode baru.</p>
         )}
         {tanya ? (
           <div className="grid grid-cols-2 gap-3">
@@ -114,7 +157,7 @@ function KodeMasuk() {
         )}
         {galat ? <p className={g.kotakGalat}>{galat}</p> : null}
       </div>
-    </section>
+    </Seksi>
   );
 }
 
@@ -139,8 +182,7 @@ function AnggotaKeluarga() {
   }
 
   return (
-    <section className="space-y-2">
-      <h2 className={g.labelSeksi}>Anggota keluarga</h2>
+    <Seksi ikon="keluarga" judul="Anggota keluarga" keterangan={data ? `${data.anggota.length} orang di program ini` : undefined}>
       {!data ? (
         <div className="kerangka h-28 w-full rounded-2xl" />
       ) : (
@@ -148,7 +190,7 @@ function AnggotaKeluarga() {
           {data.anggota.map((a) => (
             <li key={a.id} className="px-4 py-3">
               <div className="flex items-center gap-3">
-                <Inisial nama={a.nama} ukuran={36} />
+                <Inisial nama={a.nama} ukuran={40} nada={a.saya ? "hijau" : "oranye"} />
                 <span className="min-w-0 flex-1">
                   <span className="block font-semibold">
                     {a.nama}
@@ -182,7 +224,7 @@ function AnggotaKeluarga() {
         </ul>
       )}
       {galat ? <p className={g.kotakGalat}>{galat}</p> : null}
-    </section>
+    </Seksi>
   );
 }
 
@@ -216,8 +258,7 @@ function UndangPengasuh({ anakId }: { anakId: string }) {
   }
 
   return (
-    <section id="undang" className="scroll-mt-6 space-y-2">
-      <h2 className={g.labelSeksi}>Undang pengasuh</h2>
+    <Seksi id="undang" ikon="tambah" judul="Undang pengasuh" keterangan="Kode berlaku 7 hari dan hanya bisa dipakai sekali.">
       <div className={`${g.kartu} space-y-4`}>
         {undangan ? (
           <div className="flex flex-col items-center gap-3 text-center">
@@ -257,7 +298,7 @@ function UndangPengasuh({ anakId }: { anakId: string }) {
         )}
         {galat ? <p className={g.kotakGalat}>{galat}</p> : null}
       </div>
-    </section>
+    </Seksi>
   );
 }
 
@@ -292,33 +333,39 @@ function Akun({ nama }: { nama: string }) {
     }
   }
 
+  const baris = `${g.barisDaftar} tekan w-full text-left text-[16px] font-semibold hover:bg-background`;
+
   return (
-    <section className="space-y-3">
-      <h2 className={g.labelSeksi}>Akun</h2>
-      <button type="button" onClick={keluar} disabled={proses} className={g.tombolKedua}>
-        Keluar dari ponsel ini
-      </button>
-      {hapus ? (
-        <div className="space-y-3 rounded-2xl bg-oranye-muda p-4">
-          <p className="text-[15px] leading-snug">
-            Semua data Anda di program {nama} akan dihapus: rekaman, audio, catatan, dan izin. Tindakan ini tidak bisa
-            dibatalkan.
-          </p>
-          <div className="grid grid-cols-2 gap-3">
-            <button type="button" onClick={() => setHapus(false)} className={g.tombolKedua}>
-              Batal
-            </button>
-            <button type="button" onClick={hapusAkun} disabled={proses} className={g.tombolUtama}>
-              Hapus semua
-            </button>
-          </div>
-        </div>
-      ) : (
-        <button type="button" onClick={() => setHapus(true)} className={`${g.tombolTeks} w-full justify-center text-oranye-tua`}>
-          Hapus akun dan semua data saya
+    <Seksi ikon="orang" judul="Akun">
+      <div className={g.daftar}>
+        <button type="button" onClick={keluar} disabled={proses} className={baris}>
+          <Ikon nama="keluar" ukuran={20} className="text-abu" />
+          <span className="flex-1">Keluar dari ponsel ini</span>
+          <Ikon nama="panah-kanan" ukuran={18} className="text-abu" />
         </button>
-      )}
+        {hapus ? (
+          <div className="space-y-3 bg-oranye-muda p-4">
+            <p className="text-[15px] leading-snug">
+              Semua data Anda di program {nama} akan dihapus: rekaman, audio, catatan, dan izin. Tindakan ini tidak bisa
+              dibatalkan.
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <button type="button" onClick={() => setHapus(false)} className={g.tombolKedua}>
+                Batal
+              </button>
+              <button type="button" onClick={hapusAkun} disabled={proses} className={g.tombolUtama}>
+                Hapus semua
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button type="button" onClick={() => setHapus(true)} className={`${baris} text-oranye-tua`}>
+            <Ikon nama="silang" ukuran={20} />
+            <span className="flex-1">Hapus akun dan semua data saya</span>
+          </button>
+        )}
+      </div>
       {galat ? <p className={g.kotakGalat}>{galat}</p> : null}
-    </section>
+    </Seksi>
   );
 }

@@ -8,7 +8,7 @@ import { API } from "@/lib/kontrak/api";
 import { panggil, GalatApi, pesanDari, PAKAI_CONTOH } from "@/lib/perangkat/panggil";
 import { lupakanSaya } from "@/lib/perangkat/saya";
 import { tandaiMasukContoh } from "@/lib/perangkat/sesi-contoh";
-import { Merek, PratinjauHasil } from "@/components/merek";
+import { Merek, PratinjauHariIni, PratinjauJeda } from "@/components/merek";
 import { ModeDemo } from "@/components/mode-demo";
 import { Ikon } from "@/components/ikon";
 
@@ -16,7 +16,7 @@ import { Ikon } from "@/components/ikon";
 export default function HalamanMasuk() {
   return (
     <div className="min-h-dvh lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-      <aside className="kepala-hijau relative isolate hidden overflow-hidden bg-hijau-tua px-12 py-10 text-white lg:flex lg:flex-col lg:justify-between">
+      <aside className="kepala-hijau relative isolate m-3 hidden overflow-hidden rounded-[36px] bg-hijau-tua px-12 py-10 text-white lg:flex lg:flex-col lg:justify-between">
         <div className="relative z-10">
           <Merek terang />
         </div>
@@ -27,14 +27,27 @@ export default function HalamanMasuk() {
               Satu menit bermain, satu langkah lebih dekat ke kata pertama.
             </h2>
           </div>
-          <div className="rotate-[-3deg] transition-transform duration-500 ease-pantul hover:rotate-0">
-            <PratinjauHasil />
+          <div className="flex max-w-[540px] items-start gap-4" aria-hidden="true">
+            <div className="rotate-[-3deg]">
+              <PratinjauHariIni />
+            </div>
+            <div className="mt-10 hidden rotate-[4deg] xl:block">
+              <PratinjauJeda />
+            </div>
           </div>
         </div>
-        <ul className="relative z-10 flex flex-wrap gap-x-6 gap-y-2 text-[14px] font-medium">
-          <li className="flex items-center gap-2"><Ikon nama="mikrofon" ukuran={18} /> Rekam saat bermain</li>
-          <li className="flex items-center gap-2"><Ikon nama="pesan" ukuran={18} /> Langsung ke terapis</li>
-          <li className="flex items-center gap-2"><Ikon nama="keluarga" ukuran={18} /> Untuk seluruh keluarga</li>
+        <ul className="relative z-10 flex flex-wrap gap-2 text-[14px] font-medium">
+          {(
+            [
+              ["mikrofon", "Rekam saat bermain"],
+              ["pesan", "Langsung ke terapis"],
+              ["keluarga", "Untuk seluruh keluarga"],
+            ] as const
+          ).map(([ikon, teks]) => (
+            <li key={teks} className="flex items-center gap-2 rounded-full bg-hijau px-3 py-1.5">
+              <Ikon nama={ikon} ukuran={16} /> {teks}
+            </li>
+          ))}
         </ul>
       </aside>
 
@@ -82,7 +95,7 @@ function Formulir() {
         </p>
       ) : null}
 
-      <div role="tablist" aria-label="Masuk sebagai" className="grid grid-cols-2 gap-1 rounded-2xl bg-abu-muda p-1">
+      <div role="tablist" aria-label="Masuk sebagai" className="grid grid-cols-2 gap-1 rounded-full bg-permukaan p-1.5 shadow-kartu ring-1 ring-garis">
         {(["keluarga", "email"] as const).map((j) => (
           <button
             key={j}
@@ -90,8 +103,8 @@ function Formulir() {
             role="tab"
             aria-selected={jenis === j}
             onClick={() => setJenis(j)}
-            className={`tekan min-h-11 rounded-xl text-[15px] font-semibold ${
-              jenis === j ? "bg-permukaan text-hijau-tua shadow-kartu" : "text-abu"
+            className={`tekan min-h-11 rounded-full text-[15px] font-semibold ${
+              jenis === j ? "bg-hijau-tua text-white shadow-angkat" : "text-abu hover:text-foreground"
             }`}
           >
             {LABEL[j]}

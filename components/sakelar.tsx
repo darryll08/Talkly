@@ -32,7 +32,7 @@ export function Sakelar({
           onChange={(e) => ubah(e.target.checked)}
           className="peer absolute inset-0 z-10 m-0 cursor-pointer opacity-0 disabled:cursor-default"
         />
-        <span className="absolute inset-0 rounded-full bg-abu/25 transition-colors duration-300 ease-pegas peer-checked:bg-hijau peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-hijau peer-disabled:opacity-50" />
+        <span className="absolute inset-0 rounded-full bg-abu-muda ring-1 ring-inset ring-abu transition-colors peer-checked:ring-0 duration-300 ease-pegas peer-checked:bg-hijau peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-hijau peer-disabled:opacity-50" />
         <span className="pointer-events-none absolute left-[2px] top-[2px] h-[27px] w-[27px] rounded-full bg-white shadow-[0_3px_8px_rgb(0_0_0/0.15),0_1px_1px_rgb(0_0_0/0.16)] transition-transform duration-300 ease-pegas peer-checked:translate-x-5" />
       </span>
     </label>

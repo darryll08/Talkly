@@ -11,6 +11,7 @@ const menu = [
   { label: "Pesan keluarga", akhiran: "/pesan" },
 ] as const;
 
+// Tab halaman anak berbentuk pil; yang aktif hijau tua. Di layar sempit tab bisa digeser ke samping.
 // Parent layout membungkus hook URL ini dalam Suspense sesuai AGENTS.md.
 export function MenuAnak({ anakId }: { anakId: string }) {
   const pathname = usePathname();
@@ -19,21 +20,21 @@ export function MenuAnak({ anakId }: { anakId: string }) {
   return (
     <nav
       aria-label="Halaman anak"
-      className="sticky top-0 z-20 rounded-2xl border border-garis bg-permukaan/80 p-1.5 backdrop-blur-xl"
+      // Menempel tepat di bawah TopbarPanel (h-16) di layar sempit, di tepi atas di layar lebar. Latar pita penuh
+      // selebar area isi, supaya isi halaman tidak terlihat lewat celah saat digulir.
+      className="sticky top-16 z-20 -mx-4 overflow-x-auto bg-background/95 px-4 py-2 backdrop-blur-xl [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:top-0 lg:-mx-10 lg:px-10"
     >
-      <ul className="flex flex-wrap gap-1">
+      <ul className="flex w-max gap-1 rounded-full bg-permukaan p-1.5 shadow-kartu ring-1 ring-garis sm:w-auto">
         {menu.map(({ label, akhiran }) => {
           const href = `${dasar}${akhiran}`;
           const aktif = pathname === href || pathname === `${href}/`;
           return (
-            <li key={label} className="min-w-0 flex-1 basis-28">
+            <li key={label} className="sm:flex-1">
               <Link
                 href={href}
                 aria-current={aktif ? "page" : undefined}
-                className={`tekan flex min-h-11 items-center justify-center rounded-xl px-3 py-2 text-center text-sm font-semibold ${
-                  aktif
-                    ? "bg-abu-muda text-foreground"
-                    : "text-abu hover:bg-background hover:text-foreground"
+                className={`tekan flex min-h-11 items-center justify-center whitespace-nowrap rounded-full px-4 text-center text-sm font-semibold ${
+                  aktif ? "bg-hijau-tua text-white shadow-angkat" : "text-abu hover:bg-background hover:text-foreground"
                 }`}
               >
                 {label}
