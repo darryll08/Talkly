@@ -31,6 +31,8 @@ Cara mengisi: setiap anggota menambah baris untuk perubahannya sendiri pada comm
 
 ## Keamanan
 
+- **Header keamanan dasar di semua halaman dan API.** Talkly tidak bisa lagi ditanam di bingkai situs lain (`X-Frame-Options: DENY`, CSP `frame-ancestors 'none'`), browser tidak menebak jenis berkas (`nosniff`), alamat halaman tidak ikut terkirim ke situs lain (`Referrer-Policy`), dan mikrofon serta kamera hanya boleh dipakai Talkly sendiri, fitur lain seperti lokasi dimatikan (`Permissions-Policy`). Tampilan dan fitur tidak berubah. `next.config.ts`. Bukti: header terbaca di `/`, `/api/saya`, dan `/sw.js` pada dev server; di Chromium dengan mikrofon palsu, mikrofon dan kamera tetap bisa dipakai, lokasi ditolak, dan Talkly yang ditanam di iframe tidak termuat; tsc, lint, 153 tes, dan build lolos. (Wayan, `297388d`, 13 Nov 2026)
+
 ## Dokumentasi
 
 - Changelog ini dibuat. (Wayan, 11 Nov 2026)
