@@ -18,6 +18,15 @@ Cara mengisi: setiap anggota menambah baris untuk perubahannya sendiri pada comm
 
 - **Layar "Sedang dinilai" punya batas waktu.** Menit pertama tetap memeriksa hasil setiap 2 detik, lalu setiap 10 detik. Setelah 8 menit layar berhenti menunggu dan menampilkan "Penilaian belum selesai" dengan tombol Cek lagi dan Kembali ke Hari ini. Bila rekaman gagal karena sistem, tips merekam tidak ditampilkan. `app/(ortu)/hasil/[rekamanId]/hasil.tsx`. Dicek di browser lebar 375 px dengan data contoh. (Wayan, `4b9aab7`, 11 Nov 2026)
 
+- **Perapian tampilan (UI/UX) tanpa fitur baru.** Warna tetap memakai token yang sama. Semua fitur, tombol, dan data tetap ada; hanya tata letak dan gaya yang berubah. (Wayan, `0cdf9c7`, 11 Nov 2026)
+  - Profil: ringkasan Anak, Terapis, Peran; seksi berikon; izin rekaman diringkas menjadi judul dan satu kalimat (nama penyedia, negara, dan dasar hukum tidak lagi ditampilkan di layar, tetap ada di respons API). Berlaku juga di layar Mulai. `app/(ortu)/profil/page.tsx`, `components/izin-rekaman.tsx`.
+  - Kemajuan: grafik pil jeda per minggu dengan garis target 3 detik, ubin giliran/rekaman/ajakan 14 hari, bilah menuju syarat bila data belum cukup, kartu kata anak dengan keterangan. `app/(ortu)/kemajuan/page.tsx`.
+  - Dasbor terapis: sidebar di layar lebar, kartu angka status, pilih hari sesi berbentuk pil tanggal, panel Perlu perhatian dan Keaktifan keluarga, pencarian anak. Kartu anak: kepala putih dengan kata target, tren mingguan sebagai grafik pil, tata letak dua kolom; tab halaman anak berbentuk pil. `app/(terapis)/`, `components/terapis/`.
+  - Beranda dan Masuk: komposisi kartu pratinjau aplikasi, ringkasan angka, bagian untuk terapis, ajakan gabung; tab Masuk berbentuk pil. `app/page.tsx`, `app/(tamu)/masuk/page.tsx`, `components/merek.tsx`.
+  - Dicek di browser 375 px dan 1440 px dengan data contoh, tanpa scroll ke samping; tsc, lint, 153 tes, dan build lolos.
+
+- **Perbaikan dari audit UI/UX** (`docs/audit-uiux-final.md`). Kontras: angka dan ikon di atas oranye 2,71 → 5,85:1; sakelar mati 1,41 → 5,70:1; penanda kata dilaporkan keluarga tidak lagi hanya warna; teks minimal 13 px. Kartu anak terapis dibuka dengan "Yang perlu dibahas"; ikon panah yang tidak bisa diklik di dasbor dihapus. Hari ini punya satu ajakan utama; tombol aksi kartu aktivitas menempel di bawah; umpan balik dibuka dengan pujian, angka giliran menjadi pendukung; layar ditolak menyorot tips yang sesuai alasan. Dicek di browser 375 px dan 1440 px; tsc, lint, 153 tes, dan build lolos. (Wayan, `0cdf9c7`, 11 Nov 2026)
+
 ## Performa
 
 ## Keamanan
@@ -25,3 +34,4 @@ Cara mengisi: setiap anggota menambah baris untuk perubahannya sendiri pada comm
 ## Dokumentasi
 
 - Changelog ini dibuat. (Wayan, 11 Nov 2026)
+- Laporan audit UI/UX `docs/audit-uiux-final.md`: angka kontras, temuan per layar, 10 perbaikan teratas, dan skrip uji pengguna. (Wayan, `0cdf9c7`, 11 Nov 2026)
