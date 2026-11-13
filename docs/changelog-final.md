@@ -30,6 +30,16 @@ Cara mengisi: setiap anggota menambah baris untuk perubahannya sendiri pada comm
 
 - **Perbaikan dari audit UI/UX** (`docs/audit-uiux-final.md`). Kontras: angka dan ikon di atas oranye 2,71 → 5,85:1; sakelar mati 1,41 → 5,70:1; penanda kata dilaporkan keluarga tidak lagi hanya warna; teks minimal 13 px. Kartu anak terapis dibuka dengan "Yang perlu dibahas"; ikon panah yang tidak bisa diklik di dasbor dihapus. Hari ini punya satu ajakan utama; tombol aksi kartu aktivitas menempel di bawah; umpan balik dibuka dengan pujian, angka giliran menjadi pendukung; layar ditolak menyorot tips yang sesuai alasan. Dicek di browser 375 px dan 1440 px; tsc, lint, 153 tes, dan build lolos. (Wayan, `0cdf9c7`, 11 Nov 2026)
 
+- **Beranda lebih jelas untuk juri dan terapis.** Tanpa fitur, rute, atau tombol baru; semua klaim diambil dari aplikasi yang berjalan. (Wayan, `24d459c`, 13 Nov 2026)
+  - Judul menonjolkan pembeda, "Ponsel melatih orang tua, bukan anak.", dua baris di layar 640 px ke atas; kalimat pembuka menceritakan satu putaran (rekam 1 menit → jeda menunggu terukur → dibaca terapis) dan menegaskan anak tidak memakai layar.
+  - Bagian atas memusatkan satu contoh hasil rekaman: kartu jeda menunggu dan kartu hasil berdampingan, lurus, tidak bertumpuk (atas-bawah di ponsel).
+  - Bagian langkah menjadi "Cara kerjanya: satu putaran, dari rumah ke ruang terapi" dengan pelaku tiap langkah (Keluarga, Talkly, Terapis).
+  - Angka pratinjau dasbor disamakan dengan data demo (25 → 10 anak).
+  - Bagian di bawah layar muncul pelan saat digulir, bergiliran per kartu, sekali saja; dimatikan bila "kurangi gerakan" aktif, dan isi tetap terlihat tanpa JavaScript.
+  - `app/page.tsx`, `components/merek.tsx`, `components/pemicu-gulir.tsx`, `app/globals.css`.
+- **Halaman Masuk dirapikan.** Kartu pratinjau di panel kiri lurus dan berdampingan, kalimat pembuka dipendekkan menjadi "Satu menit, satu langkah ke kata pertama." (dua baris), akun demo dikelompokkan menjadi Keluarga serta Terapis dan admin, dan keterangan Kak Nadia disamakan dengan data demo (25 → 10 anak). Form masuk tidak berubah. `app/(tamu)/masuk/page.tsx`, `components/mode-demo.tsx`. (Wayan, `24d459c`, 13 Nov 2026)
+- Bukti untuk dua perubahan di atas: dicek di Chromium 375, 640, 1024, 1280, dan 1440 px. Kontras teks minimal 4,5:1, teks minimal 13 px, tanpa scroll ke samping, tanpa galat console, kartu tidak bertumpuk, dan semua tautan menuju rute yang sama. Akun demo Ibu Sari, Kak Nadia, dan Admin masuk ke `/hari-ini`, `/terapis`, dan `/admin`. tsc, lint, 157 tes, dan build lolos.
+
 ## Performa
 
 ## Keamanan
