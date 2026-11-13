@@ -85,3 +85,29 @@ for (const [nama, contoh] of Object.entries(CONTOH)) {
     assert.ok(hasil.success, hasil.success ? "" : JSON.stringify(hasil.error.issues.slice(0, 3)));
   });
 }
+
+test("anak tanpa rencana tetap bisa dibuka di Program, tapi simpan tetap wajib ≥1 aktivitas", () => {
+  // Data contoh Dafa/Gita/Mika/Salsa tidak punya rencana yang disetujui, jadi aktivitas_id kosong.
+  const anak = {
+    id: "c990cc6d-df71-4f59-9fe7-303813d321aa",
+    nama: "Dafa",
+    tanggal_lahir: "2024-01-09",
+    pendengaran: "normal",
+    tahap: 2,
+    strategi_fokus: "",
+    kata_target: ["mobil", "jalan", "mau", "lagi", "tutup"],
+    aktivitas_id: [],
+    ukuran_nonaktif: [],
+    minat: "",
+    rutinitas: "",
+    hari_sesi: 5,
+    jam_sesi: "12:00",
+    status: "bahas_minggu_ini",
+    data_contoh: true,
+  };
+  assert.equal(API.anakLihat.response.safeParse(anak).success, true);
+  const isi = Object.fromEntries(Object.entries(anak).filter(([k]) => !["id", "status", "data_contoh"].includes(k)));
+  assert.equal(API.anakBuat.request.safeParse(isi).success, false);
+  assert.equal(API.anakUbah.request.safeParse({ id: anak.id, aktivitas_id: [] }).success, false);
+  assert.equal(API.anakUbah.request.safeParse({ id: anak.id, aktivitas_id: ["MANDI-01"] }).success, true);
+});

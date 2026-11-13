@@ -43,7 +43,14 @@ export const POST = denganAkses(["terapis"], async (req, { saya, params }) => {
     .select("id")
     .single();
   if (error) throw error;
-  await db().from("rencana_item").insert(body.isi.item.map((i, n) => ({ rencana_id: rencana.id, aktivitas_id: i.aktivitas_id, anggota_id: i.anggota_id, urutan: n + 1 })));
+  const { error: e2 } = await db()
+    .from("rencana_item")
+    .insert(body.isi.item.map((i, n) => ({ rencana_id: rencana.id, aktivitas_id: i.aktivitas_id, anggota_id: i.anggota_id, urutan: n + 1 })));
+  if (e2) {
+    // Jangan tinggalkan rencana kosong yang tampil sebagai "rencana minggu baru" di ponsel keluarga.
+    await db().from("rencana").delete().eq("id", rencana.id);
+    throw e2;
+  }
   await db().from("draf_rencana").update({ status: "disetujui", rencana_id: rencana.id, isi: body.isi }).eq("id", draf.id);
   if (body.isi.kata_target) await db().from("anak").update({ kata_target: body.isi.kata_target }).eq("id", draf.anak_id);
 

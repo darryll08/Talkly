@@ -509,7 +509,8 @@ export const API = {
     path: "/api/anak/:id",
     akses: ["terapis"],
     request: z.object({ id: Id }),
-    response: DataAnak.extend({ id: Id, status: StatusAnak, data_contoh: z.boolean() }),
+    // Anak tanpa rencana yang disetujui (misal data contoh tanpa rencana) tetap bisa dibuka; form mewajibkan ≥1 saat disimpan.
+    response: DataAnak.extend({ id: Id, status: StatusAnak, data_contoh: z.boolean(), aktivitas_id: z.array(z.string()).max(12) }),
     galat: { 404: "Anak tidak ditemukan" },
     layar: ["D1"],
     titik: "I2",

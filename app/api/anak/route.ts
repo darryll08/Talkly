@@ -35,7 +35,10 @@ export const POST = denganAkses(["terapis"], async (req, { saya }) => {
     .select("id")
     .single();
   if (e2) throw e2;
-  await db().from("rencana_item").insert(aktivitas_id.map((id, i) => ({ rencana_id: rencana.id, aktivitas_id: id, anggota_id: null, urutan: i + 1 })));
+  const { error: e3 } = await db()
+    .from("rencana_item")
+    .insert(aktivitas_id.map((id, i) => ({ rencana_id: rencana.id, aktivitas_id: id, anggota_id: null, urutan: i + 1 })));
+  if (e3) throw e3;
 
   await db().from("riwayat_status").insert({ anak_id: anak.id, status: "lanjut", pemicu: "Program baru" });
   if (body.pendengaran !== "normal") {
