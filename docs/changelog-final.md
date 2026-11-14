@@ -43,6 +43,8 @@ Cara mengisi: setiap anggota menambah baris untuk perubahannya sendiri pada comm
 - **Halaman Masuk dirapikan.** Kartu pratinjau di panel kiri lurus dan berdampingan, kalimat pembuka dipendekkan menjadi "Satu menit, satu langkah ke kata pertama." (dua baris), akun demo dikelompokkan menjadi Keluarga serta Terapis dan admin, dan keterangan Kak Nadia disamakan dengan data demo (25 → 10 anak). Form masuk tidak berubah. `app/(tamu)/masuk/page.tsx`, `components/mode-demo.tsx`. (Wayan, `24d459c`, 13 Nov 2026)
 - Bukti untuk dua perubahan di atas: dicek di Chromium 375, 640, 1024, 1280, dan 1440 px. Kontras teks minimal 4,5:1, teks minimal 13 px, tanpa scroll ke samping, tanpa galat console, kartu tidak bertumpuk, dan semua tautan menuju rute yang sama. Akun demo Ibu Sari, Kak Nadia, dan Admin masuk ke `/hari-ini`, `/terapis`, dan `/admin`. tsc, lint, 157 tes, dan build lolos.
 
+- **Akun demo diringkas menjadi empat.** Kartu Akun demo di halaman Masuk kini hanya berisi satu cerita keluarga Raka: Ibu Sari (ibu), Mbak Sri (pengasuh), Kak Nadia (terapis wicara di klinik), dan Admin Talkly. Tombol Ibu Alya, Ibu Bima, dan Ibu Citra disembunyikan agar juri tidak perlu memilih dari tujuh nama; data anak mereka tetap ada dan tetap tampil di dasbor Kak Nadia. Server tidak berubah. `components/mode-demo.tsx`. Bukti: dicek di browser 375 px dan 1440 px (empat akun dalam dua kelompok, tanpa scroll ke samping); tsc, lint, 158 tes, dan build lolos. (Wayan, `4c527b0`, 14 Nov 2026)
+
 ## Performa
 
 ## Keamanan
