@@ -7,7 +7,7 @@ Tim Boomerang, Universitas Airlangga · INCEPTION 2026 · Subtema 2: Health, Wel
 - Aplikasi daring: https://talkly-orcin.vercel.app (akun demo di halaman Masuk)
 - Repositori: https://github.com/darryll08/Talkly
 - Video demo: https://youtu.be/wZaqm-0Xj7I
-- Pitch deck: https://drive.google.com/drive/folders/17_R4Q53D-kjRtCfer8yhU9L6mEL0I5KE?usp=sharing
+- Pitch deck: https://www.canva.com/d/pA2lFKx6ilGmjoe
 - Changelog final: [`docs/changelog-final.md`](docs/changelog-final.md)
 
 ## Menjalankan
