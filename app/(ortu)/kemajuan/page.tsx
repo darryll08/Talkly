@@ -66,7 +66,11 @@ function JedaMingguan({ data }: { data: Data }) {
   const { strategi, tren } = data;
   const terisi = tren.filter((t) => t.jeda_rata_s !== null);
   const awal = terisi.length > 1 ? terisi[0].jeda_rata_s : null;
-  const sekarang = strategi.jeda_rata_s.nilai!;
+  // Angka besar = batang minggu ini di grafik, supaya keduanya selalu sama. Bila minggu ini belum ada
+  // rekaman, pakai rata-rata 14 hari dan labelnya ikut berubah.
+  const mingguIni = tren.at(-1)?.jeda_rata_s ?? null;
+  const sekarang = mingguIni ?? strategi.jeda_rata_s.nilai!;
+  const labelSekarang = mingguIni !== null ? "Jeda menunggu minggu ini" : "Jeda menunggu 14 hari terakhir";
   const selisih = awal !== null ? Math.round((sekarang - awal) * 10) / 10 : null;
   const maks = Math.max(5, ...terisi.map((t) => t.jeda_rata_s ?? 0)) * 1.15;
   const posTarget = (TARGET_S / maks) * 100;
@@ -75,7 +79,7 @@ function JedaMingguan({ data }: { data: Data }) {
     <section className={`${g.tumpuk} space-y-5`}>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-[14px] text-abu">Jeda menunggu minggu ini</p>
+          <p className="text-[14px] text-abu">{labelSekarang}</p>
           <p className={`${g.angkaBesar} text-[52px] leading-none text-hijau-tua`}>
             {angka(sekarang)}
             <span className="ml-1.5 font-sans text-[18px] font-semibold">detik</span>
