@@ -56,3 +56,4 @@ Cara mengisi: setiap anggota menambah baris untuk perubahannya sendiri pada comm
 
 - Changelog ini dibuat. (Wayan, 11 Nov 2026)
 - Laporan audit UI/UX `docs/audit-uiux-final.md`: angka kontras, temuan per layar, 10 perbaikan teratas, dan skrip uji pengguna. (Wayan, `0cdf9c7`, 11 Nov 2026)
+- README untuk Final: bagian baru Keterbatasan dan langkah berikutnya (known limitations), tautan ke changelog ini, keterangan bahwa akun demo ada di halaman Masuk, dan koreksi kalimat bahwa hanya kode sampai `submission-24h` yang ditulis selama Hacking Day. `README.md`. (Wayan, `5ad01db`, 14 Nov 2026)
