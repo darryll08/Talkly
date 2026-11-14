@@ -141,13 +141,16 @@ function UmpanBalik({ rekamanId, data }: { rekamanId: string; data: StatusRekama
       </section>
 
       <section className={`${g.kartu} space-y-3`}>
-        <p className="text-[13px] font-semibold text-abu">Satu kalimat dari rekaman tadi</p>
-        <div className="flex flex-col items-start">
-          <span className="mb-1 px-1 text-[13px] text-abu">{panggilan} bilang:</span>
-          <p className="max-w-[90%] rounded-[20px] rounded-bl-md bg-abu-muda px-4 py-2.5 text-[16px] leading-snug">
-            “{ub.kutipan}”
-          </p>
-        </div>
+        {/* Kutipan boleh kosong (AI tidak menemukan kalimat yang pas): sembunyikan gelembungnya. */}
+        <p className="text-[13px] font-semibold text-abu">{ub.kutipan ? "Satu kalimat dari rekaman tadi" : "Kalimat untuk dicoba"}</p>
+        {ub.kutipan ? (
+          <div className="flex flex-col items-start">
+            <span className="mb-1 px-1 text-[13px] text-abu">{panggilan} bilang:</span>
+            <p className="max-w-[90%] rounded-[20px] rounded-bl-md bg-abu-muda px-4 py-2.5 text-[16px] leading-snug">
+              “{ub.kutipan}”
+            </p>
+          </div>
+        ) : null}
         <div className="flex flex-col items-end">
           <span className="mb-1 px-1 text-[13px] text-abu">Untuk {namaAnak} sekarang, coba:</span>
           <p className="font-judul max-w-[90%] rounded-[20px] rounded-br-md bg-hijau px-4 py-2.5 text-[24px] font-extrabold text-white">
