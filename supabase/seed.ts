@@ -62,6 +62,12 @@ async function utama() {
   console.log(`Seed ke ${proyek}${DEV ? " (dev, dengan data uji)" : ""}`);
 
   // 1. Bersihkan. Menghapus anak dan klinik contoh menghapus seluruh turunannya (cascade).
+  // Semua anak di klinik contoh dihapus lebih dulu, termasuk buatan pengunjung demo: bila tidak,
+  // pesan dari terapis contoh di anak itu kehilangan pengirim saat terapis ikut terhapus dan
+  // melanggar pesan_check.
+  const klinikContoh = await cek("klinik contoh", db.from("klinik").select("id").eq("data_contoh", true));
+  const idKlinik = (klinikContoh ?? []).map((k) => k.id as string);
+  if (idKlinik.length) await cek("hapus anak klinik contoh", db.from("anak").delete().in("klinik_id", idKlinik));
   await cek("hapus anak contoh", db.from("anak").delete().eq("data_contoh", true));
   await cek("hapus klinik contoh", db.from("klinik").delete().eq("data_contoh", true));
 
