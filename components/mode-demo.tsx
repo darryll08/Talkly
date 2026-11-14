@@ -16,13 +16,12 @@ export type Persona = "ibu_sari" | "mbak_sri" | "ibu_alya" | "ibu_bima" | "ibu_c
 
 type Sesi = "anggota" | "terapis" | "admin";
 
+// Empat akun untuk demo: satu cerita keluarga Raka (ibu, pengasuh), terapisnya, dan admin klinik.
+// Persona ibu_alya, ibu_bima, ibu_citra tetap diterima /api/demo; datanya tetap tampil di dasbor terapis.
 const PERSONA: { sebagai: Persona; nama: string; peran: string; tujuan: string; sesi: Sesi }[] = [
   { sebagai: "ibu_sari", nama: "Ibu Sari", peran: "Ibu Raka · riwayat 3 minggu", tujuan: "/hari-ini", sesi: "anggota" },
   { sebagai: "mbak_sri", nama: "Mbak Sri", peran: "Pengasuh Raka", tujuan: "/hari-ini", sesi: "anggota" },
-  { sebagai: "ibu_alya", nama: "Ibu Alya", peran: "Ibu Alya · kata lama hilang, dibahas minggu ini", tujuan: "/hari-ini", sesi: "anggota" },
-  { sebagai: "ibu_bima", nama: "Ibu Bima", peran: "Ibu Bima · 5 hari belum latihan", tujuan: "/hari-ini", sesi: "anggota" },
-  { sebagai: "ibu_citra", nama: "Ibu Citra", peran: "Ibu Citra · baru mulai program", tujuan: "/hari-ini", sesi: "anggota" },
-  { sebagai: "kak_nadia", nama: "Kak Nadia", peran: "Terapis wicara · 10 anak", tujuan: "/terapis", sesi: "terapis" },
+  { sebagai: "kak_nadia", nama: "Kak Nadia", peran: "Terapis wicara di klinik · 10 anak", tujuan: "/terapis", sesi: "terapis" },
   { sebagai: "admin", nama: "Admin Talkly", peran: "Kelola klinik dan akun terapis", tujuan: "/admin", sesi: "admin" },
 ];
 
