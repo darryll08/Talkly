@@ -54,8 +54,8 @@ export function Hasil() {
         if (batal) return;
         if (e instanceof GalatApi && e.status === 401) return router.replace("/keluar");
         setGalat(pesanDari(e));
-        // Jaringan putus: terus mencoba, penilaian tetap berjalan di server.
-        if (e instanceof GalatApi && e.status === 0) lanjut(JEDA_TANYA_MS * 2);
+        // Jaringan putus atau galat sementara (5xx): terus mencoba, penilaian tetap berjalan di server.
+        if (!(e instanceof GalatApi && e.status === 404)) lanjut(JEDA_TANYA_MS * 2);
       }
     };
     tanya();

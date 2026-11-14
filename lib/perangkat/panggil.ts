@@ -73,6 +73,8 @@ export async function panggil<E extends Endpoint>(endpoint: E, data?: Req<E>): P
   let alamat = url;
   const init: RequestInit = { method: endpoint.metode, credentials: "same-origin", headers: {} };
   if (endpoint.metode === "GET" || endpoint.metode === "DELETE") {
+    // GET menggantung (sinyal HP jelek) dianggap putus supaya pemanggil bisa mencoba ulang.
+    if (endpoint.metode === "GET") init.signal = AbortSignal.timeout(15_000);
     const q = new URLSearchParams();
     for (const [k, v] of Object.entries(sisa)) if (v !== undefined && v !== null) q.set(k, String(v));
     const qs = q.toString();
