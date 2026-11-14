@@ -235,7 +235,7 @@ export const API = {
     path: "/api/anggota/:id",
     akses: ["pengelola", "anggota"],
     request: z.object({ id: Id }),
-    galat: { 404: "Anggota tidak ditemukan" },
+    galat: { 404: "Anggota tidak ditemukan", 409: "Akun data contoh tidak bisa dihapus" },
     layar: ["O12"],
     titik: "I3",
   }),
