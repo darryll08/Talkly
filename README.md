@@ -4,10 +4,11 @@ PWA dari klinik untuk orang tua anak terlambat bicara (18–48 bulan). Orang tua
 
 Tim Boomerang, Universitas Airlangga · INCEPTION 2026 · Subtema 2: Health, Well-being, and Accessibility.
 
-- Aplikasi daring: https://talkly-orcin.vercel.app (mode demo di beranda)
+- Aplikasi daring: https://talkly-orcin.vercel.app (akun demo di halaman Masuk)
 - Repositori: https://github.com/darryll08/Talkly
 - Video demo: https://youtu.be/wZaqm-0Xj7I
 - Pitch deck: https://drive.google.com/drive/folders/17_R4Q53D-kjRtCfer8yhU9L6mEL0I5KE?usp=sharing
+- Changelog final: [`docs/changelog-final.md`](docs/changelog-final.md)
 
 ## Menjalankan
 
@@ -163,7 +164,7 @@ Disusun sebelum Hacking Day dan dipakai sebagai acuan, bukan kode produk:
 - Concept Proposal Talkly v19/v20 (Tabel 2 aturan status, Tabel 5 lapis fitur, subbab 4.1–4.4, Lampiran 1–9).
 - Dokumen rancangan tim: alur layar final, rancangan produk, konten klinis berbasis riset (aktivitas EMT dan templat).
 
-Seluruh kode di repositori ini ditulis selama Hacking Day (31 Okt 2026 12.00 – 1 Nov 2026 12.00 WIB); riwayat commit tidak di-squash.
+Seluruh kode sampai tag `submission-24h` ditulis selama Hacking Day (31 Okt 2026 12.00 – 1 Nov 2026 12.00 WIB); riwayat commit tidak di-squash. Perubahan sesudah tag itu hanya perbaikan untuk Final (bug, stabilisasi, tampilan, keamanan dasar, dokumentasi) dan tercatat di [`docs/changelog-final.md`](docs/changelog-final.md).
 
 ## Penyesuaian terhadap Challenge Brief
 
@@ -219,8 +220,19 @@ Temuan dari pengujian yang sudah diperbaiki:
 - TV atau musik yang menumpuk dengan suara bicara tidak selalu ditandai STT; mutu kini juga memeriksa level suara di sela bicara dari jejak ponsel (`lib/ukur/mutu.ts`).
 - Suara anak dikenali dari median panjang ucapan, sehingga satu ucapan orang tua yang salah dilabeli STT tidak membuat anak terbaca sebagai orang dewasa (`lib/ukur/pembicara.ts`).
 
-Keterbatasan: suara anak yang sangat pendek kadang tidak terpisah dari suara orang tua, dan skenario dengan banyak giliran cepat (N09) serta suara anak yang bukan kata (N14) masih di bawah rata-rata.
+Keterbatasan mesin ukur dirangkum di bagian berikutnya.
 
 Cara mengulang: `npm run uji:akurasi` menjalankan ulang pengukuran dari transkrip tersimpan di `data/uji/transkrip/` (tanpa kredit STT), membandingkannya dengan kunci di `data/uji/kunci/`, dan menulis `docs/hasil-uji.md`. Naskah dan kunci dibuat dari `uji/naskah.ts` (`npx tsx uji/cetak-naskah.ts`, hasil siap baca di [`docs/naskah-rekaman.md`](docs/naskah-rekaman.md)).
 
 Pemeriksaan konsistensi: `npx tsx uji/akurasi.ts --simulasi` menjalankan mesin pada transkrip sempurna yang dibuat dari naskah. Hasilnya 100% sesuai kunci; ini hanya memastikan kunci dan mesin memakai definisi yang sama, bukan hasil uji akurasi.
+
+## Keterbatasan dan langkah berikutnya
+
+- Belum diuji pada keluarga atau klinik sungguhan. Angka akurasi di atas berasal dari 15 skenario percakapan bernaskah.
+- Suara anak yang sangat pendek kadang tidak terpisah dari suara orang tua. Skenario dengan banyak giliran cepat (N09) dan suara anak yang bukan kata (N14) masih di bawah rata-rata.
+- Pengujian di ponsel masih terbatas: notifikasi push dan antrean unggah saat offline belum diuji menyeluruh di perangkat Android.
+- Transkripsi dan model bahasa diproses di Amerika Serikat. Nama disamarkan sebelum transkrip dikirim ke model bahasa.
+- 33 dari 50 aktivitas di bank aktivitas masih draf yang perlu ditinjau terapis.
+- Mode demo di produksi sengaja terbuka untuk juri dan akan dimatikan setelah lomba.
+
+Langkah berikutnya: pilot dengan satu klinik tumbuh kembang, persetujuan etik dan izin keluarga, uji akurasi pada rekaman rumah sungguhan, dan peninjauan bank aktivitas oleh terapis.
