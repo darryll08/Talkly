@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useParamRute } from "@/lib/perangkat/param";
 import { KepalaHijau } from "@/components/kepala-hijau";
 import * as g from "@/lib/gaya";
 import { API, type ResponseDari } from "@/lib/kontrak/api";
@@ -24,8 +23,8 @@ const CEPAT_MS = 60_000;
 const BERHENTI_MS = 8 * 60_000;
 
 // O5b (sedang dinilai) → O6 (umpan balik) atau O7 (rekaman ditolak).
-export function Hasil() {
-  const rekamanId = useParamRute("rekamanId");
+// rekamanId dari server (page.tsx): useParams bisa tertahan di nilai sementara saat pindah dari /rekam, polling tak pernah mulai.
+export function Hasil({ rekamanId }: { rekamanId: string }) {
   const router = useRouter();
   const [data, setData] = useState<StatusRekaman | null>(null);
   const [galat, setGalat] = useState<string | null>(null);
